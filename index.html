@@ -9,7 +9,6 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <link rel="stylesheet" href="./sidebar.css">
 <style>
-/* HERO */
 .hero-banner{position:relative;border-radius:18px;overflow:hidden;background:#141414;border:1px solid #2a2a2a;min-height:300px;display:flex;align-items:center;margin-top:8px}
 .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center right;opacity:0.55}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,#0a0a0a 10%,rgba(10,10,10,0.6) 50%,rgba(10,10,10,0.1) 100%)}
@@ -24,14 +23,12 @@
 .hero-btn-primary:hover{background:#e8e8e8}
 .hero-btn-secondary{background:transparent;color:#fff;border:1px solid #3a3a3a}
 .hero-btn-secondary:hover{background:#1a1a1a}
-/* FEATURE */
 .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
 .feature-card{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;transition:0.15s}
 .feature-card:hover{border-color:#3a3a3a}
 .feature-label{font-size:9px;color:#5a5a5a;letter-spacing:1.5px;font-weight:800;text-transform:uppercase;margin-bottom:8px}
 .feature-title{font-size:13px;font-weight:700;color:#e8e8e8;margin-bottom:4px}
 .feature-desc{font-size:11px;color:#8a8a8a;line-height:1.5}
-/* WELCOME */
 .welcome-box{position:relative;margin-top:12px;padding:24px 20px;background:#141414;border:1px solid #2a2a2a;border-radius:14px;text-align:center;overflow:hidden;display:none}
 .welcome-box::before,.welcome-box::after{content:'';position:absolute;width:14px;height:14px;border:1.5px solid #4a90e2}
 .welcome-box::before{top:10px;left:10px;border-right:none;border-bottom:none}
@@ -40,7 +37,6 @@
 .welcome-tagline{font-size:11px;color:#8a8a8a;letter-spacing:3px;line-height:1.8;position:relative;z-index:2;text-transform:uppercase}
 .welcome-msg{margin-top:16px;font-size:11px;color:#a8a8a8;line-height:1.7;position:relative;z-index:2;font-family:'Courier New',monospace;white-space:pre-wrap}
 .welcome-msg b{color:#fff;font-weight:700}
-/* ANNOUNCEMENT */
 .ann-box{background:#141414;border:1px solid #2a2a2a;border-radius:14px;padding:18px;margin-top:14px}
 .ann-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
 .ann-head-icon{font-size:22px}
@@ -55,7 +51,6 @@
 .ann-step-title{font-size:12px;font-weight:700;color:#e8e8e8;margin-bottom:3px}
 .ann-step-desc{font-size:11px;color:#8a8a8a;line-height:1.5}
 .ann-step-desc b{color:#e8e8e8}
-/* SYARAT */
 .syarat-box-modern{background:#141414;border:1px solid #2a2a2a;border-radius:14px;padding:16px;margin-top:16px}
 .syarat-title{font-weight:800;font-size:12px;color:#e8e8e8;margin-bottom:14px;letter-spacing:0.5px}
 .syarat-item{display:flex;gap:10px;align-items:flex-start;background:#0a0a0a;border-radius:8px;padding:10px 12px;margin-bottom:6px;border-left:2px solid #4a90e2;font-size:12px;color:#a8a8a8;line-height:1.5}
@@ -63,7 +58,6 @@
 .syarat-num{width:20px;height:20px;background:#1a1a1a;border:1px solid #3a3a3a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:#e8e8e8;flex-shrink:0;margin-top:1px}
 .syarat-item.green{border-left-color:#4ade80}
 .syarat-item.green .syarat-num{border-color:#4ade80;color:#4ade80}
-/* PANDUAN */
 .panduan-title{font-weight:800;font-size:15px;color:#e8e8e8;display:flex;align-items:center;gap:8px;margin:22px 0 12px}
 .panduan-item{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;transition:0.15s;margin-bottom:10px}
 .panduan-item:hover{border-color:#3a3a3a;background:#1a1a1a}
@@ -72,7 +66,6 @@
 .panduan-info b{font-size:13px;color:#e8e8e8;display:block;margin-bottom:2px}
 .panduan-info span{font-size:11px;color:#8a8a8a;line-height:1.5;display:block}
 .panduan-arrow{color:#5a5a5a;font-size:16px}
-/* ORDER LOGS */
 .log-item{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;transition:0.15s}
 .log-item:hover{border-color:#3a3a3a}
 .log-item .check{width:32px;height:32px;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
@@ -82,16 +75,6 @@
 .log-item .right{text-align:right;flex-shrink:0}
 .log-item .right b{font-size:13px;color:#4ade80;font-weight:700;display:block}
 .log-item .right small{font-size:10px;color:#5a5a5a;display:block;margin-top:2px}
-/* QRIS DINAMIS HERO */
-.qris-hero{position:relative;border-radius:16px;overflow:hidden;background-image:url('./killua-bg.webp');background-size:cover;background-position:center;padding:24px 20px;min-height:460px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 40px rgba(0,0,0,0.5)}
-.qris-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.35),rgba(0,0,0,0.65))}
-.qris-hero-content{position:relative;z-index:2;text-align:center;width:100%}
-.qris-merchant-tag{display:inline-block;background:#000;color:#fff;padding:8px 22px;border-radius:8px;font-weight:900;font-size:14px;letter-spacing:1.5px;border:2px solid #00c6ff;box-shadow:0 0 25px rgba(0,198,255,0.7);margin-bottom:18px;text-shadow:0 0 10px rgba(0,198,255,0.5)}
-.qris-qr-card{background:#fff;border-radius:14px;padding:16px 16px 12px;max-width:290px;margin:0 auto;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
-.qris-nominal-label{font-size:10px;color:#5a5a5a;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px}
-.qris-nominal-value{font-size:22px;font-weight:900;color:#0a0a0a;margin-bottom:12px}
-.qris-scan-hint{font-size:10px;color:#5a5a5a;margin-top:10px;font-weight:600}
-#qrisCanvas{max-width:100%;display:block;margin:0 auto;border-radius:6px}
 @media (max-width:768px){
   .feature-grid{grid-template-columns:1fr 1fr}
   .hero-title{font-size:32px;letter-spacing:-1px}
@@ -386,15 +369,15 @@ Selamat datang di rumah baru kalian.</div>
   </div>
 
   <div id="pay-qris" style="margin-top:14px;display:none">
-    <div class="qris-hero">
-      <div class="qris-hero-overlay"></div>
-      <div class="qris-hero-content">
-        <div class="qris-merchant-tag">AWA_NEWSTREAM</div>
-        <div class="qris-qr-card">
-          <div class="qris-nominal-label">Total Pembayaran</div>
-          <div class="qris-nominal-value" id="qrisNominalDisplay">Rp0</div>
-          <canvas id="qrisCanvas" style="max-width:100%;display:block;margin:0 auto;border-radius:6px"></canvas>
-          <div class="qris-scan-hint">📱 Scan pakai DANA / GoPay / m-Banking</div>
+    <div style="position:relative;border-radius:16px;overflow:hidden;background-image:url('./killua-bg.webp');background-size:cover;background-position:center;padding:24px 20px;min-height:480px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 40px rgba(0,0,0,0.5)">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.35),rgba(0,0,0,0.65))"></div>
+      <div style="position:relative;z-index:2;text-align:center;width:100%">
+        <div style="display:inline-block;background:#000;color:#fff;padding:8px 22px;border-radius:8px;font-weight:900;font-size:14px;letter-spacing:1.5px;border:2px solid #00c6ff;box-shadow:0 0 25px rgba(0,198,255,0.7);margin-bottom:18px;text-shadow:0 0 10px rgba(0,198,255,0.5)">AWA_NEWSTREAM</div>
+        <div style="background:#ffffff;border-radius:14px;padding:18px 16px 14px;max-width:300px;margin:0 auto;box-shadow:0 10px 40px rgba(0,0,0,0.6)">
+          <div style="font-size:10px;color:#5a5a5a;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px">Total Pembayaran</div>
+          <div style="font-size:22px;font-weight:900;color:#0a0a0a;margin-bottom:14px" id="qrisNominalDisplay">Rp0</div>
+          <canvas id="qrisCanvas" style="max-width:100%;display:block;margin:0 auto;border-radius:6px;background:#fff"></canvas>
+          <div style="font-size:10px;color:#5a5a5a;margin-top:12px;font-weight:600">📱 Scan pakai DANA / GoPay / m-Banking</div>
         </div>
       </div>
     </div>
@@ -439,7 +422,6 @@ Selamat datang di rumah baru kalian.</div>
 <script>
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
 
-// ===== SENSOR USERNAME ROBLOX =====
 function sensorUsernameRbx(u){
   if(!u || u === '-') return '-';
   if(u.length <= 3) return u[0] + '***';
@@ -447,7 +429,6 @@ function sensorUsernameRbx(u){
   return u.slice(0, 3) + '****' + u.slice(-3);
 }
 
-// ===== CEK BUKTI TF =====
 async function cekBuktiValid(file){
   let loading=document.createElement('div');
   loading.id='loadingDetect';
@@ -471,14 +452,13 @@ async function cekBuktiValid(file){
     let isNama = ciriNama.some(x => teksSaja.includes(x));
     let isQris = lower.includes('qris') || lower.includes('qr ');
     console.log('isAngka:', isAngka, '| isNama:', isNama, '| isQris:', isQris);
-    if(!isAngka && !isNama && !isQris){ document.getElementById('loadingDetect').remove(); return {valid:false,reason:`❌ SALAH TUJUAN!\n\nSistem ga nemu nomor/nama WafaStoreOnly di bukti TF.\n\nPastikan screenshot keliatan:\n• Nomor 083862776790 / 901162765462\n• ATAU nama AWA_NEWSTREAM / Wafa\n• ATAU logo QRIS`}; }
+    if(!isAngka && !isNama && !isQris){ document.getElementById('loadingDetect').remove(); return {valid:false,reason:`❌ SALAH TUJUAN!\n\nSistem ga nemu nomor/nama WafaStoreOnly di bukti TF.`}; }
 
     document.getElementById('loadingDetect').remove();
     return {valid:true};
   }catch(e){ let l=document.getElementById('loadingDetect');if(l)l.remove(); return {valid:false,reason:`❌ Gagal baca: ${e.message}`}; }
 }
 
-// ===== ROBUX PAKET =====
 let currentMethod='username';
 const listUsername=[100,200,300,400,500,1000,1500,2000,3000,4000,5000,10000];
 const listGamepass=[100,200,300,400,500,1000,1500,2000,3000,4000,5000,10000];
@@ -513,7 +493,6 @@ function calcGamepass(){let j=parseInt(document.getElementById('cRbx2').value)||
 function calcGift(){let j=parseInt(document.getElementById('cGift').value)||0;let it=document.getElementById('giftItem').value||'-';let tot=j*95;document.getElementById('tGift').innerHTML=`Total: ${j} Robux × Rp95 = Rp${tot.toLocaleString('id-ID')}<br>Item: ${it}`;}
 document.getElementById('giftItem')?.addEventListener('input',calcGift);
 
-// ===== NAVIGASI =====
 function hideAll(){ ['homePage','robloxPage','paymentPage','pesananPage'].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display='none';}); }
 function openRoblox(){ hideAll(); document.getElementById('robloxPage').style.display='block'; if(typeof wsSetTitle==='function') wsSetTitle('⚡ Top Up Roblox'); if(typeof wsSetActive==='function') wsSetActive(''); renderUsername(); renderGamepass(); }
 function goHome(){ hideAll(); document.getElementById('homePage').style.display='block'; if(typeof wsSetTitle==='function') wsSetTitle('WafaStoreOnly'); if(typeof wsSetActive==='function') wsSetActive('beranda'); }
@@ -521,7 +500,6 @@ function backToRoblox(){ hideAll(); document.getElementById('robloxPage').style.
 function openPesanan(){ hideAll(); document.getElementById('pesananPage').style.display='block'; if(typeof wsSetTitle==='function') wsSetTitle('📦 Pesanan Saya'); if(typeof wsSetActive==='function') wsSetActive('pesanan'); renderPesanan(); }
 function switchMethod(m,el){currentMethod=m;document.querySelectorAll('.method-tabs .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('m-username').style.display=m=='username'?'block':'none';document.getElementById('m-gamepass').style.display=m=='gamepass'?'block':'none';document.getElementById('m-gift').style.display=m=='gift'?'block':'none';}
 
-// ===== FIREBASE LISTENER =====
 function attachFirebaseListener(orderId){
   try{
     if(!window.wafaDB) return;
@@ -535,17 +513,16 @@ function attachFirebaseListener(orderId){
         if(o.status=='selesai' && !orders[idx].notifSelesai){
           orders[idx].notifSelesai=true;
           localStorage.setItem('wafa_orders',JSON.stringify(orders));
-          addBotMsg(`🎉 Pesanan #${o.id.toString().slice(-6)} SELESAI!\n\n${o.jumlah} Robux udah masuk ke ${o.username} ✅\n\nMakasih udah order di WafaStoreOnly ⚡`);
+          addBotMsg(`🎉 Pesanan #${o.id.toString().slice(-6)} SELESAI!\n\n${o.jumlah} Robux udah masuk ke ${o.username} ✅`);
           showThankYouPopup(o);
           setTimeout(()=>{ let cur=JSON.parse(localStorage.getItem('wafa_orders')||'[]').filter(x=>x.id!=o.id); localStorage.setItem('wafa_orders',JSON.stringify(cur)); renderPesanan(); },600000);
         }
-        if(o.status=='batal' && !orders[idx].notifBatal){ addBotMsg(`❌ Pesanan #${o.id.toString().slice(-6)} DIBATALKAN admin.\n\nAlasan: ${o.batalReason||'Dibatalkan admin'}\n\nSilakan order kembali 🙏`); orders[idx].notifBatal=true; localStorage.setItem('wafa_orders',JSON.stringify(orders)); }
+        if(o.status=='batal' && !orders[idx].notifBatal){ addBotMsg(`❌ Pesanan #${o.id.toString().slice(-6)} DIBATALKAN admin.`); orders[idx].notifBatal=true; localStorage.setItem('wafa_orders',JSON.stringify(orders)); }
       }
     });
   }catch(e){}
 }
 
-// ===== SIMPAN ORDER =====
 function saveOrder(data){
   let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]');
   data.id=Date.now(); data.date=new Date().toLocaleString('id-ID'); data.status='verifikasi'; data.bukti=''; data.expiry=Date.now()+(10*60*1000);
@@ -559,7 +536,7 @@ function saveOrder(data){
   return data.id;
 }
 
-// ===== DISCORD =====
+// ===== DISCORD: Kirim bukti + SIMPAN MESSAGE ID =====
 function sendDiscordWithBukti(o, dataUrl, judul){
   const baseUrl = "https://wafastoreonly-official.vercel.app/";
   const selesaiUrl = `${baseUrl}admin.html?id=${o.id}&action=selesai`;
@@ -584,12 +561,14 @@ function sendDiscordWithBukti(o, dataUrl, judul){
   };
   if(extra) embedData.description = extra;
   
+  // Pesan 1: Embed
   fetch(window.DISCORD_URL+"?with_components=true", {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ content: `💸 **BUKTI TF MASUK! [VALID ✅]**`, embeds: [embedData] })
-  }).then(r=>r.text()).then(t=>console.log('Discord pesan 1:', t)).catch(e=>console.log('Err 1:', e));
+  }).catch(e=>console.log('Err 1:', e));
   
+  // Pesan 2: Gambar + Tombol → SIMPAN MESSAGE ID
   setTimeout(()=>{
     fetch(dataUrl).then(r=>r.blob()).then(blob=>{
       let form = new FormData();
@@ -605,14 +584,22 @@ function sendDiscordWithBukti(o, dataUrl, judul){
       }));
       form.append('files[0]', blob, `bukti-${o.id}.jpg`);
       fetch(window.DISCORD_URL+"?with_components=true", { method:'POST', body: form })
-        .then(r=>r.text())
-        .then(t=>console.log('Discord pesan 2:', t))
+        .then(r=>r.json())
+        .then(data=>{
+          console.log('Discord pesan 2 terkirim:', data);
+          // SIMPAN message_id ke Firebase
+          if(data && data.id && window.wafaDB){
+            window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+o.id), { 
+              discordMessageId: data.id,
+              discordChannelId: data.channel_id
+            }).catch(e=>console.log('Save msg id error:', e));
+          }
+        })
         .catch(e=>console.log('Err 2:', e));
     });
   }, 1000);
 }
 
-// ===== AUTO BATAL 10 MENIT =====
 function getSisaWaktu(expiry){let sisa=expiry-Date.now();if(sisa<=0)return"00:00";let m=Math.floor(sisa/60000);let s=Math.floor((sisa%60000)/1000);return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;}
 function checkExpired(){
   let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]');
@@ -620,7 +607,7 @@ function checkExpired(){
   orders.forEach(o=>{
     if(o.status=='verifikasi' && o.expiry && now>o.expiry && !o.bukti){
       o.status='batal'; o.batalReason='timeout'; changed=true;
-      setTimeout(()=>{ addBotMsg(`❌ Pesanan #${o.id.toString().slice(-6)} dibatalkan karena timeout 10 menit!\n\nSilakan order kembali 🙏`); },500);
+      setTimeout(()=>{ addBotMsg(`❌ Pesanan #${o.id.toString().slice(-6)} dibatalkan karena timeout 10 menit!`); },500);
       try{
         if(window.wafaDB){ window.wafaSet(window.wafaRef(window.wafaDB,'orders/'+o.id), o); }
       }catch(e){}
@@ -675,7 +662,7 @@ async function uploadBukti(id){
       try{
         if(window.wafaDB){ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), {status:'proses', bukti:r.result, expiry:null}); }
       }catch(e){ console.log('Update FB error:', e); }
-      addBotMsg(`✅ Bukti TF #${id.toString().slice(-6)} valid!\n\n⚡ Pesanan kamu LANGSUNG DIPROSES!\n\nAdmin sedang cek mutasi, tunggu ya 🥰`);
+      addBotMsg(`✅ Bukti TF #${id.toString().slice(-6)} valid!\n\n⚡ Pesanan kamu LANGSUNG DIPROSES!`);
       sendDiscordWithBukti(o, r.result, `💸 **BUKTI TF MASUK! [VALID ✅]**`);
     }; r.readAsDataURL(file);
   }; input.click();
@@ -726,7 +713,6 @@ function goToPayment(){
  loadSaldoUser();
  pilihBayar('saldo', document.getElementById('tabSaldo'));
  
- // Pre-generate QRIS dinamis
  if(lastOrderData && lastOrderData.total){
    setTimeout(()=>{ generateQRISForAmount(lastOrderData.total); }, 500);
  }
@@ -744,7 +730,6 @@ function pilihBayar(m, el){
   }
 }
 
-// ===== GENERATE QRIS DINAMIS =====
 async function generateQRISForAmount(amount){
   try{
     const nominalEl = document.getElementById('qrisNominalDisplay');
@@ -769,7 +754,6 @@ async function generateQRISForAmount(amount){
   }
 }
 
-// ===== DOWNLOAD QRIS DENGAN BACKGROUND KILLUA =====
 async function downloadQRISDinamis(){
   try{
     const qrCanvas = document.getElementById('qrisCanvas');
@@ -777,7 +761,6 @@ async function downloadQRISDinamis(){
     
     if(typeof wsToast === 'function') wsToast('⏳ Generate gambar...');
     
-    // Ukuran final: 800x1200 (portrait)
     const W = 800;
     const H = 1200;
     
@@ -786,7 +769,6 @@ async function downloadQRISDinamis(){
     finalCanvas.height = H;
     const ctx = finalCanvas.getContext('2d');
     
-    // 1. Load background Killua
     const bgImg = new Image();
     bgImg.crossOrigin = 'anonymous';
     bgImg.src = './killua-bg.webp';
@@ -796,7 +778,6 @@ async function downloadQRISDinamis(){
       bgImg.onerror = () => reject(new Error('Gagal load background'));
     });
     
-    // 2. Draw background (cover)
     const bgRatio = bgImg.width / bgImg.height;
     const canvasRatio = W / H;
     let bgW, bgH, bgX, bgY;
@@ -807,11 +788,9 @@ async function downloadQRISDinamis(){
     }
     ctx.drawImage(bgImg, bgX, bgY, bgW, bgH);
     
-    // 3. Overlay gelap
     ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
     ctx.fillRect(0, 0, W, H);
     
-    // 4. Tag "AWA_NEWSTREAM"
     const tagW = 340;
     const tagH = 60;
     const tagX = (W - tagW) / 2;
@@ -833,7 +812,6 @@ async function downloadQRISDinamis(){
     ctx.textBaseline = 'middle';
     ctx.fillText('AWA_NEWSTREAM', W / 2, tagY + tagH / 2 + 2);
     
-    // 5. Card putih buat QR
     const cardW = 480;
     const cardH = 620;
     const cardX = (W - cardW) / 2;
@@ -845,41 +823,34 @@ async function downloadQRISDinamis(){
     ctx.fillRect(cardX, cardY, cardW, cardH);
     ctx.shadowBlur = 0;
     
-    // 6. Text "TOTAL PEMBAYARAN"
     ctx.fillStyle = '#5a5a5a';
     ctx.font = '700 14px Inter, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('TOTAL PEMBAYARAN', W / 2, cardY + 40);
     
-    // 7. Nominal
     const nominalEl = document.getElementById('qrisNominalDisplay');
     const nominalText = nominalEl ? nominalEl.innerText : 'Rp0';
     ctx.fillStyle = '#0a0a0a';
     ctx.font = '900 38px Inter, sans-serif';
     ctx.fillText(nominalText, W / 2, cardY + 90);
     
-    // 8. QR code
     const qrSize = 380;
     const qrX = (W - qrSize) / 2;
     const qrY = cardY + 130;
     ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
     
-    // 9. Hint bawah QR
     ctx.fillStyle = '#5a5a5a';
     ctx.font = '600 13px Inter, sans-serif';
     ctx.fillText('📱 Scan pakai DANA / GoPay / m-Banking', W / 2, cardY + cardH - 30);
     
-    // 10. Watermark
     ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
     ctx.font = '800 18px Inter, sans-serif';
     ctx.fillText('⚡ WafaStoreOnly x Killua', W / 2, H - 60);
     
-    // 11. Footer
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.font = '500 11px Inter, sans-serif';
     ctx.fillText('QRIS Dinamis • Nominal Otomatis', W / 2, H - 30);
     
-    // 12. Download
     finalCanvas.toBlob(function(blob){
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -938,12 +909,8 @@ async function bayarDenganSaldo(){
     let orderIdShort = newId.toString().slice(-6);
     let totalFormatted = lastOrderData.total.toLocaleString('id-ID');
     let sisaSaldoFormatted = saldoBaru.toLocaleString('id-ID');
-    let metode = lastOrderData.method || 'username';
-    let extraInfo = '';
-    if(metode === 'gamepass' && lastOrderData.gamepassLink){ extraInfo = `\n🔗 Link Gamepass: ${lastOrderData.gamepassLink}`; }
-    else if(metode === 'gift' && lastOrderData.item){ extraInfo = `\n🎁 Item: ${lastOrderData.item}`; if(lastOrderData.privateServer) extraInfo += `\n🔗 Private Server: ${lastOrderData.privateServer}`; }
 
-    let ringkasan = `✅ PEMBAYARAN BERHASIL!\n\n━━━━━━━━━━━━━━━━━━━━\n⚡ Pesanan #${orderIdShort} SEDANG DIPROSES\n━━━━━━━━━━━━━━━━━━━━\n\n💳 Transaksi via: SALDO WEB\n💰 Saldo terpotong: Rp${totalFormatted}\n💵 Sisa saldo kamu: Rp${sisaSaldoFormatted}\n\n📦 DETAIL ORDER:\n• Metode: ${metode.toUpperCase()}\n• Username Roblox: ${lastOrderData.username}\n• Jumlah: ${lastOrderData.jumlah} Robux\n• Total: Rp${totalFormatted}${extraInfo}\n\n👤 Buyer: ${emailSensor} (${nickname})\n📅 ${new Date().toLocaleString('id-ID')}\n\n━━━━━━━━━━━━━━━━━━━━\n⚡ Admin sedang proses order kamu!\n📦 Cek status di menu "Pesanan"\n━━━━━━━━━━━━━━━━━━━━\n\nMakasih udah order di WafaStoreOnly ⚡`;
+    let ringkasan = `✅ PEMBAYARAN BERHASIL!\n\n⚡ Pesanan #${orderIdShort} DIPROSES\n\n💳 Transaksi via: SALDO WEB\n💰 Saldo terpotong: Rp${totalFormatted}\n💵 Sisa saldo: Rp${sisaSaldoFormatted}\n\n👤 Buyer: ${emailSensor} (${nickname})\n📅 ${new Date().toLocaleString('id-ID')}\n\nMakasih udah order di WafaStoreOnly ⚡`;
 
     showOrderSummary(ringkasan);
     if(typeof addBotMsg === 'function') addBotMsg(ringkasan);
@@ -951,7 +918,7 @@ async function bayarDenganSaldo(){
     if(window.DISCORD_URL){
       fetch(window.DISCORD_URL+"?with_components=true", {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ content: `💰 **ORDER VIA SALDO - LUNAS!**\n\nID: #${orderIdShort}\nBuyer: ${emailSensor} (${nickname})\nUsername Roblox: ${lastOrderData.username}\nJumlah: ${lastOrderData.jumlah} Robux\nTotal: Rp${totalFormatted}\nSaldo sisa: Rp${sisaSaldoFormatted}\nMetode: Saldo Web\n\n✅ Otomatis DIPROSES (udah lunas)` })
+        body: JSON.stringify({ content: `💰 **ORDER VIA SALDO - LUNAS!**\n\nID: #${orderIdShort}\nBuyer: ${emailSensor} (${nickname})\nUsername Roblox: ${lastOrderData.username}\nJumlah: ${lastOrderData.jumlah} Robux\nTotal: Rp${totalFormatted}\nSaldo sisa: Rp${sisaSaldoFormatted}` })
       });
     }
     openPesanan();
@@ -994,12 +961,11 @@ function showThankYouPopup(o){
         <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>Order ID</span><b style="color:#e8e8e8">#${orderId}</b></div>
         <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>Username</span><b style="color:#e8e8e8">${o.username || '-'}</b></div>
         <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>Jumlah</span><b style="color:#e8e8e8">${o.jumlah} Robux</b></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span>Total</span><b style="color:#4ade80">Rp${total}</b></div>
-        <div style="display:flex;justify-content:space-between"><span>Tanggal</span><b style="font-size:11px;color:#e8e8e8">${o.date || '-'}</b></div>
+        <div style="display:flex;justify-content:space-between"><span>Total</span><b style="color:#4ade80">Rp${total}</b></div>
       </div>
       <div style="background:#0a0a0a;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-bottom:16px;text-align:left">
         <div style="font-size:13px;font-weight:700;color:#e8e8e8;margin-bottom:6px">💚 Terima kasih!</div>
-        <div style="font-size:11px;color:#8a8a8a;line-height:1.7">Makasih udah percaya sama <b style="color:#e8e8e8">WafaStoreOnly</b>.<br>Semoga Robux-nya berguna & happy gaming!<br><br><b style="color:#4ade80">Jangan lupa order lagi ya!</b></div>
+        <div style="font-size:11px;color:#8a8a8a;line-height:1.7">Makasih udah percaya sama <b style="color:#e8e8e8">WafaStoreOnly</b>.<br>Semoga Robux-nya berguna!<br><br><b style="color:#4ade80">Jangan lupa order lagi ya!</b></div>
       </div>
       <div style="margin-bottom:18px">
         <div style="font-size:11px;color:#8a8a8a;margin-bottom:8px">Gimana pelayanan kami?</div>
@@ -1085,7 +1051,7 @@ function loadChat(){
     const list = Object.entries(data).map(([k,v])=>({...v, _id:k})).sort((a,b)=>a.time - b.time);
     const c = document.getElementById('layananChat');
     if(list.length === 0){
-      c.innerHTML = '<div class="msg bot">Halo! Saya admin WafaStoreOnly.<br><br>Ada yang bisa dibantu? Order? Top up? Tanya aja 🥰</div>';
+      c.innerHTML = '<div class="msg bot">Halo! Saya admin WafaStoreOnly.<br><br>Ada yang bisa dibantu? Tanya aja 🥰</div>';
     } else {
       c.innerHTML = '';
       list.forEach(m=>{
@@ -1133,7 +1099,6 @@ function loadSettingsFirebase(){
     return;
   }
 
-  // BRANDING
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/branding'), (snap)=>{
     const d = snap.val();
     if(!d) return;
@@ -1155,7 +1120,6 @@ function loadSettingsFirebase(){
     }
   });
 
-  // WELCOME BOX
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/welcome'), (snap)=>{
     const d = snap.val();
     const box = document.getElementById('welcomeBox');
@@ -1167,7 +1131,6 @@ function loadSettingsFirebase(){
     if(d.message) document.getElementById('welcomeMsg').innerHTML = d.message;
   });
 
-  // SYARAT
   const syaratCfg = [
     { key: 'username', boxId: 'syaratUsername', titleId: 'syaratTitleUsername', itemsId: 'syaratItemsUsername' },
     { key: 'gamepass', boxId: 'syaratGamepass', titleId: 'syaratTitleGamepass', itemsId: 'syaratItemsGamepass' },
@@ -1197,7 +1160,6 @@ function loadSettingsFirebase(){
   });
 }
 
-// ===== LOAD ORDER LOGS =====
 function getTimeAgo(ts){
   if(!ts) return '-';
   const diff = Date.now() - ts;
