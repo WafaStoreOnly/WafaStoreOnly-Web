@@ -1,9 +1,10 @@
 // ============================================
 // QRIS DINAMIS - Convert static QRIS ke dynamic
 // Merchant: AWA_NEWSTREAM
+// WafaStoreOnly x Killua Edition
 // ============================================
 
-// QRIS STATIC kamu
+// ===== QRIS STATIC KAMU =====
 const QRIS_STATIC = "00020101021126570011ID.DANA.WWW011893600915303356172402090335617240303UMI51440014ID.CO.QRIS.WWW0215ID10265588813750303UMI5204594553033605802ID5913AWA_NEWSTREAM6010Kab. Bogor610516320630452D8";
 
 // ===== CRC16-CCITT (buat validasi QRIS) =====
@@ -27,14 +28,11 @@ function convertQRISDinamis(amount) {
   let qris = QRIS_STATIC.slice(0, -4);
   
   // 1. Ganti Point of Initiation dari "11" (static) ke "12" (dynamic)
-  // Format: "010211" → "010212"
   if (qris.includes('010211')) {
     qris = qris.replace('010211', '010212');
   }
   
   // 2. Hapus Tag 54 lama kalau ada (biar ga duplikat)
-  // Tag 54 format: "54" + 2 digit length + amount
-  // Regex: cari "54XX" di mana XX = length, terus hapus sesuai length
   const tag54Regex = /54(\d{2})(\d+)/;
   const match54 = qris.match(tag54Regex);
   if (match54) {
@@ -43,7 +41,6 @@ function convertQRISDinamis(amount) {
   }
   
   // 3. Insert Tag 54 (nominal) SEBELUM Tag 58 (country)
-  // Urutan EMVCo: ...53 (currency) → 54 (amount) → 58 (country)...
   const idx58 = qris.indexOf('5802ID');
   if (idx58 === -1) throw new Error('Format QRIS invalid: tag 58 tidak ditemukan');
   
