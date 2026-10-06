@@ -6,6 +6,7 @@
 <title>WafaStoreOnly - Top Up Robux Cepat & Aman</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <link rel="stylesheet" href="./sidebar.css">
 <style>
 /* HERO */
@@ -81,10 +82,16 @@
 .log-item .right{text-align:right;flex-shrink:0}
 .log-item .right b{font-size:13px;color:#4ade80;font-weight:700;display:block}
 .log-item .right small{font-size:10px;color:#5a5a5a;display:block;margin-top:2px}
-/* QRIS */
-.qris-wrap{position:relative;cursor:pointer;background:#141414;border:1px solid #2a2a2a;border-radius:14px;overflow:hidden;text-align:center}
-.qris-wrap img{width:100%;display:block}
-.qris-badge{position:absolute;top:12px;right:12px;background:rgba(10,10,10,0.9);border:1px solid #3a3a3a;color:#e8e8e8;padding:6px 12px;border-radius:20px;font-size:10px;font-weight:700;backdrop-filter:blur(8px)}
+/* QRIS DINAMIS HERO */
+.qris-hero{position:relative;border-radius:16px;overflow:hidden;background-image:url('./killua-bg.webp');background-size:cover;background-position:center;padding:24px 20px;min-height:460px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 40px rgba(0,0,0,0.5)}
+.qris-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.35),rgba(0,0,0,0.65))}
+.qris-hero-content{position:relative;z-index:2;text-align:center;width:100%}
+.qris-merchant-tag{display:inline-block;background:#000;color:#fff;padding:8px 22px;border-radius:8px;font-weight:900;font-size:14px;letter-spacing:1.5px;border:2px solid #00c6ff;box-shadow:0 0 25px rgba(0,198,255,0.7);margin-bottom:18px;text-shadow:0 0 10px rgba(0,198,255,0.5)}
+.qris-qr-card{background:#fff;border-radius:14px;padding:16px 16px 12px;max-width:290px;margin:0 auto;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+.qris-nominal-label{font-size:10px;color:#5a5a5a;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px}
+.qris-nominal-value{font-size:22px;font-weight:900;color:#0a0a0a;margin-bottom:12px}
+.qris-scan-hint{font-size:10px;color:#5a5a5a;margin-top:10px;font-weight:600}
+#qrisCanvas{max-width:100%;display:block;margin:0 auto;border-radius:6px}
 @media (max-width:768px){
   .feature-grid{grid-template-columns:1fr 1fr}
   .hero-title{font-size:32px;letter-spacing:-1px}
@@ -379,12 +386,23 @@ Selamat datang di rumah baru kalian.</div>
   </div>
 
   <div id="pay-qris" style="margin-top:14px;display:none">
-    <div class="qris-wrap" onclick="downloadQRIS()">
-      <img id="qrisImage" src="./qris-killua-final.jpg" alt="QRIS">
-      <div class="qris-badge">📥 Klik buat download</div>
+    <div class="qris-hero">
+      <div class="qris-hero-overlay"></div>
+      <div class="qris-hero-content">
+        <div class="qris-merchant-tag">AWA_NEWSTREAM</div>
+        <div class="qris-qr-card">
+          <div class="qris-nominal-label">Total Pembayaran</div>
+          <div class="qris-nominal-value" id="qrisNominalDisplay">Rp0</div>
+          <canvas id="qrisCanvas" style="max-width:100%;display:block;margin:0 auto;border-radius:6px"></canvas>
+          <div class="qris-scan-hint">📱 Scan pakai DANA / GoPay / m-Banking</div>
+        </div>
+      </div>
     </div>
-    <div style="font-size:10px;color:#8a8a8a;margin-top:8px;text-align:center">QRIS: AWA_NEWSTREAM / WafaStoreOnly</div>
-    <button class="btn btn-primary" style="margin-top:12px" onclick="downloadQRIS()">📥 Download QRIS</button>
+    <div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:10px;padding:12px;margin-top:12px;font-size:11px;color:#4ade80;line-height:1.6">
+      ✅ <b>Nominal sudah otomatis terisi!</b><br>
+      Tinggal scan, nominal langsung keisi tanpa ketik manual.
+    </div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="downloadQRISDinamis()">📥 Download QRIS</button>
   </div>
 
   <button class="btn btn-yellow" style="margin-top:20px" onclick="buatPesananDanUpload()">📤 Buat Pesanan & Upload Bukti TF</button>
@@ -416,11 +434,12 @@ Selamat datang di rumah baru kalian.</div>
   </div>
 </div>
 
+<script src="./qris-dinamis.js"></script>
 <script src="./sidebar.js"></script>
 <script>
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
 
-// ===== SENSOR USERNAME ROBLOX (BUAT FEED PUBLIK) =====
+// ===== SENSOR USERNAME ROBLOX =====
 function sensorUsernameRbx(u){
   if(!u || u === '-') return '-';
   if(u.length <= 3) return u[0] + '***';
@@ -706,6 +725,12 @@ function goToPayment(){
  hideAll(); document.getElementById('paymentPage').style.display='block'; if(typeof wsSetTitle==='function') wsSetTitle('💳 Pembayaran');
  loadSaldoUser();
  pilihBayar('saldo', document.getElementById('tabSaldo'));
+ 
+ // Pre-generate QRIS dinamis
+ if(lastOrderData && lastOrderData.total){
+   setTimeout(()=>{ generateQRISForAmount(lastOrderData.total); }, 500);
+ }
+ 
  window.scrollTo(0,0);
 }
 function pilihBayar(m, el){
@@ -713,7 +738,167 @@ function pilihBayar(m, el){
   document.querySelectorAll('.method-tabs .tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   ['saldo','dana','gopay','seabank','qris'].forEach(x=>{ document.getElementById('pay-'+x).style.display = x==m?'block':'none'; });
+  
+  if(m === 'qris' && lastOrderData && lastOrderData.total){
+    generateQRISForAmount(lastOrderData.total);
+  }
 }
+
+// ===== GENERATE QRIS DINAMIS =====
+async function generateQRISForAmount(amount){
+  try{
+    const nominalEl = document.getElementById('qrisNominalDisplay');
+    if(nominalEl) nominalEl.innerText = 'Rp' + amount.toLocaleString('id-ID');
+    
+    if(typeof convertQRISDinamis !== 'function'){
+      console.error('convertQRISDinamis tidak ditemukan — cek qris-dinamis.js');
+      return;
+    }
+    if(typeof QRCode === 'undefined'){
+      console.error('QRCode library belum ke-load');
+      return;
+    }
+    
+    const qrisDynamic = convertQRISDinamis(amount);
+    console.log('QRIS Dinamis:', qrisDynamic);
+    
+    await renderQRIS(qrisDynamic, 'qrisCanvas');
+    console.log('✅ QRIS berhasil di-render');
+  }catch(e){
+    console.error('Generate QRIS error:', e);
+  }
+}
+
+// ===== DOWNLOAD QRIS DENGAN BACKGROUND KILLUA =====
+async function downloadQRISDinamis(){
+  try{
+    const qrCanvas = document.getElementById('qrisCanvas');
+    if(!qrCanvas){ alert('QR belum di-generate'); return; }
+    
+    if(typeof wsToast === 'function') wsToast('⏳ Generate gambar...');
+    
+    // Ukuran final: 800x1200 (portrait)
+    const W = 800;
+    const H = 1200;
+    
+    const finalCanvas = document.createElement('canvas');
+    finalCanvas.width = W;
+    finalCanvas.height = H;
+    const ctx = finalCanvas.getContext('2d');
+    
+    // 1. Load background Killua
+    const bgImg = new Image();
+    bgImg.crossOrigin = 'anonymous';
+    bgImg.src = './killua-bg.webp';
+    
+    await new Promise((resolve, reject) => {
+      bgImg.onload = resolve;
+      bgImg.onerror = () => reject(new Error('Gagal load background'));
+    });
+    
+    // 2. Draw background (cover)
+    const bgRatio = bgImg.width / bgImg.height;
+    const canvasRatio = W / H;
+    let bgW, bgH, bgX, bgY;
+    if(bgRatio > canvasRatio){
+      bgH = H; bgW = H * bgRatio; bgX = (W - bgW) / 2; bgY = 0;
+    } else {
+      bgW = W; bgH = W / bgRatio; bgX = 0; bgY = (H - bgH) / 2;
+    }
+    ctx.drawImage(bgImg, bgX, bgY, bgW, bgH);
+    
+    // 3. Overlay gelap
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+    ctx.fillRect(0, 0, W, H);
+    
+    // 4. Tag "AWA_NEWSTREAM"
+    const tagW = 340;
+    const tagH = 60;
+    const tagX = (W - tagW) / 2;
+    const tagY = 180;
+    
+    ctx.shadowColor = 'rgba(0, 198, 255, 0.8)';
+    ctx.shadowBlur = 30;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(tagX, tagY, tagW, tagH);
+    ctx.shadowBlur = 0;
+    
+    ctx.strokeStyle = '#00c6ff';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(tagX, tagY, tagW, tagH);
+    
+    ctx.fillStyle = '#fff';
+    ctx.font = '900 28px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('AWA_NEWSTREAM', W / 2, tagY + tagH / 2 + 2);
+    
+    // 5. Card putih buat QR
+    const cardW = 480;
+    const cardH = 620;
+    const cardX = (W - cardW) / 2;
+    const cardY = 290;
+    
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+    ctx.shadowBlur = 40;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(cardX, cardY, cardW, cardH);
+    ctx.shadowBlur = 0;
+    
+    // 6. Text "TOTAL PEMBAYARAN"
+    ctx.fillStyle = '#5a5a5a';
+    ctx.font = '700 14px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('TOTAL PEMBAYARAN', W / 2, cardY + 40);
+    
+    // 7. Nominal
+    const nominalEl = document.getElementById('qrisNominalDisplay');
+    const nominalText = nominalEl ? nominalEl.innerText : 'Rp0';
+    ctx.fillStyle = '#0a0a0a';
+    ctx.font = '900 38px Inter, sans-serif';
+    ctx.fillText(nominalText, W / 2, cardY + 90);
+    
+    // 8. QR code
+    const qrSize = 380;
+    const qrX = (W - qrSize) / 2;
+    const qrY = cardY + 130;
+    ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
+    
+    // 9. Hint bawah QR
+    ctx.fillStyle = '#5a5a5a';
+    ctx.font = '600 13px Inter, sans-serif';
+    ctx.fillText('📱 Scan pakai DANA / GoPay / m-Banking', W / 2, cardY + cardH - 30);
+    
+    // 10. Watermark
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.font = '800 18px Inter, sans-serif';
+    ctx.fillText('⚡ WafaStoreOnly x Killua', W / 2, H - 60);
+    
+    // 11. Footer
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.font = '500 11px Inter, sans-serif';
+    ctx.fillText('QRIS Dinamis • Nominal Otomatis', W / 2, H - 30);
+    
+    // 12. Download
+    finalCanvas.toBlob(function(blob){
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const nominalClean = nominalText.replace(/[^0-9]/g, '') || '0';
+      a.download = 'QRIS-WafaStoreOnly-' + nominalClean + '-' + Date.now() + '.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      if(typeof wsToast === 'function') wsToast('✅ QRIS berhasil di-download!');
+    }, 'image/png');
+    
+  }catch(e){
+    console.error('Download error:', e);
+    alert('❌ Gagal download: ' + e.message);
+  }
+}
+
 async function loadSaldoUser(){
   try{
     const uid=localStorage.getItem('wafa_uid');
@@ -734,6 +919,7 @@ async function loadSaldoUser(){
     }
   }catch(e){ console.log('loadSaldo error:', e); }
 }
+
 async function bayarDenganSaldo(){
   if(!lastOrderData) return;
   const uid=localStorage.getItem('wafa_uid');
@@ -866,27 +1052,6 @@ function bayarViaApp(app, nomor){
       }, 1500);
     }
   }, 500);
-}
-
-function downloadQRIS(){
-  fetch('./qris-killua-final.jpg')
-    .then(r => r.blob())
-    .then(blob => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'QRIS-WafaStoreOnly.jpg';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      if(typeof wsToast === 'function') wsToast('✅ QRIS berhasil di-download!');
-    })
-    .catch(err => {
-      console.log('Download gagal, fallback:', err);
-      window.open('./qris-killua-final.jpg', '_blank');
-      if(typeof wsToast === 'function') wsToast('📸 Tekan lama gambar buat simpan!');
-    });
 }
 
 function buatPesananDanUpload(){
@@ -1032,7 +1197,7 @@ function loadSettingsFirebase(){
   });
 }
 
-// ===== LOAD ORDER LOGS (FEED PUBLIK) =====
+// ===== LOAD ORDER LOGS =====
 function getTimeAgo(ts){
   if(!ts) return '-';
   const diff = Date.now() - ts;
