@@ -4,7 +4,7 @@
 // WafaStoreOnly x Killua Edition
 // ============================================
 
-// ===== QRIS STATIC KAMU =====
+// ===== QRIS STATIC KAMU (JANGAN DIUBAH) =====
 const QRIS_STATIC = "00020101021126570011ID.DANA.WWW011893600915303356172402090335617240303UMI51440014ID.CO.QRIS.WWW0215ID10265588813750303UMI5204594553033605802ID5913AWA_NEWSTREAM6010Kab. Bogor610516320630452D8";
 
 // ===== CRC16-CCITT (buat validasi QRIS) =====
@@ -24,8 +24,10 @@ function crc16(str) {
 function convertQRISDinamis(amount) {
   if (!amount || amount <= 0) throw new Error('Nominal harus > 0');
   
-  // Hapus CRC lama (4 karakter terakhir)
-  let qris = QRIS_STATIC.slice(0, -4);
+  // Hapus tag CRC (6304) + 4 digit CRC di belakang
+  // Cari index "6304" terakhir, potong dari situ
+  const idxCRC = QRIS_STATIC.lastIndexOf('6304');
+  let qris = idxCRC > -1 ? QRIS_STATIC.slice(0, idxCRC) : QRIS_STATIC;
   
   // 1. Ganti Point of Initiation dari "11" (static) ke "12" (dynamic)
   if (qris.includes('010211')) {
@@ -63,7 +65,7 @@ function convertQRISDinamis(amount) {
 // ===== Generate QR Code ke Canvas =====
 async function renderQRIS(qrisString, canvasId) {
   const canvas = document.getElementById(canvasId);
-  if (!canvas) throw new Error('Canvas tidak ditemukan');
+  if (!canvas) throw new Error('Canvas tidak ditemukan: ' + canvasId);
   
   // Pakai library qrcode.js
   if (typeof QRCode === 'undefined') {
@@ -80,17 +82,24 @@ async function renderQRIS(qrisString, canvasId) {
     errorCorrectionLevel: 'M'
   });
   
+  console.log('✅ QRIS berhasil di-render ke #' + canvasId);
   return canvas;
 }
 
 // ===== Test Function (buat debug di console) =====
 window.testQRIS = function(amount) {
-  const qrisDynamic = convertQRISDinamis(amount);
-  console.log('===== QRIS DINAMIS =====');
-  console.log('Nominal: Rp' + amount.toLocaleString('id-ID'));
-  console.log('QRIS String:', qrisDynamic);
-  console.log('Panjang:', qrisDynamic.length, 'karakter');
-  return qrisDynamic;
+  try {
+    const qrisDynamic = convertQRISDinamis(amount);
+    console.log('===== QRIS DINAMIS =====');
+    console.log('Nominal: Rp' + amount.toLocaleString('id-ID'));
+    console.log('QRIS String:', qrisDynamic);
+    console.log('Panjang:', qrisDynamic.length, 'karakter');
+    console.log('Cek duplikat 6304:', qrisDynamic.indexOf('6304') !== qrisDynamic.lastIndexOf('6304') ? '❌ ADA DUPLIKAT!' : '✅ OK');
+    return qrisDynamic;
+  } catch(e) {
+    console.error('❌ Error:', e.message);
+    return null;
+  }
 };
 
 console.log('✅ qris-dinamis.js loaded. Test: testQRIS(16000)');
