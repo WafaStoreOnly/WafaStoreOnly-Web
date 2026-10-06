@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Preview - WafaStoreOnly</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
+:root{--primary:#4a90e2;--accent:#6b5ce7;--bg:#0a0a0a;--bg2:#141414;--card:#1a1a1a;--border:#2a2a2a;--text:#e8e8e8;--text2:#a8a8a8;--muted:#8a8a8a;--muted2:#5a5a5a;--success:#4ade80;--warn:#fbbf24;--danger:#ef4444}
+body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px}
+.container{max-width:900px;margin:0 auto;padding:20px}
+
+/* HEADER */
+.preview-header{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--card);object-fit:cover}
+.brand-text b{font-size:16px;font-weight:800;color:var(--text);display:block}
+.brand-text small{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.btn-login{padding:10px 20px;border-radius:10px;background:var(--primary);color:#fff;text-decoration:none;font-weight:700;font-size:13px;transition:0.15s}
+.btn-login:hover{opacity:0.9}
+
+/* BADGE */
+.preview-badge{background:linear-gradient(135deg,rgba(74,144,226,0.15),rgba(107,92,231,0.15));border:1px solid rgba(74,144,226,0.4);border-radius:12px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.preview-badge-icon{font-size:24px}
+.preview-badge-info b{color:var(--text);font-size:13px;display:block;margin-bottom:3px}
+.preview-badge-info small{color:var(--text2);font-size:11px;line-height:1.5}
+
+/* HERO */
+.hero{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:16px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(74,144,226,0.15),transparent 70%);border-radius:50%}
+.hero-badge{display:inline-block;background:var(--bg2);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:10px;font-weight:700;color:var(--text2);letter-spacing:1px;margin-bottom:14px;text-transform:uppercase}
+.hero-badge::before{content:'●';color:var(--success);margin-right:6px;font-size:8px}
+.hero h1{font-size:32px;font-weight:900;line-height:1.1;letter-spacing:-1px;color:#fff;margin-bottom:12px}
+.hero p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px;max-width:500px;position:relative;z-index:1}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;position:relative;z-index:1}
+.hero-btn{padding:12px 22px;border-radius:10px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:0.15s;text-decoration:none;display:inline-block}
+.hero-btn-primary{background:#fff;color:#000}
+.hero-btn-secondary{background:transparent;color:#fff;border:1px solid var(--border)}
+.hero-btn-secondary:hover{background:var(--card)}
+
+/* FEATURES */
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.feature{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.feature-label{font-size:9px;color:var(--muted2);letter-spacing:1.5px;font-weight:800;text-transform:uppercase;margin-bottom:8px}
+.feature-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.feature-desc{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* SECTION */
+.section-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+.card h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px}
+.step{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+.step.green{border-left-color:var(--success)}
+.step-num{width:26px;height:26px;background:var(--bg);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:var(--text);flex-shrink:0}
+.step.green .step-num{border-color:var(--success);color:var(--success)}
+.step-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+.step-desc{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* INFO GRID */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.info-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px}
+.info-label{font-size:10px;color:var(--muted2);text-transform:uppercase;font-weight:700;letter-spacing:1px;margin-bottom:6px}
+.info-value{font-size:13px;color:var(--text);font-weight:600;word-break:break-all}
+.info-value.mono{font-family:monospace;font-size:12px}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.contact-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;text-decoration:none;display:block;transition:0.15s}
+.contact-item:hover{border-color:var(--primary);background:var(--card)}
+.contact-icon{font-size:24px;margin-bottom:6px}
+.contact-label{font-size:11px;color:var(--text2);font-weight:700}
+.contact-value{font-size:11px;color:var(--text);margin-top:4px;font-weight:600}
+
+/* FOOTER */
+.footer{text-align:center;padding:30px 0 10px;border-top:1px solid var(--border);margin-top:30px;font-size:11px;color:var(--muted2);line-height:1.7}
+
+/* RESPONSIVE */
+@media (max-width:768px){
+  .features{grid-template-columns:1fr 1fr}
+  .hero h1{font-size:24px}
+  .hero{padding:22px 20px}
+  .info-grid{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="preview-header">
+    <div class="brand">
+      <img src="./logo.png" alt="logo" onerror="this.style.display='none'">
+      <div class="brand-text">
+        <b>WafaStoreOnly</b>
+        <small>Top Up Robux Cepat & Aman</small>
+      </div>
+    </div>
+    <a href="login.html" class="btn-login">Login →</a>
+  </div>
+
+  <!-- BADGE INFO -->
+  <div class="preview-badge">
+    <div class="preview-badge-icon">🔍</div>
+    <div class="preview-badge-info">
+      <b>Halaman Preview</b>
+      <small>Lihat layanan WafaStoreOnly tanpa perlu login. Klik Login kalau mau order.</small>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">Manual Order Mode • Owner Controlled</div>
+    <h1>Top Up Robux<br>Cepat & Aman</h1>
+    <p>Pesan Robux dengan proses mudah dan status order real-time. Pembayaran via QRIS, DANA, GoPay, atau Seabank.</p>
+    <div class="hero-btns">
+      <a href="login.html" class="hero-btn hero-btn-primary">Login untuk Order →</a>
+      <a href="index.html" class="hero-btn hero-btn-secondary">Masuk ke Website</a>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature">
+      <div class="feature-label">Mode</div>
+      <div class="feature-title">Manual Control</div>
+      <div class="feature-desc">Order diproses Owner</div>
+    </div>
+    <div class="feature">
+      <div class="feature-label">Checkout</div>
+      <div class="feature-title">Fast & Simple</div>
+      <div class="feature-desc">Form dalam hitungan detik</div>
+    </div>
+    <div class="feature">
+      <div class="feature-label">Tracking</div>
+      <div class="feature-title">Real-time Status</div>
+      <div class="feature-desc">Pantau dengan Order ID</div>
+    </div>
+    <div class="feature">
+      <div class="feature-label">Support</div>
+      <div class="feature-title">Official CS</div>
+      <div class="feature-desc">Chat real-time admin</div>
+    </div>
+  </div>
+
+  <!-- CARA ORDER -->
+  <div class="section-title">📢 Cara Order</div>
+  <div class="card">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Pilih Game</div>
+        <div class="step-desc">Klik menu Top Up Game, pilih game yang mau di top up.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Pilih Nominal Robux</div>
+        <div class="step-desc">Masukkan username Roblox & pilih paket. Mulai 100 - 10.000 Robux.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Pilih Payment & Bayar</div>
+        <div class="step-desc">Metode: QRIS / DANA / GoPay / Seabank. Bayar sesuai total.</div>
+      </div>
+    </div>
+    <div class="step green">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Upload Bukti & Tunggu</div>
+        <div class="step-desc">Upload bukti TF. Robux masuk 5-30 menit otomatis.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FITUR -->
+  <div class="section-title">⚡ Fitur Web</div>
+  <div class="info-grid">
+    <div class="info-item">
+      <div class="info-label">Top Up Game</div>
+      <div class="info-value">Roblox (aktif)</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Metode Bayar</div>
+      <div class="info-value">QRIS Dinamis, DANA, GoPay, Seabank</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fitur Tambahan</div>
+      <div class="info-value">Dompet, Chat CS, Order Tracking</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Auto Batal</div>
+      <div class="info-value">10 menit (jika belum bayar)</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Verifikasi Bukti</div>
+      <div class="info-value">Auto detect OCR + Anti Fake</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Admin Panel</div>
+      <div class="info-value">Dashboard + Approve + Chat</div>
+    </div>
+  </div>
+
+  <!-- KONTAK -->
+  <div class="section-title">📞 Kontak</div>
+  <div class="contact-grid">
+    <a href="https://wa.me/6283862776790" target="_blank" class="contact-item">
+      <div class="contact-icon">💬</div>
+      <div class="contact-label">WhatsApp</div>
+      <div class="contact-value">0838-6277-6790</div>
+    </a>
+    <div class="contact-item">
+      <div class="contact-icon">📧</div>
+      <div class="contact-label">Email</div>
+      <div class="contact-value">muhammadiram67@gmail.com</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <b style="color:var(--text2)">WafaStoreOnly</b> - Top Up Robux Cepat & Aman<br>
+    Halaman preview ini bisa diakses tanpa login.<br>
+    Untuk order, silakan <a href="login.html" style="color:var(--primary);text-decoration:none">login di sini</a>.
+  </div>
+
+</div>
+</body>
+</html>
