@@ -7,22 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
-:root{
-  --bg:#0a0a0a;
-  --bg2:#141414;
-  --card:#1a1a1a;
-  --card-hover:#222;
-  --border:#2a2a2a;
-  --border-light:#3a3a3a;
-  --text:#e8e8e8;
-  --text2:#a8a8a8;
-  --muted:#8a8a8a;
-  --muted2:#5a5a5a;
-  --primary:#4a90e2;
-  --success:#4ade80;
-  --warn:#fbbf24;
-  --danger:#ef4444;
-}
+:root{--bg:#0a0a0a;--bg2:#141414;--card:#1a1a1a;--card-hover:#222;--border:#2a2a2a;--border-light:#3a3a3a;--text:#e8e8e8;--text2:#a8a8a8;--muted:#8a8a8a;--muted2:#5a5a5a;--primary:#4a90e2;--success:#4ade80;--warn:#fbbf24;--danger:#ef4444}
 body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow-x:hidden}
 #adminSidebar{width:250px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto;transition:transform 0.3s}
 #adminSidebar::-webkit-scrollbar{width:4px}
@@ -164,7 +149,8 @@ const db = getDatabase(app);
 const auth = getAuth(app);
 window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onValue; window.wafaGet=get; window.wafaUpdate=update; window.wafaRemove=remove;
 window.wafaAuth=auth; window.wafaSignOut=signOut;
-window.WEBHOOK_ORDER_DONE = "https://discord.com/api/webhooks/1553277385795829770/1qR8RlkR5Lo5u2R1kyR1U2qWeM_5a-1M3WEMR34R2vPfN-I2vPfR7YvR7YvR7YvR7";
+window.WEBHOOK_ORDER_PROSES = "https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
+window.WEBHOOK_ORDER_DONE = "https://discord.com/api/webhooks/1553277385795829770/CZA2wz3K99vCfKa5m0xBATsS4KKL-uJfAhKEN5X0pOwhUvGnWB-q6EV3bCzOzITQ3t5X";
 window.WEBHOOK_DOMPET_DONE = "https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB";
 window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 </script>
@@ -338,7 +324,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div class="card-title">Pengaturan Welcome</div>
         <div class="input-group">
           <label>Status</label>
-          <select id="welcomeActive"><option value="true">Aktif (muncul di beranda)</option><option value="false">Nonaktif</option></select>
+          <select id="welcomeActive"><option value="true">Aktif</option><option value="false">Nonaktif</option></select>
         </div>
         <div class="input-group"><label>Judul</label><input id="welcomeTitle" placeholder="WELCOME TO WAFASTOREONLY"></div>
         <div class="input-group">
@@ -348,8 +334,8 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         </div>
         <div class="input-group">
           <label>Pesan Sambutan</label>
-          <textarea id="welcomeMessage" placeholder="Halo Survivors!&#10;Selamat datang di rumah baru kalian"></textarea>
-          <small>Bisa pakai &lt;br&gt; buat enter & &lt;b&gt; buat bold</small>
+          <textarea id="welcomeMessage" placeholder="Halo Survivors!"></textarea>
+          <small>Bisa pakai &lt;br&gt; buat enter</small>
         </div>
         <button class="btn btn-success" onclick="saveWelcome()">💾 Simpan Welcome Box</button>
       </div>
@@ -372,21 +358,21 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div class="card-title">Via Username</div>
         <div class="input-group"><label>Status</label><select id="syaratActiveUsername"><option value="true">Tampil</option><option value="false">Sembunyikan</option></select></div>
         <div class="input-group"><label>Judul</label><input id="syaratTitleUsername" placeholder="SYARAT ROBUX VIA USERNAME"></div>
-        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsUsername" style="min-height:130px" placeholder="Proses kilat 5-10 menit&#10;Pastikan username benar"></textarea></div>
+        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsUsername" style="min-height:130px" placeholder="Proses kilat 5-10 menit"></textarea></div>
         <button class="btn btn-success" onclick="saveSyarat('username')">💾 Simpan Username</button>
       </div>
       <div class="card">
         <div class="card-title">Via Gamepass</div>
         <div class="input-group"><label>Status</label><select id="syaratActiveGamepass"><option value="true">Tampil</option><option value="false">Sembunyikan</option></select></div>
         <div class="input-group"><label>Judul</label><input id="syaratTitleGamepass" placeholder="SYARAT ROBUX VIA GAMEPASS"></div>
-        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsGamepass" style="min-height:130px" placeholder="Proses ± 5-7 hari&#10;Username harus benar"></textarea></div>
+        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsGamepass" style="min-height:130px" placeholder="Proses ± 5-7 hari"></textarea></div>
         <button class="btn btn-success" onclick="saveSyarat('gamepass')">💾 Simpan Gamepass</button>
       </div>
       <div class="card">
         <div class="card-title">Via Gift In Game</div>
         <div class="input-group"><label>Status</label><select id="syaratActiveGift"><option value="true">Tampil</option><option value="false">Sembunyikan</option></select></div>
         <div class="input-group"><label>Judul</label><input id="syaratTitleGift" placeholder="SYARAT ROBUX VIA GIFT IN GAME"></div>
-        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsGift" style="min-height:130px" placeholder="Stand by di server map&#10;Username benar"></textarea></div>
+        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsGift" style="min-height:130px" placeholder="Stand by di server map"></textarea></div>
         <button class="btn btn-success" onclick="saveSyarat('gift')">💾 Simpan Gift</button>
       </div>
     </div>
@@ -397,7 +383,9 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       <div class="card">
         <div class="card-title">Status Announcement</div>
         <div class="input-group"><label>Status</label><select id="inputAnnActive"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div>
-        <div style="font-size:12px;color:#8a8a8a;line-height:1.7;background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:14px">ℹ️ Announcement di beranda udah <b style="color:#e8e8e8">hardcoded</b> step-by-step.</div>
+        <div style="font-size:12px;color:#8a8a8a;line-height:1.7;background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:14px">
+          ℹ️ Announcement di beranda udah <b style="color:#e8e8e8">hardcoded</b> step-by-step.
+        </div>
         <button class="btn btn-success" onclick="saveAnnouncement()">💾 Simpan Status</button>
       </div>
     </div>
@@ -431,7 +419,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div style="font-size:13px;color:#a8a8a8;line-height:1.9">
           <b style="color:#e8e8e8">Web URL:</b> <a href="https://wafastoreonly-official.vercel.app" style="color:#4a90e2" target="_blank">wafastoreonly-official.vercel.app</a><br>
           <b style="color:#e8e8e8">Firebase:</b> wafastoreonly<br>
-          <b style="color:#e8e8e8">Version:</b> Admin Panel v3.2
+          <b style="color:#e8e8e8">Version:</b> Admin Panel v3.3
         </div>
       </div>
     </div>
@@ -444,6 +432,21 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 <script>
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
 function sensorUid(u){if(!u)return'****';return u.slice(0,6)+'...'+u.slice(-4)}
+
+// ===== SENSOR PRIVATE SERVER URL =====
+function sensorPrivateServer(url){
+  if(!url || url === '-') return '-';
+  try{
+    const match = url.match(/roblox\.com\/games\/(\d+)/i);
+    if(match){
+      const gameId = match[1];
+      const sensored = gameId.slice(0, 3) + '***' + gameId.slice(-2);
+      return `roblox.com/games/${sensored}/...`;
+    }
+    if(url.length <= 20) return url.slice(0, 5) + '***';
+    return url.slice(0, 20) + '***' + url.slice(-5);
+  }catch(e){ return '***'; }
+}
 
 // ===== SIDEBAR TOGGLE =====
 function toggleSidebar(){
@@ -619,6 +622,7 @@ function loadOrders(){
       let extra = '';
       if(o.method == 'gamepass' && o.gamepassLink) extra += `<br>🔗 Gamepass: <b style="word-break:break-all;font-size:11px">${o.gamepassLink}</b>`;
       if(o.method == 'gift' && o.item) extra += `<br>🎁 Item: <b>${o.item}</b>`;
+      if(o.method == 'gift' && o.privateServer) extra += `<br>🔒 Private Server: <b style="word-break:break-all;font-size:11px">${o.privateServer}</b>`;
       if(o.metodeBayar == 'saldo') extra += `<br>💳 <b style="color:#4ade80">Via Saldo Web</b>`;
 
       let buktiBtn = o.bukti ? `<button class="btn btn-primary btn-sm" onclick="lihatBukti('${o.id}')">🖼️ Bukti</button>` : '';
@@ -658,37 +662,149 @@ window.lihatBukti = async (id)=>{
   w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${o.bukti}"></body></html>`);
 };
 
-// ✅ PROSES SELESAI DENGAN LOGS
+// ===== HAPUS PESAN DISCORD =====
+async function deleteDiscordMessage(messageId){
+  if(!messageId || !window.WEBHOOK_ORDER_PROSES) return false;
+  try{
+    const match = window.WEBHOOK_ORDER_PROSES.match(/webhooks\/(\d+)\/([^\/]+)/);
+    if(!match) return false;
+    const webhookId = match[1];
+    const webhookToken = match[2];
+    const url = `https://discord.com/api/webhooks/${webhookId}/${webhookToken}/messages/${messageId}`;
+    const res = await fetch(url, { method: 'DELETE' });
+    if(res.ok){ console.log('✅ Pesan Discord dihapus:', messageId); return true; }
+    console.log('⚠️ Gagal hapus pesan:', res.status);
+    return false;
+  }catch(e){ console.log('Delete Discord error:', e); return false; }
+}
+
+// ===== PROSES SELESAI =====
 window.prosesSelesai = async (id)=>{
   try{
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), { status:'selesai', selesaiAt:Date.now() });
     const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'orders/'+id));
     const o = snap.val();
 
-    // Simpan ke logs (buat feed publik di web user)
+    // Simpan ke logs
     const logData = {
       id: id,
       nickname: o.nickname || 'User',
       username: o.username || '-',
       jumlah: o.jumlah || 0,
       date: o.date || '-',
-      selesaiAt: Date.now()
+      selesaiAt: Date.now(),
+      status: 'selesai'
     };
     await window.wafaSet(window.wafaRef(window.wafaDB, 'logs/'+id), logData);
 
     // Auto-hapus log > 7 hari
     cleanupOldLogs();
 
-    // Discord notif
+    // HAPUS pesan lama di channel proses-top-up
+    if(o.discordMessageId){
+      await deleteDiscordMessage(o.discordMessageId);
+    }
+
+    // Build detail pesanan sesuai method
+    let detailPesanan = '';
+    const method = (o.method || 'username').toLowerCase();
+    const methodLabel = method === 'username' ? '🎮 Via Username' 
+                      : method === 'gamepass' ? '🎫 Via Gamepass' 
+                      : method === 'gift' ? '🎁 Gift In Game' 
+                      : method;
+    
+    detailPesanan += `\n**📋 DETAIL PESANAN:**\n`;
+    detailPesanan += `• Metode: **${methodLabel}**\n`;
+    detailPesanan += `• Username Roblox: **${o.username || '-'}**\n`;
+    detailPesanan += `• Jumlah Robux: **${o.jumlah || 0} Robux**\n`;
+    
+    if(method === 'gamepass' && o.gamepassLink){
+      detailPesanan += `• Link Gamepass: ${o.gamepassLink}\n`;
+      if(o.setting) detailPesanan += `• Setting Gamepass: **${o.setting} Robux**\n`;
+    }
+    if(method === 'gift'){
+      if(o.item) detailPesanan += `• Item: **${o.item}**\n`;
+      if(o.privateServer) detailPesanan += `• Private Server: \`${sensorPrivateServer(o.privateServer)}\` 🔒\n`;
+    }
+    
+    if(o.metodeBayar === 'saldo'){
+      detailPesanan += `• Pembayaran: **💰 Saldo Web**\n`;
+    }
+    
+    detailPesanan += `• Total Bayar: **Rp${(o.total||0).toLocaleString('id-ID')}**\n`;
+
+    // KIRIM log selesai ke channel LOGS
     if(window.WEBHOOK_ORDER_DONE){
       fetch(window.WEBHOOK_ORDER_DONE, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          content: `✅ **ORDER SELESAI**\n\n📦 Order #${id.toString().slice(-6)}\n👤 Buyer: **${o.nickname || 'User'}**\n📊 Jumlah: **${o.jumlah} Robux**\n💰 Total: Rp${(o.total||0).toLocaleString('id-ID')}\n🕐 Selesai: ${new Date().toLocaleString('id-ID')}\n📧 Email: ${sensorEmail(o.email||'-')}`
+          content: `✅ **TRANSAKSI SELESAI - DONE**\n\n` +
+                   `━━━━━━━━━━━━━━━━━━━━\n` +
+                   `📦 **Order #${id.toString().slice(-6)}**\n` +
+                   `━━━━━━━━━━━━━━━━━━━━\n` +
+                   `👤 Buyer: **${o.nickname || 'User'}**\n` +
+                   `📧 Email: ${sensorEmail(o.email||'-')}\n` +
+                   `🆔 UID: \`${o.uid || '-'}\`\n` +
+                   `📅 Order Dibuat: ${o.date || '-'}\n` +
+                   detailPesanan +
+                   `\n━━━━━━━━━━━━━━━━━━━━\n` +
+                   `🕐 **Selesai: ${new Date().toLocaleString('id-ID')}**\n` +
+                   `✅ Status: **COMPLETED**\n` +
+                   `━━━━━━━━━━━━━━━━━━━━\n\n` +
+                   `🔒 Pesan orderan sudah dihapus dari channel proses.`
         })
       }).catch(()=>{});
     }
     toast('✅ Order diselesaikan!');
+  }catch(e){ alert('Gagal: '+e.message); }
+};
+
+// ===== PROSES BATAL =====
+window.prosesBatal = async (id, alasan)=>{
+  try{
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), { status:'batal', batalReason:alasan, batalAt:Date.now() });
+    const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'orders/'+id));
+    const o = snap.val();
+
+    // HAPUS pesan lama di channel proses-top-up
+    if(o.discordMessageId){
+      await deleteDiscordMessage(o.discordMessageId);
+    }
+
+    // Build detail pesanan
+    let detailPesanan = '';
+    const method = (o.method || 'username').toLowerCase();
+    const methodLabel = method === 'username' ? '🎮 Via Username' 
+                      : method === 'gamepass' ? '🎫 Via Gamepass' 
+                      : method === 'gift' ? '🎁 Gift In Game' 
+                      : method;
+    
+    detailPesanan += `\n**📋 DETAIL PESANAN:**\n`;
+    detailPesanan += `• Metode: **${methodLabel}**\n`;
+    detailPesanan += `• Username Roblox: **${o.username || '-'}**\n`;
+    detailPesanan += `• Jumlah Robux: **${o.jumlah || 0} Robux**\n`;
+    detailPesanan += `• Total: **Rp${(o.total||0).toLocaleString('id-ID')}**\n`;
+
+    // KIRIM log batal ke channel LOGS
+    if(window.WEBHOOK_ORDER_DONE){
+      fetch(window.WEBHOOK_ORDER_DONE, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          content: `❌ **TRANSAKSI DIBATALKAN**\n\n` +
+                   `━━━━━━━━━━━━━━━━━━━━\n` +
+                   `📦 **Order #${id.toString().slice(-6)}**\n` +
+                   `━━━━━━━━━━━━━━━━━━━━\n` +
+                   `👤 Buyer: **${o.nickname || 'User'}**\n` +
+                   `📧 Email: ${sensorEmail(o.email||'-')}\n` +
+                   detailPesanan +
+                   `\n❌ **Alasan: ${alasan}**\n` +
+                   `🕐 Dibatalkan: ${new Date().toLocaleString('id-ID')}\n` +
+                   `━━━━━━━━━━━━━━━━━━━━\n\n` +
+                   `🔒 Pesan orderan sudah dihapus dari channel proses.`
+        })
+      }).catch(()=>{});
+    }
+    toast('❌ Order dibatalkan');
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
@@ -706,13 +822,6 @@ async function cleanupOldLogs(){
     });
   }catch(e){ console.log('Cleanup error:', e); }
 }
-
-window.prosesBatal = async (id, alasan)=>{
-  try{
-    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), { status:'batal', batalReason:alasan, batalAt:Date.now() });
-    toast('❌ Order dibatalkan');
-  }catch(e){ alert('Gagal: '+e.message); }
-};
 
 window.hapusOrder = async (id)=>{
   if(!confirm('Hapus order #'+id.toString().slice(-6)+'?')) return;
@@ -795,7 +904,7 @@ window.hapusTopup = async (id)=>{
   try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'topup_saldo/'+id)); toast('🗑️ Dihapus'); }catch(e){ alert('Gagal: '+e.message); }
 };
 </script>
-  
+
 <script>
 // ===== CHAT =====
 let currentChatUid = null;
@@ -814,6 +923,7 @@ function loadChats(){
       const unread = msgs.filter(m=>m.from === 'user' && !m.read).length;
       return { uid, last, unread, count: msgs.length };
     }).sort((a,b)=>(b.last.time||0)-(a.last.time||0));
+
     sorted.forEach(item=>{
       const card = document.createElement('div');
       card.className = 'chat-list-item';
@@ -837,9 +947,11 @@ window.openChat = async (uid)=>{
   currentChatUid = uid;
   document.getElementById('listChat').style.display = 'none';
   document.getElementById('chatBox').style.display = 'flex';
+
   const userSnap = await window.wafaGet(window.wafaRef(window.wafaDB, 'users/'+uid));
   const u = userSnap.val() || {};
   document.getElementById('chatBoxName').innerText = `${u.nickname || 'User'} (${sensorEmail(u.email||'-')})`;
+
   if(chatUnsubscribe) chatUnsubscribe();
   chatUnsubscribe = window.wafaOnValue(window.wafaRef(window.wafaDB, 'chats/'+uid), (snap)=>{
     const data = snap.val() || {};
@@ -880,7 +992,10 @@ window.sendReply = async ()=>{
   const msgId = Date.now() + '_' + Math.random().toString(36).slice(2,7);
   try{
     await window.wafaSet(window.wafaRef(window.wafaDB, 'chats/'+currentChatUid+'/'+msgId), {
-      from: 'admin', text: t, time: Date.now(), read: true
+      from: 'admin',
+      text: t,
+      time: Date.now(),
+      read: true
     });
     inp.value = '';
   }catch(e){ alert('Gagal kirim: '+e.message); }
@@ -1096,6 +1211,7 @@ function loadWelcome(){
     if(d.tagline){ document.getElementById('welcomeTagline').value = d.tagline; updateWelcomePreview(); }
     if(d.message){ document.getElementById('welcomeMessage').value = d.message; updateWelcomePreview(); }
   });
+
   ['welcomeTitle','welcomeTagline','welcomeMessage'].forEach(id=>{
     document.getElementById(id)?.addEventListener('input', updateWelcomePreview);
   });
