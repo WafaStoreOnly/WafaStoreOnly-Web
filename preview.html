@@ -3,85 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Preview - WafaStoreOnly</title>
+<title>WafaStoreOnly - Top Up Robux Cepat & Aman</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
 :root{--primary:#4a90e2;--accent:#6b5ce7;--bg:#0a0a0a;--bg2:#141414;--card:#1a1a1a;--border:#2a2a2a;--text:#e8e8e8;--text2:#a8a8a8;--muted:#8a8a8a;--muted2:#5a5a5a;--success:#4ade80;--warn:#fbbf24;--danger:#ef4444}
 body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px}
 .container{max-width:900px;margin:0 auto;padding:20px}
-
 /* HEADER */
-.preview-header{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
 .brand{display:flex;align-items:center;gap:12px}
 .brand img{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--card);object-fit:cover}
-.brand-text b{font-size:16px;font-weight:800;color:var(--text);display:block}
+.brand-text b{font-size:16px;font-weight:800;color:var(--text);display:block;letter-spacing:-0.3px}
 .brand-text small{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;font-weight:700}
-.btn-login{padding:10px 20px;border-radius:10px;background:var(--primary);color:#fff;text-decoration:none;font-weight:700;font-size:13px;transition:0.15s}
-.btn-login:hover{opacity:0.9}
-
+.header-btns{display:flex;gap:8px}
+.btn-header{padding:9px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:12px;transition:0.15s;font-family:inherit;border:none;cursor:pointer}
+.btn-header-primary{background:var(--primary);color:#fff}
+.btn-header-primary:hover{opacity:0.9}
+.btn-header-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.btn-header-secondary:hover{border-color:var(--primary);color:var(--primary)}
 /* BADGE */
-.preview-badge{background:linear-gradient(135deg,rgba(74,144,226,0.15),rgba(107,92,231,0.15));border:1px solid rgba(74,144,226,0.4);border-radius:12px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px}
-.preview-badge-icon{font-size:24px}
-.preview-badge-info b{color:var(--text);font-size:13px;display:block;margin-bottom:3px}
-.preview-badge-info small{color:var(--text2);font-size:11px;line-height:1.5}
-
+.notice-badge{background:linear-gradient(135deg,rgba(74,144,226,0.15),rgba(107,92,231,0.15));border:1px solid rgba(74,144,226,0.4);border-radius:12px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.notice-icon{font-size:24px}
+.notice-info b{color:var(--text);font-size:13px;display:block;margin-bottom:3px}
+.notice-info small{color:var(--text2);font-size:11px;line-height:1.5}
 /* HERO */
-.hero{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:16px;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(74,144,226,0.15),transparent 70%);border-radius:50%}
-.hero-badge{display:inline-block;background:var(--bg2);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:10px;font-weight:700;color:var(--text2);letter-spacing:1px;margin-bottom:14px;text-transform:uppercase}
+.hero{position:relative;border-radius:18px;overflow:hidden;background:#141414;border:1px solid var(--border);min-height:280px;display:flex;align-items:center;margin-bottom:16px}
+.hero-bg{position:absolute;inset:0;background-image:url('./killua-bg.webp');background-size:cover;background-position:center right;opacity:0.5}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,#0a0a0a 10%,rgba(10,10,10,0.6) 50%,rgba(10,10,10,0.15) 100%)}
+.hero-content{position:relative;z-index:2;padding:32px 28px;max-width:560px}
+.hero-badge{display:inline-block;background:rgba(0,0,0,0.6);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:10px;font-weight:700;color:var(--text2);letter-spacing:1px;margin-bottom:14px;text-transform:uppercase;backdrop-filter:blur(8px)}
 .hero-badge::before{content:'●';color:var(--success);margin-right:6px;font-size:8px}
-.hero h1{font-size:32px;font-weight:900;line-height:1.1;letter-spacing:-1px;color:#fff;margin-bottom:12px}
-.hero p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px;max-width:500px;position:relative;z-index:1}
-.hero-btns{display:flex;gap:10px;flex-wrap:wrap;position:relative;z-index:1}
-.hero-btn{padding:12px 22px;border-radius:10px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:0.15s;text-decoration:none;display:inline-block}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:44px;line-height:1;letter-spacing:1px;font-style:italic;color:#fff;margin-bottom:12px;text-shadow:0 0 30px rgba(74,144,226,0.5)}
+.hero p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:22px;max-width:420px}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.hero-btn{padding:12px 24px;border-radius:10px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:0.15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 .hero-btn-primary{background:#fff;color:#000}
-.hero-btn-secondary{background:transparent;color:#fff;border:1px solid var(--border)}
-.hero-btn-secondary:hover{background:var(--card)}
-
+.hero-btn-primary:hover{background:#e8e8e8}
+.hero-btn-secondary{background:transparent;color:#fff;border:1px solid #3a3a3a}
+.hero-btn-secondary:hover{background:#1a1a1a}
 /* FEATURES */
 .features{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
-.feature{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.feature{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;transition:0.15s}
+.feature:hover{border-color:#3a3a3a}
 .feature-label{font-size:9px;color:var(--muted2);letter-spacing:1.5px;font-weight:800;text-transform:uppercase;margin-bottom:8px}
 .feature-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
 .feature-desc{font-size:11px;color:var(--muted);line-height:1.5}
-
 /* SECTION */
-.section-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title{font-size:16px;font-weight:800;color:var(--text);margin:24px 0 14px;display:flex;align-items:center;gap:8px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
-.card h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px}
 .step{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+.step:last-child{margin-bottom:0}
 .step.green{border-left-color:var(--success)}
 .step-num{width:26px;height:26px;background:var(--bg);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:var(--text);flex-shrink:0}
 .step.green .step-num{border-color:var(--success);color:var(--success)}
 .step-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
 .step-desc{font-size:11px;color:var(--muted);line-height:1.5}
-
+.step-desc b{color:var(--text)}
+/* PAKET GRID */
+.paket-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.paket-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;transition:0.15s}
+.paket-item:hover{border-color:var(--primary);transform:translateY(-2px)}
+.paket-item .jumlah{font-size:14px;font-weight:800;color:var(--text);margin-bottom:6px}
+.paket-item .harga-lama{font-size:10px;color:var(--muted2);text-decoration:line-through}
+.paket-item .harga{font-size:14px;color:var(--success);font-weight:900;margin-top:2px}
+.paket-item .off{display:inline-block;background:rgba(239,68,68,0.15);color:var(--danger);font-size:9px;font-weight:800;padding:2px 6px;border-radius:8px;margin-top:6px}
 /* INFO GRID */
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .info-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px}
 .info-label{font-size:10px;color:var(--muted2);text-transform:uppercase;font-weight:700;letter-spacing:1px;margin-bottom:6px}
-.info-value{font-size:13px;color:var(--text);font-weight:600;word-break:break-all}
-.info-value.mono{font-family:monospace;font-size:12px}
-
+.info-value{font-size:13px;color:var(--text);font-weight:600;line-height:1.4}
+.info-value.mono{font-family:'Courier New',monospace;font-size:12px;word-break:break-all}
+/* FAQ */
+.faq-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
+.faq-q{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.faq-a{font-size:12px;color:var(--muted);line-height:1.6;padding-left:26px}
 /* CONTACT */
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.contact-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;text-decoration:none;display:block;transition:0.15s}
-.contact-item:hover{border-color:var(--primary);background:var(--card)}
-.contact-icon{font-size:24px;margin-bottom:6px}
-.contact-label{font-size:11px;color:var(--text2);font-weight:700}
-.contact-value{font-size:11px;color:var(--text);margin-top:4px;font-weight:600}
-
+.contact-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;text-decoration:none;display:block;transition:0.15s}
+.contact-item:hover{border-color:var(--primary);background:var(--card);transform:translateY(-2px)}
+.contact-icon{font-size:26px;margin-bottom:8px}
+.contact-label{font-size:11px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.contact-value{font-size:12px;color:var(--text);margin-top:6px;font-weight:600}
+/* CTA */
+.cta-box{background:linear-gradient(135deg,rgba(74,144,226,0.15),rgba(107,92,231,0.15));border:1px solid rgba(74,144,226,0.4);border-radius:16px;padding:28px;text-align:center;margin:24px 0}
+.cta-box h2{font-size:20px;font-weight:900;color:#fff;margin-bottom:8px}
+.cta-box p{font-size:13px;color:var(--text2);margin-bottom:18px}
+.cta-btn{display:inline-block;padding:14px 32px;border-radius:12px;background:var(--primary);color:#fff;text-decoration:none;font-weight:800;font-size:14px;transition:0.15s}
+.cta-btn:hover{opacity:0.9;transform:translateY(-2px)}
 /* FOOTER */
 .footer{text-align:center;padding:30px 0 10px;border-top:1px solid var(--border);margin-top:30px;font-size:11px;color:var(--muted2);line-height:1.7}
-
+.footer a{color:var(--primary);text-decoration:none}
 /* RESPONSIVE */
 @media (max-width:768px){
   .features{grid-template-columns:1fr 1fr}
-  .hero h1{font-size:24px}
-  .hero{padding:22px 20px}
+  .hero h1{font-size:32px}
+  .hero-content{padding:24px 20px}
+  .hero{min-height:260px}
   .info-grid{grid-template-columns:1fr}
   .contact-grid{grid-template-columns:1fr}
+  .paket-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:480px){
+  .hero h1{font-size:28px}
+  .paket-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -89,7 +114,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px
 <div class="container">
 
   <!-- HEADER -->
-  <div class="preview-header">
+  <div class="header">
     <div class="brand">
       <img src="./logo.png" alt="logo" onerror="this.style.display='none'">
       <div class="brand-text">
@@ -97,26 +122,33 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px
         <small>Top Up Robux Cepat & Aman</small>
       </div>
     </div>
-    <a href="login.html" class="btn-login">Login →</a>
+    <div class="header-btns">
+      <a href="register.html" class="btn-header btn-header-secondary">Daftar</a>
+      <a href="login.html" class="btn-header btn-header-primary">Login</a>
+    </div>
   </div>
 
-  <!-- BADGE INFO -->
-  <div class="preview-badge">
-    <div class="preview-badge-icon">🔍</div>
-    <div class="preview-badge-info">
-      <b>Halaman Preview</b>
-      <small>Lihat layanan WafaStoreOnly tanpa perlu login. Klik Login kalau mau order.</small>
+  <!-- NOTICE -->
+  <div class="notice-badge">
+    <div class="notice-icon">👋</div>
+    <div class="notice-info">
+      <b>Selamat Datang di WafaStoreOnly!</b>
+      <small>Lihat layanan kami tanpa perlu login. Klik <b>Login</b> atau <b>Daftar</b> untuk mulai order.</small>
     </div>
   </div>
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-badge">Manual Order Mode • Owner Controlled</div>
-    <h1>Top Up Robux<br>Cepat & Aman</h1>
-    <p>Pesan Robux dengan proses mudah dan status order real-time. Pembayaran via QRIS, DANA, GoPay, atau Seabank.</p>
-    <div class="hero-btns">
-      <a href="login.html" class="hero-btn hero-btn-primary">Login untuk Order →</a>
-      <a href="index.html" class="hero-btn hero-btn-secondary">Masuk ke Website</a>
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Killua Edition • Godspeed</div>
+      <h1>TOP UP ROBUX<br>CEPAT & AMAN</h1>
+      <p>Pesan Robux dengan proses mudah, status order real-time, dan harga terjangkau. Pembayaran via QRIS, DANA, GoPay, atau Seabank.</p>
+      <div class="hero-btns">
+        <a href="login.html" class="hero-btn hero-btn-primary">Mulai Top Up →</a>
+        <a href="#cara-order" class="hero-btn hero-btn-secondary">Cara Order</a>
+      </div>
     </div>
   </div>
 
@@ -125,12 +157,12 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px
     <div class="feature">
       <div class="feature-label">Mode</div>
       <div class="feature-title">Manual Control</div>
-      <div class="feature-desc">Order diproses Owner</div>
+      <div class="feature-desc">Order diproses Owner langsung</div>
     </div>
     <div class="feature">
       <div class="feature-label">Checkout</div>
       <div class="feature-title">Fast & Simple</div>
-      <div class="feature-desc">Form dalam hitungan detik</div>
+      <div class="feature-desc">Isi form dalam hitungan detik</div>
     </div>
     <div class="feature">
       <div class="feature-label">Tracking</div>
@@ -140,39 +172,93 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px
     <div class="feature">
       <div class="feature-label">Support</div>
       <div class="feature-title">Official CS</div>
-      <div class="feature-desc">Chat real-time admin</div>
+      <div class="feature-desc">Chat real-time dengan admin</div>
     </div>
   </div>
 
   <!-- CARA ORDER -->
-  <div class="section-title">📢 Cara Order</div>
+  <div class="section-title" id="cara-order">📢 Cara Order</div>
   <div class="card">
     <div class="step">
       <div class="step-num">1</div>
       <div>
-        <div class="step-title">Pilih Game</div>
-        <div class="step-desc">Klik menu Top Up Game, pilih game yang mau di top up.</div>
+        <div class="step-title">Login / Daftar Akun</div>
+        <div class="step-desc">Login pakai <b>Google</b> atau <b>Nomor WhatsApp</b>. Data kamu aman & saldo gak ilang kalo ganti HP.</div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
       <div>
-        <div class="step-title">Pilih Nominal Robux</div>
-        <div class="step-desc">Masukkan username Roblox & pilih paket. Mulai 100 - 10.000 Robux.</div>
+        <div class="step-title">Pilih Game & Nominal</div>
+        <div class="step-desc">Buka menu <b>Top Up Game</b>, pilih game, masukkan username Roblox, dan pilih paket Robux.</div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
       <div>
-        <div class="step-title">Pilih Payment & Bayar</div>
-        <div class="step-desc">Metode: QRIS / DANA / GoPay / Seabank. Bayar sesuai total.</div>
+        <div class="step-title">Bayar via QRIS / DANA / GoPay</div>
+        <div class="step-desc">Pilih metode pembayaran. QRIS otomatis terisi nominal — tinggal scan & bayar.</div>
       </div>
     </div>
     <div class="step green">
       <div class="step-num">4</div>
       <div>
-        <div class="step-title">Upload Bukti & Tunggu</div>
-        <div class="step-desc">Upload bukti TF. Robux masuk 5-30 menit otomatis.</div>
+        <div class="step-title">Upload Bukti & Robux Masuk</div>
+        <div class="step-desc">Upload bukti TF, admin proses, Robux masuk ke akun kamu <b>5-30 menit</b>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAKET -->
+  <div class="section-title">🎮 Paket Robux Tersedia</div>
+  <div class="card">
+    <div class="paket-grid">
+      <div class="paket-item">
+        <div class="jumlah">100 Robux</div>
+        <div class="harga-lama">Rp18.000</div>
+        <div class="harga">Rp16.000</div>
+        <div class="off">-10% OFF</div>
+      </div>
+      <div class="paket-item">
+        <div class="jumlah">200 Robux</div>
+        <div class="harga-lama">Rp36.000</div>
+        <div class="harga">Rp32.000</div>
+        <div class="off">-10% OFF</div>
+      </div>
+      <div class="paket-item">
+        <div class="jumlah">500 Robux</div>
+        <div class="harga-lama">Rp90.000</div>
+        <div class="harga">Rp80.000</div>
+        <div class="off">-10% OFF</div>
+      </div>
+      <div class="paket-item">
+        <div class="jumlah">1.000 Robux</div>
+        <div class="harga-lama">Rp180.000</div>
+        <div class="harga">Rp160.000</div>
+        <div class="off">-10% OFF</div>
+      </div>
+      <div class="paket-item">
+        <div class="jumlah">2.000 Robux</div>
+        <div class="harga-lama">Rp360.000</div>
+        <div class="harga">Rp320.000</div>
+        <div class="off">-10% OFF</div>
+      </div>
+      <div class="paket-item">
+        <div class="jumlah">5.000 Robux</div>
+        <div class="harga-lama">Rp900.000</div>
+        <div class="harga">Rp800.000</div>
+        <div class="off">-10% OFF</div>
+      </div>
+      <div class="paket-item">
+        <div class="jumlah">10.000 Robux</div>
+        <div class="harga-lama">Rp1.800.000</div>
+        <div class="harga">Rp1.600.000</div>
+        <div class="off">-10% OFF</div>
+      </div>
+      <div class="paket-item">
+        <div class="jumlah">Custom</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Sesuai kebutuhan</div>
+        <div class="harga">Rp160/robux</div>
       </div>
     </div>
   </div>
@@ -181,51 +267,85 @@ body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px
   <div class="section-title">⚡ Fitur Web</div>
   <div class="info-grid">
     <div class="info-item">
-      <div class="info-label">Top Up Game</div>
-      <div class="info-value">Roblox (aktif)</div>
+      <div class="info-label">Login</div>
+      <div class="info-value">Google atau WhatsApp OTP</div>
     </div>
     <div class="info-item">
       <div class="info-label">Metode Bayar</div>
-      <div class="info-value">QRIS Dinamis, DANA, GoPay, Seabank</div>
+      <div class="info-value">QRIS, DANA, GoPay, Seabank</div>
     </div>
     <div class="info-item">
-      <div class="info-label">Fitur Tambahan</div>
-      <div class="info-value">Dompet, Chat CS, Order Tracking</div>
+      <div class="info-label">Fitur Dompet</div>
+      <div class="info-value">Top up saldo, bayar cepet</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Tracking Pesanan</div>
+      <div class="info-value">Real-time order status</div>
     </div>
     <div class="info-item">
       <div class="info-label">Auto Batal</div>
-      <div class="info-value">10 menit (jika belum bayar)</div>
+      <div class="info-value">10 menit kalau belum bayar</div>
     </div>
     <div class="info-item">
       <div class="info-label">Verifikasi Bukti</div>
-      <div class="info-value">Auto detect OCR + Anti Fake</div>
+      <div class="info-value">Auto detect + anti fake</div>
     </div>
     <div class="info-item">
-      <div class="info-label">Admin Panel</div>
-      <div class="info-value">Dashboard + Approve + Chat</div>
+      <div class="info-label">Chat Admin</div>
+      <div class="info-value">Real-time dengan Owner</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Keamanan</div>
+      <div class="info-value">Verifikasi dokumen & bukti</div>
     </div>
   </div>
 
+  <!-- FAQ -->
+  <div class="section-title">❓ FAQ</div>
+  <div class="faq-item">
+    <div class="faq-q">💬 Apakah harus punya akun dulu?</div>
+    <div class="faq-a">Iya, buat tracking pesanan & keamanan saldo kamu. Login cepet pakai Google atau WhatsApp OTP.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">⚡ Berapa lama Robux masuk?</div>
+    <div class="faq-a">Metode Username: 5-10 menit. Metode Gamepass: 5-7 hari. Gift In Game: 5-30 menit.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">💳 Pembayaran bisa apa aja?</div>
+    <div class="faq-a">QRIS (semua bank & e-wallet), DANA, GoPay, Seabank, atau pakai Saldo Dompet WafaStoreOnly.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">🔒 Aman gak?</div>
+    <div class="faq-a">Aman. Kami pakai verifikasi otomatis untuk bukti TF, dan username Roblox kamu di-sensor di tampilan publik.</div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box">
+    <h2>Siap Top Up Robux?</h2>
+    <p>Daftar sekarang & nikmati diskon 10% untuk semua paket!</p>
+    <a href="login.html" class="cta-btn">Login / Daftar →</a>
+  </div>
+
   <!-- KONTAK -->
-  <div class="section-title">📞 Kontak</div>
+  <div class="section-title">📞 Butuh Bantuan?</div>
   <div class="contact-grid">
     <a href="https://wa.me/6283862776790" target="_blank" class="contact-item">
       <div class="contact-icon">💬</div>
       <div class="contact-label">WhatsApp</div>
       <div class="contact-value">0838-6277-6790</div>
     </a>
-    <div class="contact-item">
-      <div class="contact-icon">📧</div>
-      <div class="contact-label">Email</div>
-      <div class="contact-value">muhammadiram67@gmail.com</div>
-    </div>
+    <a href="https://discord.gg/wafastoreonly" target="_blank" class="contact-item">
+      <div class="contact-icon">🎮</div>
+      <div class="contact-label">Discord Server</div>
+      <div class="contact-value">WafaStoreOnly Community</div>
+    </a>
   </div>
 
   <!-- FOOTER -->
   <div class="footer">
     <b style="color:var(--text2)">WafaStoreOnly</b> - Top Up Robux Cepat & Aman<br>
-    Halaman preview ini bisa diakses tanpa login.<br>
-    Untuk order, silakan <a href="login.html" style="color:var(--primary);text-decoration:none">login di sini</a>.
+    © 2026 WafaStoreOnly x Killua Edition ⚡<br>
+    <span style="opacity:0.6">Powered by Firebase & Vercel</span>
   </div>
 
 </div>
