@@ -75,6 +75,10 @@
 .log-item .right{text-align:right;flex-shrink:0}
 .log-item .right b{font-size:13px;color:#4ade80;font-weight:700;display:block}
 .log-item .right small{font-size:10px;color:#5a5a5a;display:block;margin-top:2px}
+.usr-status{font-size:12px;margin-top:6px;padding:10px 12px;border-radius:8px;font-weight:600;line-height:1.5}
+.usr-status.loading{background:rgba(74,144,226,0.1);border:1px solid rgba(74,144,226,0.4);color:#4a90e2}
+.usr-status.ok{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.4);color:#4ade80}
+.usr-status.err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.4);color:#ef4444}
 @media (max-width:768px){
   .feature-grid{grid-template-columns:1fr 1fr}
   .hero-title{font-size:32px;letter-spacing:-1px}
@@ -98,12 +102,11 @@ window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onV
 window.wafaAuth=auth;
 window.DISCORD_URL="https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
 
-// ===== AUTH LISTENER (TANPA AUTO-REDIRECT) =====
+// AUTH LISTENER (tanpa auto-redirect)
 onAuthStateChanged(auth, (user)=>{ 
   if(user && !localStorage.getItem('wafa_uid')){ 
     localStorage.setItem('wafa_uid', user.uid); 
   }
-  // Refresh sidebar kalau ada
   if(typeof wsLoadUser === 'function') wsLoadUser();
 });
 </script>
@@ -267,7 +270,11 @@ Selamat datang di rumah baru kalian.</div>
   </div>
 
   <div id="m-username">
-    <div class="input-group"><label>Username Roblox</label><input id="uRbx" placeholder="Masukkan username"></div>
+    <div class="input-group">
+      <label>Username Roblox</label>
+      <input id="uRbx" placeholder="Masukkan username" onblur="checkUsernameRoblox('uRbx')" autocomplete="off">
+      <div id="uRbxStatus" class="usr-status" style="display:none"></div>
+    </div>
     <div class="input-group"><label>Jumlah Robux</label><input id="cRbx" type="number" placeholder="Contoh: 1000" oninput="calcUsername()"></div>
     <div class="total-box" id="tRbx">Total: 0 Robux = Rp0</div>
     <div style="font-weight:700;font-size:13px;margin:20px 0 10px;color:#e8e8e8">Pilih Paket</div>
@@ -285,7 +292,11 @@ Selamat datang di rumah baru kalian.</div>
   </div>
 
   <div id="m-gamepass" style="display:none">
-    <div class="input-group"><label>Username Roblox</label><input id="uRbx2" placeholder="Masukkan username"></div>
+    <div class="input-group">
+      <label>Username Roblox</label>
+      <input id="uRbx2" placeholder="Masukkan username" onblur="checkUsernameRoblox('uRbx2')" autocomplete="off">
+      <div id="uRbx2Status" class="usr-status" style="display:none"></div>
+    </div>
     <div class="input-group"><label>Jumlah Robux</label><input id="cRbx2" type="number" placeholder="Contoh: 1000" oninput="calcGamepass()"></div>
     <div class="input-group"><label>Link Gamepass</label><input id="gamepassLink" placeholder="https://www.roblox.com/game-pass/xxxxxxx"></div>
     <div class="total-box" id="tRbx2">Total: 0 Robux = Rp0<br>Setting Gamepass: 0 Robux</div>
@@ -303,7 +314,11 @@ Selamat datang di rumah baru kalian.</div>
   </div>
 
   <div id="m-gift" style="display:none">
-    <div class="input-group"><label>Username Roblox</label><input id="uRbx3" placeholder="Masukkan username"></div>
+    <div class="input-group">
+      <label>Username Roblox</label>
+      <input id="uRbx3" placeholder="Masukkan username" onblur="checkUsernameRoblox('uRbx3')" autocomplete="off">
+      <div id="uRbx3Status" class="usr-status" style="display:none"></div>
+    </div>
     <div class="input-group"><label>Nama Item</label><input id="giftItem" placeholder="Contoh: VIP Gamepass"></div>
     <div class="input-group"><label>Jumlah Robux Item</label><input id="cGift" type="number" placeholder="Contoh: 445" oninput="calcGift()"></div>
     <div class="input-group"><label>Link Private Server</label><input id="privateServerLink" placeholder="https://www.roblox.com/games/xxxxx"></div>
@@ -440,7 +455,6 @@ function isLoggedIn(){
   const uid = localStorage.getItem('wafa_uid');
   return !!(uid && window.wafaAuth && window.wafaAuth.currentUser);
 }
-
 function requireLogin(actionName, redirectTarget){
   if(isLoggedIn()) return true;
   if(confirm(`🔒 ${actionName} butuh login dulu.\n\nMau login sekarang?`)){
@@ -451,13 +465,84 @@ function requireLogin(actionName, redirectTarget){
 }
 
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
-
 function sensorUsernameRbx(u){
   if(!u || u === '-') return '-';
   if(u.length <= 3) return u[0] + '***';
   if(u.length <= 6) return u.slice(0, 2) + '***' + u.slice(-1);
   return u.slice(0, 3) + '****' + u.slice(-3);
 }
+
+// ==========================================
+// VALIDASI USERNAME ROBLOX
+// ==========================================
+async function validateRobloxUsername(username) {
+  if (!username || username.trim().length < 3) {
+    return { valid: false, message: 'Username minimal 3 karakter' };
+  }
+  const clean = username.trim();
+  if (!/^[a-zA-Z0-9_]+$/.test(clean)) {
+    return { valid: false, message: 'Username cuma boleh huruf, angka, dan underscore (_)' };
+  }
+  try {
+    const res = await fetch('/api/check-roblox', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: clean })
+    });
+    const data = await res.json();
+    if (data.exists) {
+      return {
+        valid: true,
+        message: `✅ Username ditemukan: ${data.displayName} (@${data.username})`,
+        displayName: data.displayName,
+        username: data.username,
+        id: data.id
+      };
+    } else {
+      return { valid: false, message: data.error || '❌ Username Roblox tidak ditemukan' };
+    }
+  } catch (e) {
+    console.error('Validate error:', e);
+    return { valid: false, message: '❌ Gagal cek username, coba lagi' };
+  }
+}
+
+function setStatus(el, type, text){
+  if (!el) return;
+  el.style.display = 'block';
+  el.className = 'usr-status ' + type;
+  el.innerText = text;
+}
+
+async function checkUsernameRoblox(inputId) {
+  const input = document.getElementById(inputId);
+  const statusId = inputId + 'Status';
+  const status = document.getElementById(statusId);
+  if (!input || !status) return;
+
+  const username = input.value.trim();
+  if (!username) {
+    status.style.display = 'none';
+    input.dataset.valid = 'false';
+    return;
+  }
+
+  setStatus(status, 'loading', '⏳ Cek username...');
+  const result = await validateRobloxUsername(username);
+
+  if (result.valid) {
+    setStatus(status, 'ok', result.message);
+    input.dataset.valid = 'true';
+    input.dataset.robloxId = result.id;
+    input.dataset.robloxDisplayName = result.displayName;
+  } else {
+    setStatus(status, 'err', result.message);
+    input.dataset.valid = 'false';
+    delete input.dataset.robloxId;
+    delete input.dataset.robloxDisplayName;
+  }
+}
+// ==========================================
 
 async function cekBuktiValid(file){
   let loading=document.createElement('div');
@@ -783,9 +868,48 @@ function goToPayment(){
   let pG = window.hargaConfig.perRobuxGamepass||140;
   let pF = window.hargaConfig.perRobuxGift||95;
 
-  if(currentMethod=='username'){u=document.getElementById('uRbx').value||'-';j=parseInt(document.getElementById('cRbx').value)||0;total=j*pU;if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Username</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
-  else if(currentMethod=='gamepass'){u=document.getElementById('uRbx2').value||'-';j=parseInt(document.getElementById('cRbx2').value)||0;gpassLink=document.getElementById('gamepassLink').value||'-';total=j*pG;set=Math.ceil(j/0.7);if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gamepass</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Link</span><b style="word-break:break-all;font-size:11px">${gpassLink}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Setting</span><b>${set} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
-  else{u=document.getElementById('uRbx3').value||'-';it=document.getElementById('giftItem').value||'-';privateLink=document.getElementById('privateServerLink').value||'-';j=parseInt(document.getElementById('cGift').value)||0;total=j*pF;if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gift In Game</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Item</span><b>${it}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Private Server</span><b style="font-size:11px;word-break:break-all">${privateLink}</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
+  if(currentMethod=='username'){
+    const uRbx = document.getElementById('uRbx');
+    u = uRbx.value || '-';
+    j = parseInt(document.getElementById('cRbx').value) || 0;
+    if(!j){alert('Isi jumlah Robux dulu');return;}
+    if(uRbx.dataset.valid !== 'true'){
+      alert('❌ Username Roblox belum valid!\n\nTunggu sampai muncul tanda ✅ hijau di bawah kolom username.\n\nKalau usernya salah, Robux bisa hilang!');
+      uRbx.focus();
+      return;
+    }
+    total = j * pU;
+    summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Username</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${uRbx.dataset.robloxDisplayName || u} (@${uRbx.dataset.robloxUsername || u})</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Roblox ID</span><b>${uRbx.dataset.robloxId || '-'}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;
+  }
+  else if(currentMethod=='gamepass'){
+    const uRbx2 = document.getElementById('uRbx2');
+    u = uRbx2.value || '-';
+    j = parseInt(document.getElementById('cRbx2').value) || 0;
+    gpassLink=document.getElementById('gamepassLink').value||'-';
+    if(!j){alert('Isi jumlah Robux dulu');return;}
+    if(uRbx2.dataset.valid !== 'true'){
+      alert('❌ Username Roblox belum valid!\n\nTunggu sampai muncul tanda ✅ hijau di bawah kolom username.');
+      uRbx2.focus();
+      return;
+    }
+    total=j*pG;set=Math.ceil(j/0.7);
+    summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gamepass</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${uRbx2.dataset.robloxDisplayName || u} (@${uRbx2.dataset.robloxUsername || u})</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Link</span><b style="word-break:break-all;font-size:11px">${gpassLink}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Setting</span><b>${set} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;
+  }
+  else{
+    const uRbx3 = document.getElementById('uRbx3');
+    u = uRbx3.value || '-';
+    it=document.getElementById('giftItem').value||'-';
+    privateLink=document.getElementById('privateServerLink').value||'-';
+    j = parseInt(document.getElementById('cGift').value) || 0;
+    if(!j){alert('Isi jumlah Robux dulu');return;}
+    if(uRbx3.dataset.valid !== 'true'){
+      alert('❌ Username Roblox belum valid!\n\nTunggu sampai muncul tanda ✅ hijau di bawah kolom username.');
+      uRbx3.focus();
+      return;
+    }
+    total=j*pF;
+    summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gift In Game</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${uRbx3.dataset.robloxDisplayName || u} (@${uRbx3.dataset.robloxUsername || u})</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Item</span><b>${it}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Private Server</span><b style="font-size:11px;word-break:break-all">${privateLink}</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;
+  }
 
   lastOrderData = {username:u,method:currentMethod,jumlah:j,total:total,item:it||'',setting:set||'',privateServer:privateLink||'',gamepassLink:gpassLink||''};
   window.lastOrderData = lastOrderData;
@@ -800,6 +924,7 @@ function goToPayment(){
   if(lastOrderData && lastOrderData.total){ setTimeout(()=>{ generateQRISForAmount(lastOrderData.total); }, 500); }
   window.scrollTo(0,0);
 }
+
 function pilihBayar(m, el){
   metodeBayar = m;
   document.querySelectorAll('.method-tabs .tab').forEach(t=>t.classList.remove('active'));
@@ -1140,7 +1265,7 @@ if(typeof loadHargaConfig === 'function'){
 checkExpired();
 (function initListeners(){ let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]'); orders.forEach(o=>attachFirebaseListener(o.id)); })();
 
-// ===== AUTO REDIRECT SETELAH LOGIN =====
+// AUTO REDIRECT SETELAH LOGIN
 setTimeout(()=>{
   const redirect = sessionStorage.getItem('wafa_redirect_after_login');
   if(redirect && isLoggedIn()){
