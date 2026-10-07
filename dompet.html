@@ -35,8 +35,13 @@ const auth = getAuth(app);
 window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onValue; window.wafaGet=get; window.wafaUpdate=update;
 window.wafaAuth=auth;
 window.DISCORD_URL="https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
+
+// ===== CEK LOGIN (REDIRECT DENGAN TARGET) =====
 let uid = localStorage.getItem('wafa_uid');
-if(!uid){ window.location.href='login.html'; }
+if(!uid){ 
+  sessionStorage.setItem('wafa_redirect_after_login', 'dompet');
+  window.location.href='login.html'; 
+}
 onAuthStateChanged(auth, (user)=>{ if(user && !localStorage.getItem('wafa_uid')){ localStorage.setItem('wafa_uid', user.uid); } });
 </script>
 </head>
@@ -150,7 +155,7 @@ function renderDompet(){
 function calcDompet(){
   let j = parseInt(document.getElementById('nominalDompet').value) || 0;
   document.getElementById('totalDompet').innerText = `Total bayar: Rp${j.toLocaleString('id-ID')}`;
-  
+
   if (j >= 10000 && typeof convertQRISDinamis === 'function') {
     try {
       const qrisString = convertQRISDinamis(j);
@@ -192,7 +197,7 @@ async function downloadQRIS(){
     else alert('❌ Isi nominal dulu minimal Rp10.000');
     return;
   }
-  
+
   try {
     const qrImg = await getQRImage('qrisCanvas');
     const canvas = document.createElement('canvas');
@@ -202,7 +207,7 @@ async function downloadQRIS(){
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, 400, 400);
     ctx.drawImage(qrImg, 40, 40, 320, 320);
-    
+
     canvas.toBlob(function(blob){
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
