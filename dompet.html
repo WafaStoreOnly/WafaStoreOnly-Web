@@ -6,9 +6,7 @@
 <title>Dompet - WafaStoreOnly</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<!-- Library QR Code (WAJIB) -->
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-<!-- Logic QRIS Dinamis lo (WAJIB) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="./qris-dinamis.js"></script>
 <link rel="stylesheet" href="./sidebar.css">
 <style>
@@ -20,7 +18,6 @@
 .paket-item{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:0.15s;font-weight:700;font-size:13px;color:#e8e8e8}
 .paket-item:hover{border-color:#4a90e2}
 .qris-wrap{position:relative;cursor:pointer;background:#141414;border:1px solid #2a2a2a;border-radius:14px;overflow:hidden;text-align:center;margin-top:12px;padding:15px}
-.qris-wrap canvas{max-width:100%;height:auto;display:block;margin:0 auto}
 .qris-badge{position:absolute;top:12px;right:12px;background:rgba(10,10,10,0.9);border:1px solid #3a3a3a;color:#e8e8e8;padding:6px 12px;border-radius:20px;font-size:10px;font-weight:700;backdrop-filter:blur(8px)}
 .riwayat-item{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-top:8px;display:flex;justify-content:space-between;align-items:center}
 .riwayat-item b{font-size:13px;color:#e8e8e8}
@@ -87,9 +84,8 @@ onAuthStateChanged(auth, (user)=>{ if(user && !localStorage.getItem('wafa_uid'))
       <button onclick="bayarViaApp('seabank','901162765462')" style="padding:8px 14px;border-radius:8px;border:none;background:#fbbf24;color:#000;font-weight:700;font-size:11px;cursor:pointer">Salin</button>
     </div>
 
-    <!-- QRIS DINAMIS: Ganti img jadi canvas -->
     <div class="qris-wrap" onclick="downloadQRIS()">
-      <canvas id="qrisCanvas"></canvas>
+      <div id="qrisCanvas" style="display:flex;justify-content:center;background:#fff;border-radius:6px;padding:8px;min-height:296px;align-items:center"></div>
       <div class="qris-badge">📥 Klik buat download</div>
     </div>
     <div style="font-size:10px;color:#8a8a8a;margin-top:8px;text-align:center">QRIS: AWA_NEWSTREAM / WafaStoreOnly</div>
@@ -110,7 +106,6 @@ onAuthStateChanged(auth, (user)=>{ if(user && !localStorage.getItem('wafa_uid'))
 <script>
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
 
-// ===== CEK BUKTI TF =====
 async function cekBuktiValid(file){
   let loading=document.createElement('div');
   loading.id='loadingDetect';
@@ -134,14 +129,13 @@ async function cekBuktiValid(file){
     let isNama = ciriNama.some(x => teksSaja.includes(x));
     let isQris = lower.includes('qris') || lower.includes('qr ');
     console.log('isAngka:', isAngka, '| isNama:', isNama, '| isQris:', isQris);
-    if(!isAngka && !isNama && !isQris){ document.getElementById('loadingDetect').remove(); return {valid:false,reason:`❌ SALAH TUJUAN!\n\nSistem ga nemu nomor/nama WafaStoreOnly di bukti TF.\n\nPastikan screenshot keliatan:\n• Nomor 083862776790 / 901162765462\n• ATAU nama AWA_NEWSTREAM / Wafa\n• ATAU logo QRIS`}; }
+    if(!isAngka && !isNama && !isQris){ document.getElementById('loadingDetect').remove(); return {valid:false,reason:`❌ SALAH TUJUAN!\n\nSistem ga nemu nomor/nama WafaStoreOnly di bukti TF.`}; }
 
     document.getElementById('loadingDetect').remove();
     return {valid:true};
   }catch(e){ let l=document.getElementById('loadingDetect');if(l)l.remove(); return {valid:false,reason:`❌ Gagal baca: ${e.message}`}; }
 }
 
-// ===== PAKET CEPAT =====
 const listDompet=[10000,20000,50000,100000,200000,500000];
 function renderDompet(){
   let g=document.getElementById('gridDompet');g.innerHTML='';
@@ -153,13 +147,10 @@ function renderDompet(){
     g.appendChild(d);
   });
 }
-
-// ===== FUNGSI CALC DOMPET (UDAH DIBENERIN) =====
 function calcDompet(){
   let j = parseInt(document.getElementById('nominalDompet').value) || 0;
   document.getElementById('totalDompet').innerText = `Total bayar: Rp${j.toLocaleString('id-ID')}`;
   
-  // Generate QRIS Dinamis kalau nominal >= 10000
   if (j >= 10000 && typeof convertQRISDinamis === 'function') {
     try {
       const qrisString = convertQRISDinamis(j);
@@ -170,16 +161,11 @@ function calcDompet(){
       else alert('❌ Gagal generate QRIS: ' + e.message);
     }
   } else if (j > 0 && j < 10000) {
-    // Clear canvas kalau nominal di bawah 10rb
-    const canvas = document.getElementById('qrisCanvas');
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+    const container = document.getElementById('qrisCanvas');
+    if (container) container.innerHTML = '';
   }
 }
 
-// ===== BUKA APP =====
 function bayarViaApp(app, nomor){
   navigator.clipboard.writeText(nomor).then(()=>{
     if(typeof wsToast==='function') wsToast(`✅ Nomor ${nomor} disalin!`);
@@ -199,28 +185,40 @@ function bayarViaApp(app, nomor){
   }, 500);
 }
 
-// ===== DOWNLOAD QRIS (UDAH DIBENERIN PAKAI CANVAS) =====
-function downloadQRIS(){
-  const canvas = document.getElementById('qrisCanvas');
-  if (!canvas || canvas.width === 0) {
+async function downloadQRIS(){
+  const container = document.getElementById('qrisCanvas');
+  if (!container || !container.querySelector('img')) {
     if(typeof wsToast === 'function') wsToast('❌ Isi nominal dulu minimal Rp10.000');
     else alert('❌ Isi nominal dulu minimal Rp10.000');
     return;
   }
   
-  const url = canvas.toDataURL('image/png');
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'QRIS-WafaStoreOnly.png';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  
-  if(typeof wsToast === 'function') wsToast('✅ QRIS berhasil di-download!');
-  else alert('✅ QRIS berhasil di-download!');
+  try {
+    const qrImg = await getQRImage('qrisCanvas');
+    const canvas = document.createElement('canvas');
+    canvas.width = 400;
+    canvas.height = 400;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, 400, 400);
+    ctx.drawImage(qrImg, 40, 40, 320, 320);
+    
+    canvas.toBlob(function(blob){
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'QRIS-WafaStoreOnly.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      if(typeof wsToast === 'function') wsToast('✅ QRIS berhasil di-download!');
+    }, 'image/png');
+  } catch(e) {
+    alert('❌ Gagal download: ' + e.message);
+  }
 }
 
-// ===== UPLOAD BUKTI DOMPET =====
 async function uploadBuktiDompet(){
   let nominal=parseInt(document.getElementById('nominalDompet').value)||0;
   if(nominal<10000){alert('Minimal top up Rp10.000');return;}
@@ -280,7 +278,6 @@ function renderRiwayat(){
   });
 }
 
-// ===== LOAD USER =====
 async function loadUser(){
   try{
     let uid=localStorage.getItem('wafa_uid');
@@ -297,7 +294,6 @@ async function loadUser(){
   }catch(e){ console.log('loadUser error:', e); }
 }
 
-// ===== FIREBASE LISTENER =====
 function attachDompetListener(){
   try{
     if(!window.wafaDB || !window.wafaOnValue) return;
@@ -326,7 +322,6 @@ function attachDompetListener(){
   }catch(e){ console.log('listener error:', e); }
 }
 
-// ===== INIT =====
 if(typeof wsSetActive==='function') wsSetActive('dompet');
 if(typeof wsSetTitle==='function') wsSetTitle('👛 Dompet Saya');
 renderDompet();
@@ -334,7 +329,6 @@ renderRiwayat();
 loadUser();
 attachDompetListener();
 
-// ===== LOAD BRANDING =====
 function loadBrandingDompet(){
   if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){
     setTimeout(loadBrandingDompet, 500);
