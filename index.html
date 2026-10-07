@@ -97,9 +97,15 @@ const auth = getAuth(app);
 window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onValue; window.wafaGet=get; window.wafaUpdate=update;
 window.wafaAuth=auth;
 window.DISCORD_URL="https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
-let uid = localStorage.getItem('wafa_uid');
-if(!uid){ window.location.href='login.html'; }
-onAuthStateChanged(auth, (user)=>{ if(user && !localStorage.getItem('wafa_uid')){ localStorage.setItem('wafa_uid', user.uid); } });
+
+// ===== AUTH LISTENER (TANPA AUTO-REDIRECT) =====
+onAuthStateChanged(auth, (user)=>{ 
+  if(user && !localStorage.getItem('wafa_uid')){ 
+    localStorage.setItem('wafa_uid', user.uid); 
+  }
+  // Refresh sidebar kalau ada
+  if(typeof wsLoadUser === 'function') wsLoadUser();
+});
 </script>
 </head>
 <body>
@@ -429,6 +435,21 @@ Selamat datang di rumah baru kalian.</div>
 <script src="./harga-voucher.js"></script>
 <script src="./sidebar.js"></script>
 <script>
+// ===== CEK LOGIN =====
+function isLoggedIn(){
+  const uid = localStorage.getItem('wafa_uid');
+  return !!(uid && window.wafaAuth && window.wafaAuth.currentUser);
+}
+
+function requireLogin(actionName, redirectTarget){
+  if(isLoggedIn()) return true;
+  if(confirm(`🔒 ${actionName} butuh login dulu.\n\nMau login sekarang?`)){
+    sessionStorage.setItem('wafa_redirect_after_login', redirectTarget || 'index');
+    window.location.href = 'login.html';
+  }
+  return false;
+}
+
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
 
 function sensorUsernameRbx(u){
@@ -527,10 +548,29 @@ function calcGift(){
 document.getElementById('giftItem')?.addEventListener('input',calcGift);
 
 function hideAll(){ ['homePage','robloxPage','paymentPage','pesananPage'].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display='none';}); }
-function openRoblox(){ hideAll(); document.getElementById('robloxPage').style.display='block'; if(typeof wsSetTitle==='function') wsSetTitle('⚡ Top Up Roblox'); if(typeof wsSetActive==='function') wsSetActive(''); renderUsername(); renderGamepass(); }
 function goHome(){ hideAll(); document.getElementById('homePage').style.display='block'; if(typeof wsSetTitle==='function') wsSetTitle('WafaStoreOnly'); if(typeof wsSetActive==='function') wsSetActive('beranda'); }
+
+function openRoblox(){ 
+  if(!requireLogin('Top Up Roblox', 'roblox')) return;
+  hideAll(); 
+  document.getElementById('robloxPage').style.display='block'; 
+  if(typeof wsSetTitle==='function') wsSetTitle('⚡ Top Up Roblox'); 
+  if(typeof wsSetActive==='function') wsSetActive(''); 
+  renderUsername(); 
+  renderGamepass(); 
+}
+
 function backToRoblox(){ hideAll(); document.getElementById('robloxPage').style.display='block'; }
-function openPesanan(){ hideAll(); document.getElementById('pesananPage').style.display='block'; if(typeof wsSetTitle==='function') wsSetTitle('📦 Pesanan Saya'); if(typeof wsSetActive==='function') wsSetActive('pesanan'); renderPesanan(); }
+
+function openPesanan(){ 
+  if(!requireLogin('Pesanan Saya', 'pesanan')) return;
+  hideAll(); 
+  document.getElementById('pesananPage').style.display='block'; 
+  if(typeof wsSetTitle==='function') wsSetTitle('📦 Pesanan Saya'); 
+  if(typeof wsSetActive==='function') wsSetActive('pesanan'); 
+  renderPesanan(); 
+}
+
 function switchMethod(m,el){currentMethod=m;document.querySelectorAll('.method-tabs .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('m-username').style.display=m=='username'?'block':'none';document.getElementById('m-gamepass').style.display=m=='gamepass'?'block':'none';document.getElementById('m-gift').style.display=m=='gift'?'block':'none';}
 
 function attachFirebaseListener(orderId){
@@ -645,12 +685,13 @@ function checkExpired(){
       }catch(e){}
     }
   });
-  if(changed){ localStorage.setItem('wafa_orders',JSON.stringify(orders)); if(document.getElementById('pesananPage').style.display=='block') renderPesanan(); }
+  if(changed){ localStorage.setItem('wafa_orders',JSON.stringify(orders)); if(document.getElementById('pesananPage') && document.getElementById('pesananPage').style.display=='block') renderPesanan(); }
 }
 
 function renderPesanan(){
  let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]');
  let list=document.getElementById('listPesanan'); let empty=document.getElementById('emptyPesanan');
+ if(!list || !empty) return;
  if(orders.length==0){list.innerHTML='';empty.style.display='block';return;}
  empty.style.display='none';list.innerHTML='';
  orders.forEach(o=>{
@@ -672,6 +713,7 @@ function renderPesanan(){
 }
 
 async function uploadBukti(id){
+  if(!requireLogin('Upload Bukti', 'index')) return;
   let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]');
   let oCheck=orders.find(x=>x.id==id);
   if(!oCheck){alert('Pesanan tidak ditemukan!');return;}
@@ -702,6 +744,7 @@ async function uploadBukti(id){
 }
 
 async function uploadBuktiFromChat(input){
+  if(!requireLogin('Upload Bukti', 'index')) { input.value=''; return; }
   let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]');
   if(orders.length==0){alert('Buat pesanan dulu!');input.value='';return;}
   let o=orders[0];
@@ -727,34 +770,35 @@ async function uploadBuktiFromChat(input){
 }
 
 setInterval(checkExpired,5000);
-setInterval(()=>{if(document.getElementById('pesananPage').style.display=='block')renderPesanan();},1000);
+setInterval(()=>{if(document.getElementById('pesananPage') && document.getElementById('pesananPage').style.display=='block')renderPesanan();},1000);
 
 // ===== PEMBAYARAN =====
 let lastOrderData = null;
 let metodeBayar = 'saldo';
 
 function goToPayment(){
- let summary='',total=0,u,j,it,set,privateLink='',gpassLink='';
- let pU = window.hargaConfig.perRobux||160;
- let pG = window.hargaConfig.perRobuxGamepass||140;
- let pF = window.hargaConfig.perRobuxGift||95;
+  if(!requireLogin('Pembayaran', 'roblox')) return;
+  let summary='',total=0,u,j,it,set,privateLink='',gpassLink='';
+  let pU = window.hargaConfig.perRobux||160;
+  let pG = window.hargaConfig.perRobuxGamepass||140;
+  let pF = window.hargaConfig.perRobuxGift||95;
 
- if(currentMethod=='username'){u=document.getElementById('uRbx').value||'-';j=parseInt(document.getElementById('cRbx').value)||0;total=j*pU;if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Username</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
- else if(currentMethod=='gamepass'){u=document.getElementById('uRbx2').value||'-';j=parseInt(document.getElementById('cRbx2').value)||0;gpassLink=document.getElementById('gamepassLink').value||'-';total=j*pG;set=Math.ceil(j/0.7);if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gamepass</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Link</span><b style="word-break:break-all;font-size:11px">${gpassLink}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Setting</span><b>${set} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
- else{u=document.getElementById('uRbx3').value||'-';it=document.getElementById('giftItem').value||'-';privateLink=document.getElementById('privateServerLink').value||'-';j=parseInt(document.getElementById('cGift').value)||0;total=j*pF;if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gift In Game</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Item</span><b>${it}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Private Server</span><b style="font-size:11px;word-break:break-all">${privateLink}</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
+  if(currentMethod=='username'){u=document.getElementById('uRbx').value||'-';j=parseInt(document.getElementById('cRbx').value)||0;total=j*pU;if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Username</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
+  else if(currentMethod=='gamepass'){u=document.getElementById('uRbx2').value||'-';j=parseInt(document.getElementById('cRbx2').value)||0;gpassLink=document.getElementById('gamepassLink').value||'-';total=j*pG;set=Math.ceil(j/0.7);if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gamepass</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Link</span><b style="word-break:break-all;font-size:11px">${gpassLink}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Setting</span><b>${set} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
+  else{u=document.getElementById('uRbx3').value||'-';it=document.getElementById('giftItem').value||'-';privateLink=document.getElementById('privateServerLink').value||'-';j=parseInt(document.getElementById('cGift').value)||0;total=j*pF;if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gift In Game</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Item</span><b>${it}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Private Server</span><b style="font-size:11px;word-break:break-all">${privateLink}</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
 
- lastOrderData = {username:u,method:currentMethod,jumlah:j,total:total,item:it||'',setting:set||'',privateServer:privateLink||'',gamepassLink:gpassLink||''};
- window.lastOrderData = lastOrderData;
- document.getElementById('orderSummary').innerHTML=summary;
- document.getElementById('wajibBayar').innerText=`Rp${total.toLocaleString('id-ID')}`;
+  lastOrderData = {username:u,method:currentMethod,jumlah:j,total:total,item:it||'',setting:set||'',privateServer:privateLink||'',gamepassLink:gpassLink||''};
+  window.lastOrderData = lastOrderData;
+  document.getElementById('orderSummary').innerHTML=summary;
+  document.getElementById('wajibBayar').innerText=`Rp${total.toLocaleString('id-ID')}`;
 
- if(typeof resetVoucher === 'function') resetVoucher();
+  if(typeof resetVoucher === 'function') resetVoucher();
 
- hideAll(); document.getElementById('paymentPage').style.display='block'; if(typeof wsSetTitle==='function') wsSetTitle('💳 Pembayaran');
- loadSaldoUser();
- pilihBayar('saldo', document.getElementById('tabSaldo'));
- if(lastOrderData && lastOrderData.total){ setTimeout(()=>{ generateQRISForAmount(lastOrderData.total); }, 500); }
- window.scrollTo(0,0);
+  hideAll(); document.getElementById('paymentPage').style.display='block'; if(typeof wsSetTitle==='function') wsSetTitle('💳 Pembayaran');
+  loadSaldoUser();
+  pilihBayar('saldo', document.getElementById('tabSaldo'));
+  if(lastOrderData && lastOrderData.total){ setTimeout(()=>{ generateQRISForAmount(lastOrderData.total); }, 500); }
+  window.scrollTo(0,0);
 }
 function pilihBayar(m, el){
   metodeBayar = m;
@@ -770,14 +814,8 @@ async function generateQRISForAmount(amount){
   try{
     const nominalEl = document.getElementById('qrisNominalDisplay');
     if(nominalEl) nominalEl.innerText = 'Rp' + amount.toLocaleString('id-ID');
-    if(typeof convertQRISDinamis !== 'function'){
-      console.error('convertQRISDinamis tidak ditemukan');
-      return;
-    }
-    if(typeof QRCode === 'undefined'){
-      console.error('Library QRCode belum ke-load');
-      return;
-    }
+    if(typeof convertQRISDinamis !== 'function'){ console.error('convertQRISDinamis tidak ditemukan'); return; }
+    if(typeof QRCode === 'undefined'){ console.error('Library QRCode belum ke-load'); return; }
     const qrisDynamic = convertQRISDinamis(amount);
     renderQRIS(qrisDynamic, 'qrisCanvas');
   }catch(e){
@@ -894,6 +932,7 @@ async function loadSaldoUser(){
 }
 
 async function bayarDenganSaldo(){
+  if(!requireLogin('Pembayaran', 'roblox')) return;
   if(!lastOrderData) return;
   const uid=localStorage.getItem('wafa_uid');
   const saldo=window._userSaldo||0;
@@ -1021,6 +1060,7 @@ function bayarViaApp(app, nomor){
 }
 
 function buatPesananDanUpload(){
+  if(!requireLogin('Buat Pesanan', 'roblox')) return;
   if(!lastOrderData){ alert('Data order hilang, ulangi ya'); return; }
   let newId = saveOrder(lastOrderData);
   if(typeof saveVoucherUsage === 'function' && window.voucherApplied) saveVoucherUsage(newId);
@@ -1033,6 +1073,7 @@ function buatPesananDanUpload(){
 // ===== CHAT =====
 let chatUnsubscribe = null;
 function toggleLayanan(){
+  if(!requireLogin('Chat Admin', 'index')) return;
   let b=document.getElementById('layananBox');
   let isOpen = b.style.display=='flex';
   b.style.display = isOpen?'none':'flex';
@@ -1086,6 +1127,7 @@ async function sendLayanan(){
 }
 function addBotMsg(txt){
   const c=document.getElementById('layananChat');
+  if(!c) return;
   const d=document.createElement('div');d.className='msg bot';d.innerText=txt;c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
 
@@ -1097,6 +1139,19 @@ if(typeof loadHargaConfig === 'function'){
 }
 checkExpired();
 (function initListeners(){ let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]'); orders.forEach(o=>attachFirebaseListener(o.id)); })();
+
+// ===== AUTO REDIRECT SETELAH LOGIN =====
+setTimeout(()=>{
+  const redirect = sessionStorage.getItem('wafa_redirect_after_login');
+  if(redirect && isLoggedIn()){
+    sessionStorage.removeItem('wafa_redirect_after_login');
+    if(redirect === 'roblox') openRoblox();
+    else if(redirect === 'pesanan') openPesanan();
+    else if(redirect === 'dompet') window.location.href = 'dompet.html';
+    else if(redirect === 'profil') window.location.href = 'profil.html';
+    else if(redirect === 'admin') window.location.href = 'admin.html';
+  }
+}, 800);
 
 function loadSettingsFirebase(){
   if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){ setTimeout(loadSettingsFirebase, 500); return; }
