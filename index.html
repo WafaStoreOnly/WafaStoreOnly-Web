@@ -730,27 +730,39 @@ function pilihBayar(m, el){
   }
 }
 
+// ===== FUNGSI INI YANG DIUBAH JADI ALERT =====
 async function generateQRISForAmount(amount){
   try{
     const nominalEl = document.getElementById('qrisNominalDisplay');
     if(nominalEl) nominalEl.innerText = 'Rp' + amount.toLocaleString('id-ID');
     
     if(typeof convertQRISDinamis !== 'function'){
-      console.error('convertQRISDinamis tidak ditemukan — cek qris-dinamis.js');
+      alert('❌ ERROR 1: convertQRISDinamis tidak ditemukan! Cek qris-dinamis.js');
       return;
     }
     if(typeof QRCode === 'undefined'){
-      console.error('QRCode library belum ke-load');
+      alert('❌ ERROR 2: Library QRCode belum ke-load! Cek CDN qrcode.min.js di <head>');
       return;
     }
     
     const qrisDynamic = convertQRISDinamis(amount);
-    console.log('QRIS Dinamis:', qrisDynamic);
+    
+    if(!qrisDynamic || qrisDynamic.length < 50){
+      alert('❌ ERROR 3: String QRIS kosong atau terlalu pendek! Panjang: ' + (qrisDynamic ? qrisDynamic.length : 0));
+      return;
+    }
+    
+    const canvas = document.getElementById('qrisCanvas');
+    if(!canvas){
+      alert('❌ ERROR 4: Canvas #qrisCanvas tidak ditemukan di HTML!');
+      return;
+    }
     
     await renderQRIS(qrisDynamic, 'qrisCanvas');
-    console.log('✅ QRIS berhasil di-render');
+    alert('✅ SUKSES! QRIS berhasil di-render.\n\nString: ' + qrisDynamic.substring(0, 30) + '...');
+    
   }catch(e){
-    console.error('Generate QRIS error:', e);
+    alert('❌ GAGAL GENERATE QRIS: ' + e.message);
   }
 }
 
@@ -1218,5 +1230,6 @@ if(document.readyState === 'complete'){
   });
 }
 </script>
+<script src="./fix-games.js"></script>
 </body>
 </html>
