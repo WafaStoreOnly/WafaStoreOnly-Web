@@ -25,7 +25,6 @@ function convertQRISDinamis(amount) {
   if (!amount || amount <= 0) throw new Error('Nominal harus > 0');
   
   // Hapus tag CRC (6304) + 4 digit CRC di belakang
-  // Cari index "6304" terakhir, potong dari situ
   const idxCRC = QRIS_STATIC.lastIndexOf('6304');
   let qris = idxCRC > -1 ? QRIS_STATIC.slice(0, idxCRC) : QRIS_STATIC;
   
@@ -34,7 +33,7 @@ function convertQRISDinamis(amount) {
     qris = qris.replace('010211', '010212');
   }
   
-  // 2. Hapus Tag 54 lama kalau ada (biar ga duplikat)
+  // 2. Hapus Tag 54 lama kalau ada
   const tag54Regex = /54(\d{2})(\d+)/;
   const match54 = qris.match(tag54Regex);
   if (match54) {
@@ -46,47 +45,75 @@ function convertQRISDinamis(amount) {
   const idx58 = qris.indexOf('5802ID');
   if (idx58 === -1) throw new Error('Format QRIS invalid: tag 58 tidak ditemukan');
   
-  // Format Tag 54: "54" + length (2 digit) + amount
   const amountStr = amount.toString();
   const amountLen = amountStr.length.toString().padStart(2, '0');
   const tag54 = '54' + amountLen + amountStr;
   
-  // Insert tag 54 sebelum 5802ID
   const newQRIS = qris.slice(0, idx58) + tag54 + qris.slice(idx58);
   
-  // 4. Hitung ulang CRC16 untuk string + "6304"
+  // 4. Hitung ulang CRC16
   const crcInput = newQRIS + '6304';
   const newCRC = crc16(crcInput);
   
-  // 5. Return QRIS dinamis lengkap dengan CRC baru
   return crcInput + newCRC;
 }
 
-// ===== Generate QR Code ke Canvas =====
-async function renderQRIS(qrisString, canvasId) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) throw new Error('Canvas tidak ditemukan: ' + canvasId);
+// ===== Generate QR Code (pakai qrcodejs - davidshimjs) =====
+function renderQRIS(qrisString, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) throw new Error('Container tidak ditemukan: ' + containerId);
   
-  // Pakai library qrcode.js
   if (typeof QRCode === 'undefined') {
-    throw new Error('Library QRCode belum ke-load. Cek CDN di <head>.');
+    throw new Error('Library QRCode belum ke-load. Cek CDN qrcodejs di <head>.');
   }
   
-  await QRCode.toCanvas(canvas, qrisString, {
-    width: 300,
-    margin: 2,
-    color: {
-      dark: '#000000',
-      light: '#ffffff'
-    },
-    errorCorrectionLevel: 'M'
+  // Bersihin container dulu
+  container.innerHTML = '';
+  
+  // Generate QR baru
+  new QRCode(container, {
+    text: qrisString,
+    width: 280,
+    height: 280,
+    colorDark: '#000000',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
   });
   
-  console.log('✅ QRIS berhasil di-render ke #' + canvasId);
-  return canvas;
+  console.log('✅ QRIS berhasil di-render ke #' + containerId);
+  return container;
 }
 
-// ===== Test Function (buat debug di console) =====
+// ===== Ambil gambar QR sebagai Image (buat download) =====
+async function getQRImage(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) throw new Error('Container tidak ditemukan: ' + containerId);
+  
+  const img = container.querySelector('img');
+  const canvas = container.querySelector('canvas');
+  
+  if (img && img.src) {
+    // qrcodejs bikin img, kita tunggu loaded
+    await new Promise((resolve) => {
+      if (img.complete && img.naturalWidth > 0) { resolve(); return; }
+      img.onload = resolve;
+      img.onerror = resolve;
+    });
+    return img;
+  }
+  
+  if (canvas) {
+    // Fallback ke canvas
+    const newImg = new Image();
+    newImg.src = canvas.toDataURL('image/png');
+    await new Promise((resolve) => { newImg.onload = resolve; });
+    return newImg;
+  }
+  
+  throw new Error('QR belum di-generate. Coba refresh dulu.');
+}
+
+// ===== Test Function =====
 window.testQRIS = function(amount) {
   try {
     const qrisDynamic = convertQRISDinamis(amount);
@@ -94,7 +121,8 @@ window.testQRIS = function(amount) {
     console.log('Nominal: Rp' + amount.toLocaleString('id-ID'));
     console.log('QRIS String:', qrisDynamic);
     console.log('Panjang:', qrisDynamic.length, 'karakter');
-    console.log('Cek duplikat 6304:', qrisDynamic.indexOf('6304') !== qrisDynamic.lastIndexOf('6304') ? '❌ ADA DUPLIKAT!' : '✅ OK');
+    const duplikat = qrisDynamic.indexOf('6304') !== qrisDynamic.lastIndexOf('6304');
+    console.log('Cek duplikat 6304:', duplikat ? '❌ ADA DUPLIKAT!' : '✅ OK');
     return qrisDynamic;
   } catch(e) {
     console.error('❌ Error:', e.message);
@@ -102,4 +130,4 @@ window.testQRIS = function(amount) {
   }
 };
 
-console.log('✅ qris-dinamis.js loaded. Test: testQRIS(16000)');
+console.log('✅ qris-dinamis.js loaded (qrcodejs version). Test: testQRIS(16000)');
