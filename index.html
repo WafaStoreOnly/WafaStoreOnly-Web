@@ -262,7 +262,7 @@ Selamat datang di rumah baru kalian.</div>
 
   <div id="m-username">
     <div class="input-group"><label>Username Roblox</label><input id="uRbx" placeholder="Masukkan username"></div>
-    <div class="input-group"><label>Jumlah Robux (Rp160/robux)</label><input id="cRbx" type="number" placeholder="Contoh: 1000" oninput="calcUsername()"></div>
+    <div class="input-group"><label>Jumlah Robux</label><input id="cRbx" type="number" placeholder="Contoh: 1000" oninput="calcUsername()"></div>
     <div class="total-box" id="tRbx">Total: 0 Robux = Rp0</div>
     <div style="font-weight:700;font-size:13px;margin:20px 0 10px;color:#e8e8e8">Pilih Paket</div>
     <div class="grid-robux" id="gridUsername"></div>
@@ -280,7 +280,7 @@ Selamat datang di rumah baru kalian.</div>
 
   <div id="m-gamepass" style="display:none">
     <div class="input-group"><label>Username Roblox</label><input id="uRbx2" placeholder="Masukkan username"></div>
-    <div class="input-group"><label>Jumlah Robux (Rp140/robux)</label><input id="cRbx2" type="number" placeholder="Contoh: 1000" oninput="calcGamepass()"></div>
+    <div class="input-group"><label>Jumlah Robux</label><input id="cRbx2" type="number" placeholder="Contoh: 1000" oninput="calcGamepass()"></div>
     <div class="input-group"><label>Link Gamepass</label><input id="gamepassLink" placeholder="https://www.roblox.com/game-pass/xxxxxxx"></div>
     <div class="total-box" id="tRbx2">Total: 0 Robux = Rp0<br>Setting Gamepass: 0 Robux</div>
     <div style="font-weight:700;font-size:13px;margin:20px 0 10px;color:#e8e8e8">Pilih Paket</div>
@@ -301,7 +301,7 @@ Selamat datang di rumah baru kalian.</div>
     <div class="input-group"><label>Nama Item</label><input id="giftItem" placeholder="Contoh: VIP Gamepass"></div>
     <div class="input-group"><label>Jumlah Robux Item</label><input id="cGift" type="number" placeholder="Contoh: 445" oninput="calcGift()"></div>
     <div class="input-group"><label>Link Private Server</label><input id="privateServerLink" placeholder="https://www.roblox.com/games/xxxxx"></div>
-    <div class="total-box" id="tGift">Total: 0 Robux × Rp95 = Rp0<br>Item: -</div>
+    <div class="total-box" id="tGift">Total: 0 Robux = Rp0<br>Item: -</div>
     <div class="syarat-box-modern" id="syaratGift">
       <div class="syarat-title" id="syaratTitleGift">📌 SYARAT & KETENTUAN — GIFT IN GAME</div>
       <div id="syaratItemsGift">
@@ -320,6 +320,14 @@ Selamat datang di rumah baru kalian.</div>
   <div style="color:#8a8a8a;font-size:12px;margin:10px 0;cursor:pointer" onclick="backToRoblox()">← Kembali</div>
   <div style="font-weight:800;font-size:18px;margin-top:8px">Pembayaran</div>
   <div style="background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:16px;margin-top:16px;font-size:13px;line-height:1.8" id="orderSummary"></div>
+
+  <div style="margin-top:20px;font-weight:700;font-size:13px;color:#e8e8e8">🎟️ Kode Voucher</div>
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <input id="voucherInput" placeholder="Masukkan kode voucher" style="flex:1;padding:12px;border-radius:10px;border:1px solid #2a2a2a;background:#141414;color:#e8e8e8;font-family:inherit;font-size:13px;text-transform:uppercase">
+    <button onclick="applyVoucher()" style="padding:12px 20px;border-radius:10px;border:none;background:#4a90e2;color:#fff;font-weight:700;font-size:13px;cursor:pointer">Pakai</button>
+  </div>
+  <div id="voucherInfo" style="font-size:11px;color:#8a8a8a;margin-top:8px;min-height:16px"></div>
+
   <div style="margin-top:20px;font-weight:700;font-size:13px;color:#a8a8a8">Total yang wajib dibayar</div>
   <div style="background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:18px;margin-top:8px;text-align:center;font-size:28px;font-weight:900;color:#4ade80" id="wajibBayar">Rp0</div>
 
@@ -418,6 +426,7 @@ Selamat datang di rumah baru kalian.</div>
 </div>
 
 <script src="./qris-dinamis.js"></script>
+<script src="./harga-voucher.js"></script>
 <script src="./sidebar.js"></script>
 <script>
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
@@ -465,32 +474,56 @@ const listGamepass=[100,200,300,400,500,1000,1500,2000,3000,4000,5000,10000];
 
 function renderUsername(){
   let g=document.getElementById('gridUsername');g.innerHTML='';
+  let p = window.hargaConfig.perRobux || 160;
+  let coret = window.hitungHargaCoret(p);
   listUsername.forEach(j=>{
     let d=document.createElement('div');
     d.style.cssText='background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:0.15s';
     d.onmouseenter=()=>d.style.borderColor='#4a90e2';
     d.onmouseleave=()=>d.style.borderColor='#2a2a2a';
-    d.innerHTML=`<div style="font-weight:700;font-size:13px;color:#e8e8e8">${j} Robux</div><div style="font-size:10px;color:#5a5a5a;text-decoration:line-through;margin-top:2px">Rp${(j*180).toLocaleString('id-ID')}</div><div style="font-size:14px;color:#4ade80;font-weight:800;margin-top:4px">Rp${(j*160).toLocaleString('id-ID')}</div>`;
+    let hargaFinal = j*p;
+    let hargaCoret = j*coret;
+    let diskonBadge = (window.hargaConfig.diskonPersen > 0)
+      ? `<div style="display:inline-block;background:rgba(239,68,68,0.15);color:#ef4444;font-size:9px;font-weight:800;padding:2px 6px;border-radius:8px;margin-top:4px">-${window.hargaConfig.diskonPersen}% OFF</div>`
+      : '';
+    d.innerHTML=`<div style="font-weight:700;font-size:13px;color:#e8e8e8">${j} Robux</div>${window.hargaConfig.diskonPersen > 0 ? `<div style="font-size:10px;color:#5a5a5a;text-decoration:line-through;margin-top:2px">Rp${hargaCoret.toLocaleString('id-ID')}</div>` : ''}<div style="font-size:14px;color:#4ade80;font-weight:800;margin-top:4px">Rp${hargaFinal.toLocaleString('id-ID')}</div>${diskonBadge}`;
     d.onclick=()=>{document.getElementById('cRbx').value=j;calcUsername()};
     g.appendChild(d);
   });
 }
-function calcUsername(){let j=parseInt(document.getElementById('cRbx').value)||0;document.getElementById('tRbx').innerText=`Total: ${j} Robux = Rp${(j*160).toLocaleString('id-ID')}`;}
+function calcUsername(){
+  let j=parseInt(document.getElementById('cRbx').value)||0;
+  let p = window.hargaConfig.perRobux || 160;
+  document.getElementById('tRbx').innerText=`Total: ${j} Robux = Rp${(j*p).toLocaleString('id-ID')}`;
+}
 
 function renderGamepass(){
   let g=document.getElementById('gridGamepass');g.innerHTML='';
+  let p = window.hargaConfig.perRobuxGamepass || 140;
+  let coret = window.hitungHargaCoret(p);
   listGamepass.forEach(j=>{
     let d=document.createElement('div');
     d.style.cssText='background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:0.15s';
     d.onmouseenter=()=>d.style.borderColor='#4a90e2';
     d.onmouseleave=()=>d.style.borderColor='#2a2a2a';
-    d.innerHTML=`<div style="font-weight:700;font-size:13px;color:#e8e8e8">${j} Robux</div><div style="font-size:10px;color:#5a5a5a;text-decoration:line-through;margin-top:2px">Rp${(j*155).toLocaleString('id-ID')}</div><div style="font-size:14px;color:#4ade80;font-weight:800;margin-top:4px">Rp${(j*140).toLocaleString('id-ID')}</div>`;
+    d.innerHTML=`<div style="font-weight:700;font-size:13px;color:#e8e8e8">${j} Robux</div>${window.hargaConfig.diskonPersen > 0 ? `<div style="font-size:10px;color:#5a5a5a;text-decoration:line-through;margin-top:2px">Rp${(j*coret).toLocaleString('id-ID')}</div>` : ''}<div style="font-size:14px;color:#4ade80;font-weight:800;margin-top:4px">Rp${(j*p).toLocaleString('id-ID')}</div>`;
     d.onclick=()=>{document.getElementById('cRbx2').value=j;calcGamepass()};
     g.appendChild(d);
   });
 }
-function calcGamepass(){let j=parseInt(document.getElementById('cRbx2').value)||0;let tot=j*140;let set=Math.ceil(j/0.7);document.getElementById('tRbx2').innerHTML=`Total: ${j} Robux = Rp${tot.toLocaleString('id-ID')}<br>Setting Gamepass: ${set} Robux`;}
-function calcGift(){let j=parseInt(document.getElementById('cGift').value)||0;let it=document.getElementById('giftItem').value||'-';let tot=j*95;document.getElementById('tGift').innerHTML=`Total: ${j} Robux × Rp95 = Rp${tot.toLocaleString('id-ID')}<br>Item: ${it}`;}
+function calcGamepass(){
+  let j=parseInt(document.getElementById('cRbx2').value)||0;
+  let p = window.hargaConfig.perRobuxGamepass || 140;
+  let tot=j*p;let set=Math.ceil(j/0.7);
+  document.getElementById('tRbx2').innerHTML=`Total: ${j} Robux = Rp${tot.toLocaleString('id-ID')}<br>Setting Gamepass: ${set} Robux`;
+}
+function calcGift(){
+  let j=parseInt(document.getElementById('cGift').value)||0;
+  let it=document.getElementById('giftItem').value||'-';
+  let p = window.hargaConfig.perRobuxGift || 95;
+  let tot=j*p;
+  document.getElementById('tGift').innerHTML=`Total: ${j} Robux × Rp${p} = Rp${tot.toLocaleString('id-ID')}<br>Item: ${it}`;
+}
 document.getElementById('giftItem')?.addEventListener('input',calcGift);
 
 function hideAll(){ ['homePage','robloxPage','paymentPage','pesananPage'].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display='none';}); }
@@ -528,6 +561,12 @@ function saveOrder(data){
   data.id=Date.now(); data.date=new Date().toLocaleString('id-ID'); data.status='verifikasi'; data.bukti=''; data.expiry=Date.now()+(10*60*1000);
   let uid=localStorage.getItem('wafa_uid')||'guest'; data.uid=uid;
   try{let userData=JSON.parse(localStorage.getItem('wafa_user')||'{}');data.nickname=userData.nickname||'-';data.email=userData.email||'-';}catch(e){}
+  if(window.voucherApplied){
+    data.voucherCode = window.voucherApplied.code;
+    data.voucherPotongan = window.voucherDiskon;
+    data.totalSebelumVoucher = data.total;
+    data.total = Math.max(0, data.total - window.voucherDiskon);
+  }
   orders.unshift(data); localStorage.setItem('wafa_orders',JSON.stringify(orders));
   attachFirebaseListener(data.id);
   try{
@@ -540,11 +579,10 @@ function sendDiscordWithBukti(o, dataUrl, judul){
   const baseUrl = "https://wafastoreonly-official.vercel.app/";
   const selesaiUrl = `${baseUrl}admin.html?id=${o.id}&action=selesai`;
   const batalUrl = `${baseUrl}admin.html?id=${o.id}&action=batal`;
-  
   let extra = '';
   if(o.method == 'gamepass' && o.gamepassLink) extra = `🔗 Link Gamepass: ${o.gamepassLink}`;
   if(o.method == 'gift' && o.item){ extra = `🎁 Item: ${o.item}`; if(o.privateServer) extra += `\n🔗 Private Server: ${o.privateServer}`; }
-  
+  if(o.voucherCode) extra += `\n🎟️ Voucher: ${o.voucherCode} (-Rp${(o.voucherPotongan||0).toLocaleString('id-ID')})`;
   const embedData = {
     title: `📦 Order #${o.id.toString().slice(-6)}`,
     color: 0x4a90e2,
@@ -559,13 +597,11 @@ function sendDiscordWithBukti(o, dataUrl, judul){
     footer: { text: `UID: ${o.uid || '-'} • Status: OTOMATIS DIPROSES ⚡` }
   };
   if(extra) embedData.description = extra;
-  
   fetch(window.DISCORD_URL+"?with_components=true", {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ content: `💸 **BUKTI TF MASUK! [VALID ✅]**`, embeds: [embedData] })
   }).catch(e=>console.log('Err 1:', e));
-  
   setTimeout(()=>{
     fetch(dataUrl).then(r=>r.blob()).then(blob=>{
       let form = new FormData();
@@ -585,7 +621,7 @@ function sendDiscordWithBukti(o, dataUrl, judul){
         .then(data=>{
           console.log('Discord pesan 2 terkirim:', data);
           if(data && data.id && window.wafaDB){
-            window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+o.id), { 
+            window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+o.id), {
               discordMessageId: data.id,
               discordChannelId: data.channel_id
             }).catch(e=>console.log('Save msg id error:', e));
@@ -623,12 +659,13 @@ function renderPesanan(){
   let label=o.status=='verifikasi'?`Menunggu Bukti · ${o.expiry?getSisaWaktu(o.expiry):'10:00'}`:o.status=='proses'?'Diproses':o.status=='selesai'?'Selesai': isTimeout? 'Batal (Timeout)' : 'Batal';
   let d=document.createElement('div');d.className='order-card';d.style.borderColor=color+'60';
   if(o.status=='verifikasi'){
-    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:14px;color:#e8e8e8">#${o.id.toString().slice(-6)}</b><span style="background:${color}20;color:${color};border:1px solid ${color}60;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700">${label}</span></div><div style="font-size:11px;color:#5a5a5a;margin-top:6px">${o.date}</div><div style="font-size:12px;color:#a8a8a8;margin-top:12px;line-height:1.7">Username: <b style="color:#e8e8e8">${o.username}</b><br>Jumlah: <b style="color:#e8e8e8">${o.jumlah} Robux</b><br>Total: <b style="color:#4ade80">Rp${o.total.toLocaleString('id-ID')}</b></div><button class="btn btn-yellow" style="margin-top:14px" onclick="uploadBukti(${o.id})">📤 Upload Bukti TF</button>`;
+    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:14px;color:#e8e8e8">#${o.id.toString().slice(-6)}</b><span style="background:${color}20;color:${color};border:1px solid ${color}60;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700">${label}</span></div><div style="font-size:11px;color:#5a5a5a;margin-top:6px">${o.date}</div><div style="font-size:12px;color:#a8a8a8;margin-top:12px;line-height:1.7">Username: <b style="color:#e8e8e8">${o.username}</b><br>Jumlah: <b style="color:#e8e8e8">${o.jumlah} Robux</b><br>Total: <b style="color:#4ade80">Rp${o.total.toLocaleString('id-ID')}</b>${o.voucherCode?`<br>Voucher: <b style="color:#4ade80">${o.voucherCode} (-Rp${(o.voucherPotongan||0).toLocaleString('id-ID')})</b>`:''}</div><button class="btn btn-yellow" style="margin-top:14px" onclick="uploadBukti(${o.id})">📤 Upload Bukti TF</button>`;
   } else {
     let msgTimeout = isTimeout? `<div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);padding:10px;border-radius:8px;margin-top:12px;font-size:11px;color:#ef4444">Transaksi dibatalkan karena timeout. Order kembali ya.</div>` : '';
     let msgBatal = (o.status=='batal' && !isTimeout)? `<div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);padding:10px;border-radius:8px;margin-top:12px;font-size:11px;color:#ef4444">Dibatalkan admin: ${o.batalReason||'-'}</div>` : '';
     let viaSaldo = o.metodeBayar=='saldo'? `<div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);padding:10px;border-radius:8px;margin-top:12px;font-size:11px;color:#4ade80">💳 Dibayar via Saldo Web</div>` : '';
-    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:14px;color:#e8e8e8">#${o.id.toString().slice(-6)}</b><span style="background:${color}20;color:${color};border:1px solid ${color}60;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700">${label}</span></div><div style="font-size:11px;color:#5a5a5a;margin-top:6px">${o.date}</div><div style="font-size:12px;color:#a8a8a8;margin-top:12px;line-height:1.7">Username: <b style="color:#e8e8e8">${o.username}</b><br>Jumlah: <b style="color:#e8e8e8">${o.jumlah} Robux</b><br>Total: <b style="color:#e8e8e8">Rp${o.total.toLocaleString('id-ID')}</b></div>${viaSaldo}${msgTimeout}${msgBatal}`;
+    let viaVoucher = o.voucherCode? `<div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);padding:10px;border-radius:8px;margin-top:12px;font-size:11px;color:#4ade80">🎟️ Voucher ${o.voucherCode}: -Rp${(o.voucherPotongan||0).toLocaleString('id-ID')}</div>` : '';
+    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:14px;color:#e8e8e8">#${o.id.toString().slice(-6)}</b><span style="background:${color}20;color:${color};border:1px solid ${color}60;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700">${label}</span></div><div style="font-size:11px;color:#5a5a5a;margin-top:6px">${o.date}</div><div style="font-size:12px;color:#a8a8a8;margin-top:12px;line-height:1.7">Username: <b style="color:#e8e8e8">${o.username}</b><br>Jumlah: <b style="color:#e8e8e8">${o.jumlah} Robux</b><br>Total: <b style="color:#e8e8e8">Rp${o.total.toLocaleString('id-ID')}</b></div>${viaSaldo}${viaVoucher}${msgTimeout}${msgBatal}`;
   }
   list.appendChild(d);
  });
@@ -691,28 +728,32 @@ async function uploadBuktiFromChat(input){
 
 setInterval(checkExpired,5000);
 setInterval(()=>{if(document.getElementById('pesananPage').style.display=='block')renderPesanan();},1000);
-  
+
 // ===== PEMBAYARAN =====
 let lastOrderData = null;
 let metodeBayar = 'saldo';
 
 function goToPayment(){
  let summary='',total=0,u,j,it,set,privateLink='',gpassLink='';
- if(currentMethod=='username'){u=document.getElementById('uRbx').value||'-';j=parseInt(document.getElementById('cRbx').value)||0;total=j*160;if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Username</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
- else if(currentMethod=='gamepass'){u=document.getElementById('uRbx2').value||'-';j=parseInt(document.getElementById('cRbx2').value)||0;gpassLink=document.getElementById('gamepassLink').value||'-';total=j*140;set=Math.ceil(j/0.7);if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gamepass</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Link</span><b style="word-break:break-all;font-size:11px">${gpassLink}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Setting</span><b>${set} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
- else{u=document.getElementById('uRbx3').value||'-';it=document.getElementById('giftItem').value||'-';privateLink=document.getElementById('privateServerLink').value||'-';j=parseInt(document.getElementById('cGift').value)||0;total=j*95;if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gift In Game</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Item</span><b>${it}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Private Server</span><b style="font-size:11px;word-break:break-all">${privateLink}</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
+ let pU = window.hargaConfig.perRobux||160;
+ let pG = window.hargaConfig.perRobuxGamepass||140;
+ let pF = window.hargaConfig.perRobuxGift||95;
+
+ if(currentMethod=='username'){u=document.getElementById('uRbx').value||'-';j=parseInt(document.getElementById('cRbx').value)||0;total=j*pU;if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Username</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
+ else if(currentMethod=='gamepass'){u=document.getElementById('uRbx2').value||'-';j=parseInt(document.getElementById('cRbx2').value)||0;gpassLink=document.getElementById('gamepassLink').value||'-';total=j*pG;set=Math.ceil(j/0.7);if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gamepass</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Link</span><b style="word-break:break-all;font-size:11px">${gpassLink}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Jumlah</span><b>${j} Robux</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Setting</span><b>${set} Robux</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
+ else{u=document.getElementById('uRbx3').value||'-';it=document.getElementById('giftItem').value||'-';privateLink=document.getElementById('privateServerLink').value||'-';j=parseInt(document.getElementById('cGift').value)||0;total=j*pF;if(!j){alert('Isi jumlah dulu');return;}summary=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Via</span><b>Gift In Game</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Username</span><b>${u}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Item</span><b>${it}</b></div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#8a8a8a">Private Server</span><b style="font-size:11px;word-break:break-all">${privateLink}</b></div><div style="display:flex;justify-content:space-between"><span style="color:#8a8a8a">Total</span><b style="color:#4ade80">Rp${total.toLocaleString('id-ID')}</b></div>`;}
 
  lastOrderData = {username:u,method:currentMethod,jumlah:j,total:total,item:it||'',setting:set||'',privateServer:privateLink||'',gamepassLink:gpassLink||''};
+ window.lastOrderData = lastOrderData;
  document.getElementById('orderSummary').innerHTML=summary;
  document.getElementById('wajibBayar').innerText=`Rp${total.toLocaleString('id-ID')}`;
+
+ if(typeof resetVoucher === 'function') resetVoucher();
+
  hideAll(); document.getElementById('paymentPage').style.display='block'; if(typeof wsSetTitle==='function') wsSetTitle('💳 Pembayaran');
  loadSaldoUser();
  pilihBayar('saldo', document.getElementById('tabSaldo'));
- 
- if(lastOrderData && lastOrderData.total){
-   setTimeout(()=>{ generateQRISForAmount(lastOrderData.total); }, 500);
- }
- 
+ if(lastOrderData && lastOrderData.total){ setTimeout(()=>{ generateQRISForAmount(lastOrderData.total); }, 500); }
  window.scrollTo(0,0);
 }
 function pilihBayar(m, el){
@@ -720,7 +761,6 @@ function pilihBayar(m, el){
   document.querySelectorAll('.method-tabs .tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   ['saldo','dana','gopay','seabank','qris'].forEach(x=>{ document.getElementById('pay-'+x).style.display = x==m?'block':'none'; });
-  
   if(m === 'qris' && lastOrderData && lastOrderData.total){
     generateQRISForAmount(lastOrderData.total);
   }
@@ -730,33 +770,19 @@ async function generateQRISForAmount(amount){
   try{
     const nominalEl = document.getElementById('qrisNominalDisplay');
     if(nominalEl) nominalEl.innerText = 'Rp' + amount.toLocaleString('id-ID');
-    
     if(typeof convertQRISDinamis !== 'function'){
-      alert('❌ ERROR 1: convertQRISDinamis tidak ditemukan! Cek qris-dinamis.js');
+      console.error('convertQRISDinamis tidak ditemukan');
       return;
     }
     if(typeof QRCode === 'undefined'){
-      alert('❌ ERROR 2: Library QRCode belum ke-load! Cek CDN qrcodejs di <head>');
+      console.error('Library QRCode belum ke-load');
       return;
     }
-    
     const qrisDynamic = convertQRISDinamis(amount);
-    
-    if(!qrisDynamic || qrisDynamic.length < 50){
-      alert('❌ ERROR 3: String QRIS kosong atau terlalu pendek! Panjang: ' + (qrisDynamic ? qrisDynamic.length : 0));
-      return;
-    }
-    
-    const container = document.getElementById('qrisCanvas');
-    if(!container){
-      alert('❌ ERROR 4: Container #qrisCanvas tidak ditemukan di HTML!');
-      return;
-    }
-    
     renderQRIS(qrisDynamic, 'qrisCanvas');
-    
   }catch(e){
-    alert('❌ GAGAL GENERATE QRIS: ' + e.message);
+    console.error('Gagal generate QRIS:', e);
+    if(typeof wsToast === 'function') wsToast('❌ Gagal generate QRIS');
   }
 }
 
@@ -764,101 +790,69 @@ async function downloadQRISDinamis(){
   try{
     const container = document.getElementById('qrisCanvas');
     if(!container){ alert('QR belum di-generate'); return; }
-    
     if(typeof wsToast === 'function') wsToast('⏳ Generate gambar...');
-    
     const qrImg = await getQRImage('qrisCanvas');
-    
     const W = 800;
     const H = 1200;
-    
     const finalCanvas = document.createElement('canvas');
     finalCanvas.width = W;
     finalCanvas.height = H;
     const ctx = finalCanvas.getContext('2d');
-    
     const bgImg = new Image();
     bgImg.crossOrigin = 'anonymous';
     bgImg.src = './killua-bg.webp';
-    
     await new Promise((resolve, reject) => {
       bgImg.onload = resolve;
       bgImg.onerror = () => reject(new Error('Gagal load background'));
     });
-    
     const bgRatio = bgImg.width / bgImg.height;
     const canvasRatio = W / H;
     let bgW, bgH, bgX, bgY;
-    if(bgRatio > canvasRatio){
-      bgH = H; bgW = H * bgRatio; bgX = (W - bgW) / 2; bgY = 0;
-    } else {
-      bgW = W; bgH = W / bgRatio; bgX = 0; bgY = (H - bgH) / 2;
-    }
+    if(bgRatio > canvasRatio){ bgH = H; bgW = H * bgRatio; bgX = (W - bgW) / 2; bgY = 0; }
+    else { bgW = W; bgH = W / bgRatio; bgX = 0; bgY = (H - bgH) / 2; }
     ctx.drawImage(bgImg, bgX, bgY, bgW, bgH);
-    
     ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
     ctx.fillRect(0, 0, W, H);
-    
-    const tagW = 340;
-    const tagH = 60;
-    const tagX = (W - tagW) / 2;
-    const tagY = 180;
-    
+    const tagW = 340, tagH = 60, tagX = (W - tagW) / 2, tagY = 180;
     ctx.shadowColor = 'rgba(0, 198, 255, 0.8)';
     ctx.shadowBlur = 30;
     ctx.fillStyle = '#000';
     ctx.fillRect(tagX, tagY, tagW, tagH);
     ctx.shadowBlur = 0;
-    
     ctx.strokeStyle = '#00c6ff';
     ctx.lineWidth = 3;
     ctx.strokeRect(tagX, tagY, tagW, tagH);
-    
     ctx.fillStyle = '#fff';
     ctx.font = '900 28px Inter, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('AWA_NEWSTREAM', W / 2, tagY + tagH / 2 + 2);
-    
-    const cardW = 480;
-    const cardH = 620;
-    const cardX = (W - cardW) / 2;
-    const cardY = 290;
-    
+    const cardW = 480, cardH = 620, cardX = (W - cardW) / 2, cardY = 290;
     ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
     ctx.shadowBlur = 40;
     ctx.fillStyle = '#fff';
     ctx.fillRect(cardX, cardY, cardW, cardH);
     ctx.shadowBlur = 0;
-    
     ctx.fillStyle = '#5a5a5a';
     ctx.font = '700 14px Inter, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('TOTAL PEMBAYARAN', W / 2, cardY + 40);
-    
     const nominalEl = document.getElementById('qrisNominalDisplay');
     const nominalText = nominalEl ? nominalEl.innerText : 'Rp0';
     ctx.fillStyle = '#0a0a0a';
     ctx.font = '900 38px Inter, sans-serif';
     ctx.fillText(nominalText, W / 2, cardY + 90);
-    
-    const qrSize = 380;
-    const qrX = (W - qrSize) / 2;
-    const qrY = cardY + 130;
+    const qrSize = 380, qrX = (W - qrSize) / 2, qrY = cardY + 130;
     ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
-    
     ctx.fillStyle = '#5a5a5a';
     ctx.font = '600 13px Inter, sans-serif';
     ctx.fillText('📱 Scan pakai DANA / GoPay / m-Banking', W / 2, cardY + cardH - 30);
-    
     ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
     ctx.font = '800 18px Inter, sans-serif';
     ctx.fillText('⚡ WafaStoreOnly x Killua', W / 2, H - 60);
-    
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.font = '500 11px Inter, sans-serif';
     ctx.fillText('QRIS Dinamis • Nominal Otomatis', W / 2, H - 30);
-    
     finalCanvas.toBlob(function(blob){
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -871,7 +865,6 @@ async function downloadQRISDinamis(){
       URL.revokeObjectURL(url);
       if(typeof wsToast === 'function') wsToast('✅ QRIS berhasil di-download!');
     }, 'image/png');
-    
   }catch(e){
     console.error('Download error:', e);
     alert('❌ Gagal download: ' + e.message);
@@ -888,11 +881,12 @@ async function loadSaldoUser(){
     document.getElementById('saldoNow').innerText=`Rp${saldo.toLocaleString('id-ID')}`;
     const info=document.getElementById('saldoInfo');
     const btn=document.getElementById('btnBayarSaldo');
-    if(lastOrderData && saldo >= lastOrderData.total){
-      info.innerHTML=`✅ Saldo cukup. Sisa setelah bayar: <b style="color:#4ade80">Rp${(saldo-lastOrderData.total).toLocaleString('id-ID')}</b>`;
+    let totalAkhir = lastOrderData ? Math.max(0, lastOrderData.total - (window.voucherDiskon||0)) : 0;
+    if(lastOrderData && saldo >= totalAkhir){
+      info.innerHTML=`✅ Saldo cukup. Sisa setelah bayar: <b style="color:#4ade80">Rp${(saldo-totalAkhir).toLocaleString('id-ID')}</b>`;
       btn.disabled=false; btn.style.opacity=1;
     } else {
-      const kurang = lastOrderData? lastOrderData.total - saldo : 0;
+      const kurang = lastOrderData? totalAkhir - saldo : 0;
       info.innerHTML=`❌ Saldo kurang <b style="color:#ef4444">Rp${kurang.toLocaleString('id-ID')}</b><br><span style="font-size:10px;color:#5a5a5a">Top up dompet dulu di halaman Dompet</span>`;
       btn.disabled=true; btn.style.opacity=0.5;
     }
@@ -903,30 +897,28 @@ async function bayarDenganSaldo(){
   if(!lastOrderData) return;
   const uid=localStorage.getItem('wafa_uid');
   const saldo=window._userSaldo||0;
-  if(saldo < lastOrderData.total){ alert('❌ Saldo kurang!'); return; }
-  if(!confirm(`Bayar Rp${lastOrderData.total.toLocaleString('id-ID')} pakai saldo?`)) return;
+  let totalAkhir = Math.max(0, lastOrderData.total - (window.voucherDiskon||0));
+  if(saldo < totalAkhir){ alert('❌ Saldo kurang!'); return; }
+  if(!confirm(`Bayar Rp${totalAkhir.toLocaleString('id-ID')} pakai saldo?`)) return;
   try{
-    const saldoBaru = saldo - lastOrderData.total;
+    const saldoBaru = saldo - totalAkhir;
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'users/' + uid), {saldo: saldoBaru});
     let newId = saveOrder({...lastOrderData, metodeBayar:'saldo', statusBayar:'lunas'});
+    if(typeof saveVoucherUsage === 'function' && window.voucherApplied) saveVoucherUsage(newId);
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/' + newId), {status:'proses', dibayarDariSaldo:true, expiry:null});
-    
     let userData = JSON.parse(localStorage.getItem('wafa_user')||'{}');
     let emailSensor = sensorEmail(userData.email || '-');
     let nickname = userData.nickname || '-';
     let orderIdShort = newId.toString().slice(-6);
-    let totalFormatted = lastOrderData.total.toLocaleString('id-ID');
+    let totalFormatted = totalAkhir.toLocaleString('id-ID');
     let sisaSaldoFormatted = saldoBaru.toLocaleString('id-ID');
-
-    let ringkasan = `✅ PEMBAYARAN BERHASIL!\n\n⚡ Pesanan #${orderIdShort} DIPROSES\n\n💳 Transaksi via: SALDO WEB\n💰 Saldo terpotong: Rp${totalFormatted}\n💵 Sisa saldo: Rp${sisaSaldoFormatted}\n\n👤 Buyer: ${emailSensor} (${nickname})\n📅 ${new Date().toLocaleString('id-ID')}\n\nMakasih udah order di WafaStoreOnly ⚡`;
-
+    let ringkasan = `✅ PEMBAYARAN BERHASIL!\n\n⚡ Pesanan #${orderIdShort} DIPROSES\n\n💳 Transaksi via: SALDO WEB\n💰 Saldo terpotong: Rp${totalFormatted}\n💵 Sisa saldo: Rp${sisaSaldoFormatted}${window.voucherApplied?`\n🎟️ Voucher: ${window.voucherApplied.code} (-Rp${(window.voucherDiskon||0).toLocaleString('id-ID')})`:''}\n\n👤 Buyer: ${emailSensor} (${nickname})\n📅 ${new Date().toLocaleString('id-ID')}\n\nMakasih udah order di WafaStoreOnly ⚡`;
     showOrderSummary(ringkasan);
     if(typeof addBotMsg === 'function') addBotMsg(ringkasan);
-    
     if(window.DISCORD_URL){
       fetch(window.DISCORD_URL+"?with_components=true", {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ content: `💰 **ORDER VIA SALDO - LUNAS!**\n\nID: #${orderIdShort}\nBuyer: ${emailSensor} (${nickname})\nUsername Roblox: ${lastOrderData.username}\nJumlah: ${lastOrderData.jumlah} Robux\nTotal: Rp${totalFormatted}\nSaldo sisa: Rp${sisaSaldoFormatted}` })
+        body: JSON.stringify({ content: `💰 **ORDER VIA SALDO - LUNAS!**\n\nID: #${orderIdShort}\nBuyer: ${emailSensor} (${nickname})\nUsername Roblox: ${lastOrderData.username}\nJumlah: ${lastOrderData.jumlah} Robux\nTotal: Rp${totalFormatted}${window.voucherApplied?`\nVoucher: ${window.voucherApplied.code} (-Rp${(window.voucherDiskon||0).toLocaleString('id-ID')})`:''}\nSaldo sisa: Rp${sisaSaldoFormatted}` })
       });
     }
     openPesanan();
@@ -1031,6 +1023,7 @@ function bayarViaApp(app, nomor){
 function buatPesananDanUpload(){
   if(!lastOrderData){ alert('Data order hilang, ulangi ya'); return; }
   let newId = saveOrder(lastOrderData);
+  if(typeof saveVoucherUsage === 'function' && window.voucherApplied) saveVoucherUsage(newId);
   if(typeof wsToast==='function') wsToast(`✅ Pesanan #${newId.toString().slice(-6)} dibuat!`);
   openPesanan();
   addBotMsg(`Yosh pesanan #${newId.toString().slice(-6)} masuk! 📤 Upload bukti TF ya! ⏰ Sisa 10 menit`);
@@ -1065,8 +1058,8 @@ function loadChat(){
       list.forEach(m=>{
         const d = document.createElement('div');
         d.className = 'msg ' + (m.from === 'admin' ? 'bot' : 'user');
-        if(m.image){ 
-          d.innerHTML = `<div style="font-size:11px;opacity:0.7;margin-bottom:4px">📸 Gambar:</div><img src="${m.image}" style="max-width:100%;border-radius:8px;margin-top:4px">`; 
+        if(m.image){
+          d.innerHTML = `<div style="font-size:11px;opacity:0.7;margin-bottom:4px">📸 Gambar:</div><img src="${m.image}" style="max-width:100%;border-radius:8px;margin-top:4px">`;
           if(m.text) d.innerHTML = m.text + '<br>' + d.innerHTML;
         } else {
           d.innerText = m.text;
@@ -1097,16 +1090,16 @@ function addBotMsg(txt){
 }
 
 // ===== INIT =====
-renderUsername(); renderGamepass(); checkExpired();
+if(typeof loadHargaConfig === 'function'){
+  loadHargaConfig().then(()=>{ renderUsername(); renderGamepass(); });
+} else {
+  renderUsername(); renderGamepass();
+}
+checkExpired();
 (function initListeners(){ let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]'); orders.forEach(o=>attachFirebaseListener(o.id)); })();
 
-// ===== LOAD SETTINGS FIREBASE =====
 function loadSettingsFirebase(){
-  if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){
-    setTimeout(loadSettingsFirebase, 500);
-    return;
-  }
-
+  if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){ setTimeout(loadSettingsFirebase, 500); return; }
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/branding'), (snap)=>{
     const d = snap.val();
     if(!d) return;
@@ -1127,7 +1120,6 @@ function loadSettingsFirebase(){
       if(heroBg) heroBg.style.backgroundImage = `url('${d.banner}')`;
     }
   });
-
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/welcome'), (snap)=>{
     const d = snap.val();
     const box = document.getElementById('welcomeBox');
@@ -1138,7 +1130,6 @@ function loadSettingsFirebase(){
     if(d.tagline) document.getElementById('welcomeTagline').innerHTML = d.tagline;
     if(d.message) document.getElementById('welcomeMsg').innerHTML = d.message;
   });
-
   const syaratCfg = [
     { key: 'username', boxId: 'syaratUsername', titleId: 'syaratTitleUsername', itemsId: 'syaratItemsUsername' },
     { key: 'gamepass', boxId: 'syaratGamepass', titleId: 'syaratTitleGamepass', itemsId: 'syaratItemsGamepass' },
@@ -1181,10 +1172,7 @@ function getTimeAgo(ts){
 }
 
 function loadRecentLogs(){
-  if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){
-    setTimeout(loadRecentLogs, 500);
-    return;
-  }
+  if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){ setTimeout(loadRecentLogs, 500); return; }
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'logs'), (snap)=>{
     const data = snap.val() || {};
     const logs = Object.values(data).sort((a,b)=>(b.selesaiAt||0)-(a.selesaiAt||0)).slice(0,10);
@@ -1200,17 +1188,7 @@ function loadRecentLogs(){
       const sensorRbx = sensorUsernameRbx(log.username);
       const div = document.createElement('div');
       div.className = 'log-item';
-      div.innerHTML = `
-        <div class="check">✅</div>
-        <div class="info">
-          <b>${log.nickname || 'User'}</b>
-          <span>@${sensorRbx}</span>
-        </div>
-        <div class="right">
-          <b>${log.jumlah} Robux</b>
-          <small>${timeAgo}</small>
-        </div>
-      `;
+      div.innerHTML = `<div class="check">✅</div><div class="info"><b>${log.nickname || 'User'}</b><span>@${sensorRbx}</span></div><div class="right"><b>${log.jumlah} Robux</b><small>${timeAgo}</small></div>`;
       el.appendChild(div);
     });
   });
@@ -1220,10 +1198,7 @@ if(document.readyState === 'complete'){
   loadSettingsFirebase();
   loadRecentLogs();
 } else {
-  window.addEventListener('load', ()=>{
-    loadSettingsFirebase();
-    loadRecentLogs();
-  });
+  window.addEventListener('load', ()=>{ loadSettingsFirebase(); loadRecentLogs(); });
 }
 </script>
 </body>
