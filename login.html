@@ -10,7 +10,7 @@
 :root{--primary:#4a90e2;--accent:#6b5ce7}
 body{background:#0a0a0a;color:#e8e8e8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at top,rgba(74,144,226,0.08),transparent 60%);pointer-events:none}
-.card{width:100%;max-width:400px;background:#141414;border:1px solid #2a2a2a;border-radius:20px;padding:28px;position:relative;z-index:2}
+.card{width:100%;max-width:420px;background:#141414;border:1px solid #2a2a2a;border-radius:20px;padding:28px;position:relative;z-index:2}
 .logo-box{display:flex;align-items:center;gap:14px;margin-bottom:22px}
 .logo-box img{width:56px;height:56px;border-radius:50%;border:1px solid #2a2a2a;object-fit:cover;background:#1a1a1a}
 .logo-text{flex:1}
@@ -20,28 +20,72 @@ h1{font-size:22px;font-weight:800;letter-spacing:-0.5px;color:#e8e8e8;line-heigh
 .btn{width:100%;padding:13px;border-radius:10px;border:none;font-weight:600;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;transition:0.15s;font-family:inherit}
 .btn:hover{opacity:0.9}
 .btn:active{transform:scale(0.98)}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
 .btn-google{background:#fff;color:#000}
+.btn-discord{background:#5865F2;color:#fff}
+.btn-tiktok{background:#000;color:#fff;border:1px solid #2a2a2a}
 .btn-wa{background:var(--primary);color:#fff}
+.btn-icon{font-size:16px;line-height:1}
 input{width:100%;padding:13px 16px;border-radius:10px;border:1px solid #2a2a2a;background:#0a0a0a;color:#e8e8e8;outline:none;margin-top:10px;font-size:13px;font-family:inherit;transition:0.15s}
 input:focus{border-color:var(--primary)}
 .divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:#5a5a5a;font-size:11px;font-weight:500;letter-spacing:0.5px}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:#2a2a2a}
 #recaptcha-container{margin-top:12px;transform:scale(0.9);transform-origin:left}
 .footer-note{font-size:10px;color:#5a5a5a;margin-top:16px;text-align:center;line-height:1.6}
+.social-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.social-grid .btn{margin-top:0}
+.error-box{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.4);color:#ef4444;padding:12px 14px;border-radius:10px;font-size:12px;margin-bottom:14px;line-height:1.6;display:none}
+.error-box.show{display:block}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);backdrop-filter:blur(8px);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal-box{background:#141414;border:1px solid #2a2a2a;border-radius:20px;padding:28px;max-width:420px;width:100%;animation:slideUp 0.3s ease}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-box h2{font-size:20px;font-weight:800;color:#e8e8e8;margin-bottom:8px;letter-spacing:-0.5px}
+.modal-box p{font-size:12px;color:#8a8a8a;line-height:1.6;margin-bottom:20px}
+.modal-box .avatar-preview{display:flex;align-items:center;gap:12px;padding:12px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;margin-bottom:16px}
+.modal-box .avatar-preview img{width:48px;height:48px;border-radius:50%;border:1px solid #2a2a2a;object-fit:cover;background:#0a0a0a}
+.modal-box .avatar-preview b{font-size:13px;color:#e8e8e8;display:block}
+.modal-box .avatar-preview small{font-size:11px;color:#5a5a5a}
+.field-error{font-size:11px;color:#ef4444;margin-top:6px;display:none}
+.field-error.show{display:block}
+@media(max-width:480px){.card{padding:22px}.modal-box{padding:22px}}
 </style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, RecaptchaVerifier, signInWithPhoneNumber, getRedirectResult, signInWithRedirect } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getDatabase, ref, get, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-const firebaseConfig = { apiKey: "AIzaSyDTkQVpME0XRQmk9Jo7eDQuf0OFY8stm_8", authDomain: "wafastoreonly.firebaseapp.com", databaseURL: "https://wafastoreonly-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "wafastoreonly", storageBucket: "wafastoreonly.firebasestorage.app", messagingSenderId: "208012194307", appId: "1:208012194307:web:551a540b0151333da69436" };
+import { 
+  getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult,
+  RecaptchaVerifier, signInWithPhoneNumber, signInWithCustomToken, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, get, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = { 
+  apiKey: "AIzaSyDTkQVpME0XRQmk9Jo7eDQuf0OFY8stm_8", 
+  authDomain: "wafastoreonly.firebaseapp.com", 
+  databaseURL: "https://wafastoreonly-default-rtdb.asia-southeast1.firebasedatabase.app", 
+  projectId: "wafastoreonly", 
+  storageBucket: "wafastoreonly.firebasestorage.app", 
+  messagingSenderId: "208012194307", 
+  appId: "1:208012194307:web:551a540b0151333da69436" 
+};
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
-window._auth=auth; window._db=db; window._ref=ref; window._get=get; window._set=set; window._onValue=onValue;
-window._provider=new GoogleAuthProvider(); window._GoogleSign=signInWithPopup; window._GoogleRedirect=signInWithRedirect; window._getRedirectResult=getRedirectResult;
-window._RecaptchaVerifier=RecaptchaVerifier; window._signInWithPhoneNumber=signInWithPhoneNumber;
 
-// ===== LOAD BRANDING & THEME =====
+window._auth = auth;
+window._db = db;
+window._ref = ref;
+window._get = get;
+window._set = set;
+window._update = update;
+window._onValue = onValue;
+window._provider = new GoogleAuthProvider();
+window._GoogleSign = signInWithPopup;
+window._GoogleRedirect = signInWithRedirect;
+window._getRedirectResult = getRedirectResult;
+window._RecaptchaVerifier = RecaptchaVerifier;
+window._signInWithPhoneNumber = signInWithPhoneNumber;
+window._signInWithCustomToken = signInWithCustomToken;
+
 function loadLoginSettings(){
   onValue(ref(db, 'settings/branding'), (snap)=>{
     const d = snap.val();
@@ -69,9 +113,93 @@ function loadLoginSettings(){
   });
 }
 loadLoginSettings();
+
+function redirectAfterLogin(){
+  const target = sessionStorage.getItem('wafa_redirect_after_login') || 'index';
+  sessionStorage.removeItem('wafa_redirect_after_login');
+  if(target === 'dompet') window.location.href = 'dompet.html';
+  else if(target === 'profil') window.location.href = 'profil.html';
+  else if(target === 'admin') window.location.href = 'admin.html';
+  else if(target === 'roblox') window.location.href = 'index.html?open=roblox';
+  else if(target === 'pesanan') window.location.href = 'index.html?open=pesanan';
+  else window.location.href = 'index.html';
+}
+
+function showError(msg){
+  const box = document.getElementById('errorBox');
+  if(!box) return;
+  box.innerText = '❌ ' + msg;
+  box.classList.add('show');
+  setTimeout(()=>box.classList.remove('show'), 6000);
+}
+
+async function checkUserAndRedirect(user){
+  const snap = await get(ref(db, 'users/'+user.uid));
+  const data = snap.val();
+  localStorage.setItem('wafa_uid', user.uid);
+  if(!data || !data.nickname || data.nickname.trim() === ''){
+    showNameModal(user, data);
+    return;
+  }
+  redirectAfterLogin();
+}
+
+function showNameModal(user, userData){
+  const modal = document.getElementById('nameModal');
+  const avatar = document.getElementById('modalAvatar');
+  const providerInfo = document.getElementById('modalProvider');
+  const av = (userData && userData.avatar) || user.photoURL || './logo.png';
+  avatar.src = av;
+  const provider = (userData && userData.provider) || (user.providerData[0] && user.providerData[0].providerId) || 'email';
+  const providerLabel = {
+    'google.com': '🔵 Login via Google',
+    'discord': '🎮 Login via Discord',
+    'tiktok': '🎵 Login via TikTok',
+    'phone': '📱 Login via WhatsApp',
+    'password': '📧 Login via Email'
+  }[provider] || '👤 Login via ' + provider;
+  providerInfo.innerText = providerLabel;
+  const nameInput = document.getElementById('nameInput');
+  nameInput.value = (userData && userData.name) || user.displayName || '';
+  modal.classList.add('show');
+  setTimeout(()=>nameInput.focus(), 300);
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const btnSave = document.getElementById('btnSaveName');
+  if(!btnSave) return;
+  btnSave.onclick = async ()=>{
+    const nameInput = document.getElementById('nameInput');
+    const nameErr = document.getElementById('nameError');
+    const name = nameInput.value.trim();
+    if(name.length < 3){ nameErr.innerText = '❌ Nama minimal 3 karakter'; nameErr.classList.add('show'); return; }
+    if(name.length > 20){ nameErr.innerText = '❌ Nama maksimal 20 karakter'; nameErr.classList.add('show'); return; }
+    if(!/^[a-zA-Z0-9 _.-]+$/.test(name)){ nameErr.innerText = '❌ Cuma boleh huruf, angka, spasi, titik, underscore, strip'; nameErr.classList.add('show'); return; }
+    nameErr.classList.remove('show');
+    btnSave.disabled = true;
+    btnSave.innerText = '⏳ Menyimpan...';
+    try{
+      const uid = localStorage.getItem('wafa_uid');
+      if(!uid) throw new Error('User tidak ditemukan');
+      await update(ref(db, 'users/'+uid), { nickname: name, name: name, needsName: false, updatedAt: Date.now() });
+      const userSnap = await get(ref(db, 'users/'+uid));
+      const userData = userSnap.val();
+      localStorage.setItem('wafa_user', JSON.stringify({ nickname: name, email: userData.email || '', saldo: userData.saldo || 0 }));
+      btnSave.innerText = '✅ Berhasil!';
+      setTimeout(()=>redirectAfterLogin(), 500);
+    } catch(e){
+      console.error(e);
+      nameErr.innerText = '❌ Gagal menyimpan: ' + e.message;
+      nameErr.classList.add('show');
+      btnSave.disabled = false;
+      btnSave.innerText = '💾 Simpan & Lanjut';
+    }
+  };
+});
 </script>
 </head>
 <body>
+
 <div class="card">
   <div class="logo-box">
     <img id="loginLogo" src="./logo.png" alt="logo">
@@ -81,9 +209,16 @@ loadLoginSettings();
     </div>
   </div>
 
+  <div class="error-box" id="errorBox"></div>
+
   <div class="sub">Login dulu biar saldo & pesanan gak ilang kalo ganti HP. Kalo belum punya akun, nanti auto daftar setelah login.</div>
 
-  <button class="btn btn-google" id="btnGoogle">🔵 Login dengan Google</button>
+  <button class="btn btn-google" id="btnGoogle"><span class="btn-icon">🔵</span> Login dengan Google</button>
+
+  <div class="social-grid">
+    <button class="btn btn-discord" id="btnDiscord"><span class="btn-icon">🎮</span> Discord</button>
+    <button class="btn btn-tiktok" id="btnTiktok"><span class="btn-icon">🎵</span> TikTok</button>
+  </div>
 
   <div class="divider">ATAU LOGIN DENGAN WHATSAPP</div>
 
@@ -92,28 +227,72 @@ loadLoginSettings();
   <button class="btn btn-wa" id="btnSendOTP">Kirim Kode OTP ke WA (SMS)</button>
 
   <div id="otpBox" style="display:none">
-    <input id="otp" placeholder="Masukkan 6 digit kode OTP" type="number">
+    <input id="otp" placeholder="Masukkan 6 digit kode OTP" type="number" inputmode="numeric">
     <button class="btn btn-wa" id="btnVerif">Verifikasi Kode</button>
   </div>
 
-  <div class="footer-note">OTP dikirim via SMS (Firebase)</div>
+  <div class="footer-note">Login aman via Firebase & OAuth resmi.</div>
+</div>
+
+<div class="modal-overlay" id="nameModal">
+  <div class="modal-box">
+    <h2>👋 Selamat Datang!</h2>
+    <p>Sebelum lanjut, isi nama kamu dulu ya. Nama ini bakal muncul di profil & order.</p>
+    <div class="avatar-preview">
+      <img id="modalAvatar" src="./logo.png" alt="avatar">
+      <div>
+        <b id="modalName">User Baru</b>
+        <small id="modalProvider">Login via</small>
+      </div>
+    </div>
+    <input id="nameInput" placeholder="Contoh: Abi Wafa" maxlength="20" autocomplete="off">
+    <div class="field-error" id="nameError"></div>
+    <button class="btn btn-wa" id="btnSaveName" style="margin-top:16px">💾 Simpan & Lanjut</button>
+  </div>
 </div>
 
 <script type="module">
-let confirmationResult=null;
+let confirmationResult = null;
 const auth = window._auth;
 const db = window._db;
-
-// Deteksi HP
 const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-// INIT RECAPTCHA
+const urlParams = new URLSearchParams(window.location.search);
+const customToken = urlParams.get('custom_token');
+const providerParam = urlParams.get('provider');
+const errorParam = urlParams.get('error');
+
+if(errorParam){
+  const box = document.getElementById('errorBox');
+  box.innerText = '❌ ' + decodeURIComponent(errorParam);
+  box.classList.add('show');
+  window.history.replaceState({}, '', 'login.html');
+}
+
+if(customToken){
+  (async ()=>{
+    try{
+      console.log('🔐 Signing in with custom token from', providerParam);
+      const result = await window._signInWithCustomToken(auth, customToken);
+      const user = result.user;
+      console.log('✅ Logged in as:', user.uid);
+      window.history.replaceState({}, '', 'login.html');
+      await checkUserAndRedirect(user);
+    } catch(e){
+      console.error('Custom token login error:', e);
+      const box = document.getElementById('errorBox');
+      box.innerText = '❌ Gagal login: ' + e.message;
+      box.classList.add('show');
+      window.history.replaceState({}, '', 'login.html');
+    }
+  })();
+}
+
 try{
   window.recaptchaVerifier = new window._RecaptchaVerifier(auth, 'recaptcha-container', { size: 'normal', theme: 'dark' });
   window.recaptchaVerifier.render();
 }catch(e){ console.log('Recaptcha init error:', e); }
 
-// ===== LOGIN GOOGLE =====
 document.getElementById('btnGoogle').onclick = async () => {
   try{
     if(isMobile){
@@ -123,62 +302,76 @@ document.getElementById('btnGoogle').onclick = async () => {
       const user = result.user;
       const snap = await window._get(window._ref(db, 'users/'+user.uid));
       if(!snap.exists()){
-        await window._set(window._ref(db, 'users/'+user.uid), { uid:user.uid, email:user.email, name:user.displayName, nickname:user.displayName||user.email.split('@')[0], saldo:0, created:Date.now() });
+        await window._set(window._ref(db, 'users/'+user.uid), {
+          uid: user.uid, email: user.email, name: user.displayName, nickname: '',
+          avatar: user.photoURL || '', provider: 'google.com', saldo: 0,
+          created: Date.now(), needsName: true
+        });
       }
       localStorage.setItem('wafa_uid', user.uid);
-      location.href='index.html';
+      await checkUserAndRedirect(user);
     }
   }catch(e){
     if(e.code === 'auth/cancelled-popup-request' || e.code === 'auth/popup-closed-by-user'){
-      alert('Login dibatalkan. Coba klik lagi ya 🙏');
+      showError('Login dibatalkan. Coba klik lagi ya 🙏');
     } else {
-      alert('Login Google gagal: '+e.message);
+      showError('Login Google gagal: ' + e.message);
     }
-    console.log(e);
   }
 };
 
-// ===== HANDLE REDIRECT =====
 window._getRedirectResult(auth).then(async (result) => {
   if(result && result.user){
     const user = result.user;
     const snap = await window._get(window._ref(db, 'users/'+user.uid));
     if(!snap.exists()){
-      await window._set(window._ref(db, 'users/'+user.uid), { uid:user.uid, email:user.email, name:user.displayName, nickname:user.displayName||user.email.split('@')[0], saldo:0, created:Date.now() });
+      await window._set(window._ref(db, 'users/'+user.uid), {
+        uid: user.uid, email: user.email, name: user.displayName, nickname: '',
+        avatar: user.photoURL || '', provider: 'google.com', saldo: 0,
+        created: Date.now(), needsName: true
+      });
     }
     localStorage.setItem('wafa_uid', user.uid);
-    location.href='index.html';
+    await checkUserAndRedirect(user);
   }
 }).catch((e)=>{ console.log('Redirect error:', e); });
 
-// ===== LOGIN WHATSAPP OTP =====
 document.getElementById('btnSendOTP').onclick = async () => {
   let phone = document.getElementById('phone').value.trim();
-  if(phone.startsWith('0')) phone='+62'+phone.slice(1);
-  if(!phone.startsWith('+62')) phone='+62'+phone;
-  if(phone.length<11){ alert('Nomor WA salah'); return; }
+  if(phone.startsWith('0')) phone = '+62' + phone.slice(1);
+  if(!phone.startsWith('+62')) phone = '+62' + phone;
+  if(phone.length < 11){ showError('Nomor WA salah'); return; }
   try{
     confirmationResult = await window._signInWithPhoneNumber(auth, phone, window.recaptchaVerifier);
-    document.getElementById('otpBox').style.display='block';
-    alert('Kode OTP dikirim ke '+phone+' cek SMS!');
-  }catch(e){ alert('Gagal kirim OTP: '+e.message); console.log(e); }
+    document.getElementById('otpBox').style.display = 'block';
+    alert('Kode OTP dikirim ke ' + phone + '\n\nCek SMS!');
+  }catch(e){ showError('Gagal kirim OTP: ' + e.message); }
 };
 
 document.getElementById('btnVerif').onclick = async () => {
   let code = document.getElementById('otp').value.trim();
-  if(code.length!=6){ alert('Kode harus 6 digit'); return; }
+  if(code.length != 6){ showError('Kode harus 6 digit'); return; }
   try{
     const result = await confirmationResult.confirm(code);
     const user = result.user;
     const snap = await window._get(window._ref(db, 'users/'+user.uid));
     if(!snap.exists()){
-      let name = prompt('Akun baru! Masukkan Username kamu:','');
-      if(!name) name='User'+user.uid.slice(0,4);
-      await window._set(window._ref(db, 'users/'+user.uid), { uid:user.uid, phone:user.phoneNumber, name:name, nickname:name, saldo:0, created:Date.now() });
+      await window._set(window._ref(db, 'users/'+user.uid), {
+        uid: user.uid, phone: user.phoneNumber, name: '', nickname: '',
+        provider: 'phone', saldo: 0, created: Date.now(), needsName: true
+      });
     }
     localStorage.setItem('wafa_uid', user.uid);
-    location.href='index.html';
-  }catch(e){ alert('Kode salah: '+e.message); }
+    await checkUserAndRedirect(user);
+  }catch(e){ showError('Kode salah: ' + e.message); }
+};
+
+document.getElementById('btnDiscord').onclick = () => {
+  window.location.href = '/api/auth/discord';
+};
+
+document.getElementById('btnTiktok').onclick = () => {
+  window.location.href = '/api/auth/tiktok';
 };
 </script>
 </body>
