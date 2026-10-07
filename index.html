@@ -6,7 +6,7 @@
 <title>WafaStoreOnly - Top Up Robux Cepat & Aman</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="stylesheet" href="./sidebar.css">
 <style>
 .hero-banner{position:relative;border-radius:18px;overflow:hidden;background:#141414;border:1px solid #2a2a2a;min-height:300px;display:flex;align-items:center;margin-top:8px}
@@ -376,7 +376,7 @@ Selamat datang di rumah baru kalian.</div>
         <div style="background:#ffffff;border-radius:14px;padding:18px 16px 14px;max-width:300px;margin:0 auto;box-shadow:0 10px 40px rgba(0,0,0,0.6)">
           <div style="font-size:10px;color:#5a5a5a;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px">Total Pembayaran</div>
           <div style="font-size:22px;font-weight:900;color:#0a0a0a;margin-bottom:14px" id="qrisNominalDisplay">Rp0</div>
-          <canvas id="qrisCanvas" style="max-width:100%;display:block;margin:0 auto;border-radius:6px;background:#fff"></canvas>
+          <div id="qrisCanvas" style="display:flex;justify-content:center;background:#fff;border-radius:6px;padding:8px;min-height:296px;align-items:center"></div>
           <div style="font-size:10px;color:#5a5a5a;margin-top:12px;font-weight:600">📱 Scan pakai DANA / GoPay / m-Banking</div>
         </div>
       </div>
@@ -536,7 +536,6 @@ function saveOrder(data){
   return data.id;
 }
 
-// ===== DISCORD: Kirim bukti + SIMPAN MESSAGE ID =====
 function sendDiscordWithBukti(o, dataUrl, judul){
   const baseUrl = "https://wafastoreonly-official.vercel.app/";
   const selesaiUrl = `${baseUrl}admin.html?id=${o.id}&action=selesai`;
@@ -561,14 +560,12 @@ function sendDiscordWithBukti(o, dataUrl, judul){
   };
   if(extra) embedData.description = extra;
   
-  // Pesan 1: Embed
   fetch(window.DISCORD_URL+"?with_components=true", {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ content: `💸 **BUKTI TF MASUK! [VALID ✅]**`, embeds: [embedData] })
   }).catch(e=>console.log('Err 1:', e));
   
-  // Pesan 2: Gambar + Tombol → SIMPAN MESSAGE ID
   setTimeout(()=>{
     fetch(dataUrl).then(r=>r.blob()).then(blob=>{
       let form = new FormData();
@@ -587,7 +584,6 @@ function sendDiscordWithBukti(o, dataUrl, judul){
         .then(r=>r.json())
         .then(data=>{
           console.log('Discord pesan 2 terkirim:', data);
-          // SIMPAN message_id ke Firebase
           if(data && data.id && window.wafaDB){
             window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+o.id), { 
               discordMessageId: data.id,
@@ -730,7 +726,6 @@ function pilihBayar(m, el){
   }
 }
 
-// ===== FUNGSI INI YANG DIUBAH JADI ALERT =====
 async function generateQRISForAmount(amount){
   try{
     const nominalEl = document.getElementById('qrisNominalDisplay');
@@ -741,7 +736,7 @@ async function generateQRISForAmount(amount){
       return;
     }
     if(typeof QRCode === 'undefined'){
-      alert('❌ ERROR 2: Library QRCode belum ke-load! Cek CDN qrcode.min.js di <head>');
+      alert('❌ ERROR 2: Library QRCode belum ke-load! Cek CDN qrcodejs di <head>');
       return;
     }
     
@@ -752,14 +747,13 @@ async function generateQRISForAmount(amount){
       return;
     }
     
-    const canvas = document.getElementById('qrisCanvas');
-    if(!canvas){
-      alert('❌ ERROR 4: Canvas #qrisCanvas tidak ditemukan di HTML!');
+    const container = document.getElementById('qrisCanvas');
+    if(!container){
+      alert('❌ ERROR 4: Container #qrisCanvas tidak ditemukan di HTML!');
       return;
     }
     
-    await renderQRIS(qrisDynamic, 'qrisCanvas');
-    alert('✅ SUKSES! QRIS berhasil di-render.\n\nString: ' + qrisDynamic.substring(0, 30) + '...');
+    renderQRIS(qrisDynamic, 'qrisCanvas');
     
   }catch(e){
     alert('❌ GAGAL GENERATE QRIS: ' + e.message);
@@ -768,10 +762,12 @@ async function generateQRISForAmount(amount){
 
 async function downloadQRISDinamis(){
   try{
-    const qrCanvas = document.getElementById('qrisCanvas');
-    if(!qrCanvas){ alert('QR belum di-generate'); return; }
+    const container = document.getElementById('qrisCanvas');
+    if(!container){ alert('QR belum di-generate'); return; }
     
     if(typeof wsToast === 'function') wsToast('⏳ Generate gambar...');
+    
+    const qrImg = await getQRImage('qrisCanvas');
     
     const W = 800;
     const H = 1200;
@@ -849,7 +845,7 @@ async function downloadQRISDinamis(){
     const qrSize = 380;
     const qrX = (W - qrSize) / 2;
     const qrY = cardY + 130;
-    ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
+    ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
     
     ctx.fillStyle = '#5a5a5a';
     ctx.font = '600 13px Inter, sans-serif';
