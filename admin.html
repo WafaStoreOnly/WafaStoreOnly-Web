@@ -189,6 +189,8 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
   <div class="sb-section">
     <div class="sb-section-title">Kustomisasi</div>
     <div class="sb-menu-item" data-menu="branding" onclick="switchPage('branding')"><span class="icon">🎨</span> Branding</div>
+    <div class="sb-menu-item" data-menu="harga" onclick="switchPage('harga')"><span class="icon">💵</span> Harga Roblox</div>
+    <div class="sb-menu-item" data-menu="voucher" onclick="switchPage('voucher')"><span class="icon">🎟️</span> Voucher</div>
     <div class="sb-menu-item" data-menu="games" onclick="switchPage('games')"><span class="icon">🎮</span> Game Icons</div>
     <div class="sb-menu-item" data-menu="welcome" onclick="switchPage('welcome')"><span class="icon">🏠</span> Welcome Box</div>
     <div class="sb-menu-item" data-menu="syarat" onclick="switchPage('syarat')"><span class="icon">📋</span> Syarat & Ketentuan</div>
@@ -307,6 +309,101 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       </div>
     </div>
 
+    <div class="page" id="page-harga" style="display:none">
+      <div class="page-title">Harga Roblox</div>
+      <div class="page-sub">Atur harga per Robux & diskon otomatis</div>
+      <div class="card">
+        <div class="card-title">Pengaturan Harga</div>
+        <div class="input-group">
+          <label>Harga per Robux — Via Username (Rp)</label>
+          <input id="inpPerRobux" type="number" placeholder="160">
+          <small>Contoh: 160 → 100 Robux = Rp16.000</small>
+        </div>
+        <div class="input-group">
+          <label>Harga per Robux — Via Gamepass (Rp)</label>
+          <input id="inpPerRobuxGamepass" type="number" placeholder="140">
+        </div>
+        <div class="input-group">
+          <label>Harga per Robux — Gift In Game (Rp)</label>
+          <input id="inpPerRobuxGift" type="number" placeholder="95">
+        </div>
+        <div class="input-group">
+          <label>Diskon Otomatis (%)</label>
+          <input id="inpDiskonPersen" type="number" placeholder="0" min="0" max="100">
+          <small>Diskon ini otomatis nempel di semua paket. Isi 0 kalau nggak ada diskon.</small>
+        </div>
+        <div class="input-group">
+          <label>Status Fitur Voucher</label>
+          <select id="inpVoucherAktif">
+            <option value="true">Aktif</option>
+            <option value="false">Nonaktif</option>
+          </select>
+        </div>
+        <button class="btn btn-success" onclick="saveHarga()">💾 Simpan Harga</button>
+      </div>
+      <div class="card">
+        <div class="card-title">Preview Harga</div>
+        <div id="previewHarga" style="font-size:13px;color:#a8a8a8;line-height:2"></div>
+      </div>
+    </div>
+
+    <div class="page" id="page-voucher" style="display:none">
+      <div class="page-title">Voucher</div>
+      <div class="page-sub">Bikin & kelola kode voucher diskon</div>
+      <div class="card">
+        <div class="card-title">Buat / Edit Voucher</div>
+        <input type="hidden" id="vEditCode">
+        <div class="input-group">
+          <label>Kode Voucher (huruf besar, tanpa spasi)</label>
+          <input id="vCode" placeholder="WAFA10" style="text-transform:uppercase">
+        </div>
+        <div class="input-group">
+          <label>Tipe Potongan</label>
+          <select id="vType" onchange="updateVoucherForm()">
+            <option value="persen">Persen (%)</option>
+            <option value="nominal">Nominal (Rp)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Nilai Potongan</label>
+          <input id="vValue" type="number" placeholder="10">
+          <small id="vValueHint">Isi 10 = potongan 10%</small>
+        </div>
+        <div class="input-group">
+          <label>Minimal Belanja (Rp) — 0 = bebas</label>
+          <input id="vMinPurchase" type="number" placeholder="0" value="0">
+        </div>
+        <div class="input-group">
+          <label>Maksimal Potongan (Rp) — 0 = unlimited</label>
+          <input id="vMaxDiscount" type="number" placeholder="0" value="0">
+        </div>
+        <div class="input-group">
+          <label>Kuota Pemakaian</label>
+          <input id="vQuota" type="number" placeholder="100" value="100">
+        </div>
+        <div class="input-group">
+          <label>Status</label>
+          <select id="vActive">
+            <option value="true">Aktif</option>
+            <option value="false">Nonaktif</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Expired (opsional)</label>
+          <input id="vExpiry" type="datetime-local">
+          <small>Kosongin kalau nggak ada expired</small>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-success" onclick="saveVoucher()">💾 Simpan Voucher</button>
+          <button class="btn btn-grey" onclick="clearVoucherForm()">🔄 Reset Form</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Daftar Voucher</div>
+        <div id="listVouchers"></div>
+      </div>
+    </div>
+
     <div class="page" id="page-games" style="display:none">
       <div class="page-title">Game Icons</div>
       <div class="page-sub">Upload & atur logo game untuk ditampilkan di web user</div>
@@ -419,7 +516,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div style="font-size:13px;color:#a8a8a8;line-height:1.9">
           <b style="color:#e8e8e8">Web URL:</b> <a href="https://wafastoreonly-official.vercel.app" style="color:#4a90e2" target="_blank">wafastoreonly-official.vercel.app</a><br>
           <b style="color:#e8e8e8">Firebase:</b> wafastoreonly<br>
-          <b style="color:#e8e8e8">Version:</b> Admin Panel v3.3
+          <b style="color:#e8e8e8">Version:</b> Admin Panel v3.4
         </div>
       </div>
     </div>
@@ -433,7 +530,6 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
 function sensorUid(u){if(!u)return'****';return u.slice(0,6)+'...'+u.slice(-4)}
 
-// ===== SENSOR PRIVATE SERVER URL =====
 function sensorPrivateServer(url){
   if(!url || url === '-') return '-';
   try{
@@ -448,7 +544,6 @@ function sensorPrivateServer(url){
   }catch(e){ return '***'; }
 }
 
-// ===== SIDEBAR TOGGLE =====
 function toggleSidebar(){
   document.getElementById('adminSidebar').classList.toggle('open');
   document.getElementById('sbOverlay').style.display = document.getElementById('adminSidebar').classList.contains('open')?'block':'none';
@@ -458,7 +553,6 @@ function closeSidebar(){
   document.getElementById('sbOverlay').style.display='none';
 }
 
-// ===== ADMIN CHECK (FIX RACE CONDITION) =====
 function checkAuthReady(){
   if(window.wafaAuth && window.wafaDB && window.wafaOnValue && window.wafaGet){
     console.log('✅ Firebase ready, checking auth...');
@@ -504,11 +598,12 @@ function initAdmin(user){
   loadSyarat();
   loadAnnouncement();
   loadTheme();
+  loadHarga();
+  loadVouchers();
 
   setTimeout(handleUrlAction, 1000);
 }
 
-// ===== PAGE SWITCH =====
 function switchPage(menu){
   document.querySelectorAll('.page').forEach(p=>p.style.display='none');
   document.getElementById('page-'+menu).style.display='block';
@@ -518,7 +613,6 @@ function switchPage(menu){
   closeSidebar();
 }
 
-// ===== TOAST =====
 function toast(msg){
   let t = document.getElementById('admToast');
   t.innerText = msg;
@@ -527,14 +621,12 @@ function toast(msg){
   t._timer = setTimeout(()=>t.classList.remove('show'), 2500);
 }
 
-// ===== LOGOUT =====
 function logoutAdmin(){
   if(!confirm('Logout dari admin panel?')) return;
   localStorage.removeItem('wafa_uid');
   window.wafaAuth.signOut().then(()=>{ location.href='login.html'; }).catch(()=>{ location.href='login.html'; });
 }
 
-// ===== HANDLE ACTION URL DISCORD =====
 async function handleUrlAction(){
   const urlParams = new URLSearchParams(window.location.search);
   const actionId = urlParams.get('id');
@@ -622,8 +714,9 @@ function loadOrders(){
       let extra = '';
       if(o.method == 'gamepass' && o.gamepassLink) extra += `<br>🔗 Gamepass: <b style="word-break:break-all;font-size:11px">${o.gamepassLink}</b>`;
       if(o.method == 'gift' && o.item) extra += `<br>🎁 Item: <b>${o.item}</b>`;
-      if(o.method == 'gift' && o.privateServer) extra += `<br>🔒 Private Server: <b style="word-break:break-all;font-size:11px">${o.privateServer}</b>`;
+      if(o.method == 'gift' && o.privateServer) extra += `<br>🔒 Private Server: <b style="word-break:break-all;font-size:11px">${sensorPrivateServer(o.privateServer)}</b>`;
       if(o.metodeBayar == 'saldo') extra += `<br>💳 <b style="color:#4ade80">Via Saldo Web</b>`;
+      if(o.voucherCode) extra += `<br>🎟️ Voucher: <b style="color:#4ade80">${o.voucherCode} (-Rp${(o.voucherPotongan||0).toLocaleString('id-ID')})</b>`;
 
       let buktiBtn = o.bukti ? `<button class="btn btn-primary btn-sm" onclick="lihatBukti('${o.id}')">🖼️ Bukti</button>` : '';
       let actionBtns = '';
@@ -662,7 +755,6 @@ window.lihatBukti = async (id)=>{
   w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${o.bukti}"></body></html>`);
 };
 
-// ===== HAPUS PESAN DISCORD =====
 async function deleteDiscordMessage(messageId){
   if(!messageId || !window.WEBHOOK_ORDER_PROSES) return false;
   try{
@@ -678,14 +770,12 @@ async function deleteDiscordMessage(messageId){
   }catch(e){ console.log('Delete Discord error:', e); return false; }
 }
 
-// ===== PROSES SELESAI =====
 window.prosesSelesai = async (id)=>{
   try{
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), { status:'selesai', selesaiAt:Date.now() });
     const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'orders/'+id));
     const o = snap.val();
 
-    // Simpan ke logs
     const logData = {
       id: id,
       nickname: o.nickname || 'User',
@@ -696,28 +786,22 @@ window.prosesSelesai = async (id)=>{
       status: 'selesai'
     };
     await window.wafaSet(window.wafaRef(window.wafaDB, 'logs/'+id), logData);
-
-    // Auto-hapus log > 7 hari
     cleanupOldLogs();
 
-    // HAPUS pesan lama di channel proses-top-up
-    if(o.discordMessageId){
-      await deleteDiscordMessage(o.discordMessageId);
-    }
+    if(o.discordMessageId){ await deleteDiscordMessage(o.discordMessageId); }
 
-    // Build detail pesanan sesuai method
     let detailPesanan = '';
     const method = (o.method || 'username').toLowerCase();
-    const methodLabel = method === 'username' ? '🎮 Via Username' 
-                      : method === 'gamepass' ? '🎫 Via Gamepass' 
-                      : method === 'gift' ? '🎁 Gift In Game' 
+    const methodLabel = method === 'username' ? '🎮 Via Username'
+                      : method === 'gamepass' ? '🎫 Via Gamepass'
+                      : method === 'gift' ? '🎁 Gift In Game'
                       : method;
-    
+
     detailPesanan += `\n**📋 DETAIL PESANAN:**\n`;
     detailPesanan += `• Metode: **${methodLabel}**\n`;
     detailPesanan += `• Username Roblox: **${o.username || '-'}**\n`;
     detailPesanan += `• Jumlah Robux: **${o.jumlah || 0} Robux**\n`;
-    
+
     if(method === 'gamepass' && o.gamepassLink){
       detailPesanan += `• Link Gamepass: ${o.gamepassLink}\n`;
       if(o.setting) detailPesanan += `• Setting Gamepass: **${o.setting} Robux**\n`;
@@ -726,32 +810,16 @@ window.prosesSelesai = async (id)=>{
       if(o.item) detailPesanan += `• Item: **${o.item}**\n`;
       if(o.privateServer) detailPesanan += `• Private Server: \`${sensorPrivateServer(o.privateServer)}\` 🔒\n`;
     }
-    
-    if(o.metodeBayar === 'saldo'){
-      detailPesanan += `• Pembayaran: **💰 Saldo Web**\n`;
-    }
-    
+    if(o.metodeBayar === 'saldo'){ detailPesanan += `• Pembayaran: **💰 Saldo Web**\n`; }
+    if(o.voucherCode) detailPesanan += `• Voucher: **${o.voucherCode}** (-Rp${(o.voucherPotongan||0).toLocaleString('id-ID')})\n`;
+
     detailPesanan += `• Total Bayar: **Rp${(o.total||0).toLocaleString('id-ID')}**\n`;
 
-    // KIRIM log selesai ke channel LOGS
     if(window.WEBHOOK_ORDER_DONE){
       fetch(window.WEBHOOK_ORDER_DONE, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          content: `✅ **TRANSAKSI SELESAI - DONE**\n\n` +
-                   `━━━━━━━━━━━━━━━━━━━━\n` +
-                   `📦 **Order #${id.toString().slice(-6)}**\n` +
-                   `━━━━━━━━━━━━━━━━━━━━\n` +
-                   `👤 Buyer: **${o.nickname || 'User'}**\n` +
-                   `📧 Email: ${sensorEmail(o.email||'-')}\n` +
-                   `🆔 UID: \`${o.uid || '-'}\`\n` +
-                   `📅 Order Dibuat: ${o.date || '-'}\n` +
-                   detailPesanan +
-                   `\n━━━━━━━━━━━━━━━━━━━━\n` +
-                   `🕐 **Selesai: ${new Date().toLocaleString('id-ID')}**\n` +
-                   `✅ Status: **COMPLETED**\n` +
-                   `━━━━━━━━━━━━━━━━━━━━\n\n` +
-                   `🔒 Pesan orderan sudah dihapus dari channel proses.`
+          content: `✅ **TRANSAKSI SELESAI - DONE**\n\n━━━━━━━━━━━━━━━━━━━━\n📦 **Order #${id.toString().slice(-6)}**\n━━━━━━━━━━━━━━━━━━━━\n👤 Buyer: **${o.nickname || 'User'}**\n📧 Email: ${sensorEmail(o.email||'-')}\n🆔 UID: \`${o.uid || '-'}\`\n📅 Order Dibuat: ${o.date || '-'}\n${detailPesanan}\n━━━━━━━━━━━━━━━━━━━━\n🕐 **Selesai: ${new Date().toLocaleString('id-ID')}**\n✅ Status: **COMPLETED**\n━━━━━━━━━━━━━━━━━━━━\n\n🔒 Pesan orderan sudah dihapus dari channel proses.`
         })
       }).catch(()=>{});
     }
@@ -759,48 +827,31 @@ window.prosesSelesai = async (id)=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== PROSES BATAL =====
 window.prosesBatal = async (id, alasan)=>{
   try{
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), { status:'batal', batalReason:alasan, batalAt:Date.now() });
     const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'orders/'+id));
     const o = snap.val();
+    if(o.discordMessageId){ await deleteDiscordMessage(o.discordMessageId); }
 
-    // HAPUS pesan lama di channel proses-top-up
-    if(o.discordMessageId){
-      await deleteDiscordMessage(o.discordMessageId);
-    }
-
-    // Build detail pesanan
     let detailPesanan = '';
     const method = (o.method || 'username').toLowerCase();
-    const methodLabel = method === 'username' ? '🎮 Via Username' 
-                      : method === 'gamepass' ? '🎫 Via Gamepass' 
-                      : method === 'gift' ? '🎁 Gift In Game' 
+    const methodLabel = method === 'username' ? '🎮 Via Username'
+                      : method === 'gamepass' ? '🎫 Via Gamepass'
+                      : method === 'gift' ? '🎁 Gift In Game'
                       : method;
-    
+
     detailPesanan += `\n**📋 DETAIL PESANAN:**\n`;
     detailPesanan += `• Metode: **${methodLabel}**\n`;
     detailPesanan += `• Username Roblox: **${o.username || '-'}**\n`;
     detailPesanan += `• Jumlah Robux: **${o.jumlah || 0} Robux**\n`;
     detailPesanan += `• Total: **Rp${(o.total||0).toLocaleString('id-ID')}**\n`;
 
-    // KIRIM log batal ke channel LOGS
     if(window.WEBHOOK_ORDER_DONE){
       fetch(window.WEBHOOK_ORDER_DONE, {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          content: `❌ **TRANSAKSI DIBATALKAN**\n\n` +
-                   `━━━━━━━━━━━━━━━━━━━━\n` +
-                   `📦 **Order #${id.toString().slice(-6)}**\n` +
-                   `━━━━━━━━━━━━━━━━━━━━\n` +
-                   `👤 Buyer: **${o.nickname || 'User'}**\n` +
-                   `📧 Email: ${sensorEmail(o.email||'-')}\n` +
-                   detailPesanan +
-                   `\n❌ **Alasan: ${alasan}**\n` +
-                   `🕐 Dibatalkan: ${new Date().toLocaleString('id-ID')}\n` +
-                   `━━━━━━━━━━━━━━━━━━━━\n\n` +
-                   `🔒 Pesan orderan sudah dihapus dari channel proses.`
+          content: `❌ **TRANSAKSI DIBATALKAN**\n\n━━━━━━━━━━━━━━━━━━━━\n📦 **Order #${id.toString().slice(-6)}**\n━━━━━━━━━━━━━━━━━━━━\n👤 Buyer: **${o.nickname || 'User'}**\n📧 Email: ${sensorEmail(o.email||'-')}\n${detailPesanan}\n❌ **Alasan: ${alasan}**\n🕐 Dibatalkan: ${new Date().toLocaleString('id-ID')}\n━━━━━━━━━━━━━━━━━━━━\n\n🔒 Pesan orderan sudah dihapus dari channel proses.`
         })
       }).catch(()=>{});
     }
@@ -808,7 +859,6 @@ window.prosesBatal = async (id, alasan)=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// Auto-hapus logs > 7 hari
 async function cleanupOldLogs(){
   try{
     const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'logs'));
@@ -903,9 +953,7 @@ window.hapusTopup = async (id)=>{
   if(!confirm('Hapus top up #'+id.toString().slice(-6)+'?')) return;
   try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'topup_saldo/'+id)); toast('🗑️ Dihapus'); }catch(e){ alert('Gagal: '+e.message); }
 };
-</script>
 
-<script>
 // ===== CHAT =====
 let currentChatUid = null;
 let chatUnsubscribe = null;
@@ -1198,9 +1246,7 @@ window.resetGameLogo = async (key)=>{
     toast(`✅ Logo ${key} direset`);
   }catch(e){ alert('Gagal: '+e.message); }
 };
-</script>
 
-<script>
 // ===== WELCOME BOX =====
 function loadWelcome(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/welcome'), (snap)=>{
@@ -1211,7 +1257,6 @@ function loadWelcome(){
     if(d.tagline){ document.getElementById('welcomeTagline').value = d.tagline; updateWelcomePreview(); }
     if(d.message){ document.getElementById('welcomeMessage').value = d.message; updateWelcomePreview(); }
   });
-
   ['welcomeTitle','welcomeTagline','welcomeMessage'].forEach(id=>{
     document.getElementById(id)?.addEventListener('input', updateWelcomePreview);
   });
@@ -1239,7 +1284,7 @@ window.saveWelcome = async ()=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== SYARAT & KETENTUAN =====
+// ===== SYARAT =====
 function loadSyarat(){
   ['username','gamepass','gift'].forEach(key=>{
     window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/syarat/' + key), (snap)=>{
@@ -1326,6 +1371,189 @@ window.resetTheme = async ()=>{
   try{
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/theme'), { primary: '#4a90e2', accent: '#6b5ce7', updatedAt: Date.now() });
     toast('✅ Theme direset ke default');
+  }catch(e){ alert('Gagal: '+e.message); }
+};
+
+// ===== HARGA ROBLOX =====
+function loadHarga(){
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/harga/roblox'), (snap)=>{
+    const d = snap.val() || {};
+    document.getElementById('inpPerRobux').value = d.perRobux || 160;
+    document.getElementById('inpPerRobuxGamepass').value = d.perRobuxGamepass || 140;
+    document.getElementById('inpPerRobuxGift').value = d.perRobuxGift || 95;
+    document.getElementById('inpDiskonPersen').value = d.diskonPersen || 0;
+    document.getElementById('inpVoucherAktif').value = d.voucherAktif === false ? 'false' : 'true';
+    renderPreviewHarga(d);
+  });
+  ['inpPerRobux','inpPerRobuxGamepass','inpPerRobuxGift','inpDiskonPersen'].forEach(id=>{
+    document.getElementById(id)?.addEventListener('input', ()=>{
+      renderPreviewHarga({
+        perRobux: parseInt(document.getElementById('inpPerRobux').value) || 160,
+        perRobuxGamepass: parseInt(document.getElementById('inpPerRobuxGamepass').value) || 140,
+        perRobuxGift: parseInt(document.getElementById('inpPerRobuxGift').value) || 95,
+        diskonPersen: parseInt(document.getElementById('inpDiskonPersen').value) || 0
+      });
+    });
+  });
+}
+
+function renderPreviewHarga(d){
+  const p = d.perRobux || 160;
+  const gp = d.perRobuxGamepass || 140;
+  const g = d.perRobuxGift || 95;
+  const disc = d.diskonPersen || 0;
+  const coret = disc > 0 ? Math.round(p / (1 - disc/100)) : p;
+  const el = document.getElementById('previewHarga');
+  if(!el) return;
+  el.innerHTML = `
+    <b style="color:#e8e8e8">Via Username:</b> Rp${p.toLocaleString('id-ID')}/robux ${disc > 0 ? `<span style="color:#5a5a5a;text-decoration:line-through;margin-left:6px">Rp${coret.toLocaleString('id-ID')}</span> <span style="color:#ef4444;font-size:11px">-${disc}%</span>` : ''}<br>
+    <b style="color:#e8e8e8">Via Gamepass:</b> Rp${gp.toLocaleString('id-ID')}/robux<br>
+    <b style="color:#e8e8e8">Gift In Game:</b> Rp${g.toLocaleString('id-ID')}/robux<br>
+    <b style="color:#e8e8e8">Contoh 100 Robux (username):</b> Rp${(100*p).toLocaleString('id-ID')}
+  `;
+}
+
+window.saveHarga = async ()=>{
+  const perRobux = parseInt(document.getElementById('inpPerRobux').value) || 160;
+  const perRobuxGamepass = parseInt(document.getElementById('inpPerRobuxGamepass').value) || 140;
+  const perRobuxGift = parseInt(document.getElementById('inpPerRobuxGift').value) || 95;
+  const diskonPersen = parseInt(document.getElementById('inpDiskonPersen').value) || 0;
+  const voucherAktif = document.getElementById('inpVoucherAktif').value === 'true';
+  if(diskonPersen < 0 || diskonPersen > 100){ alert('Diskon harus 0-100%'); return; }
+  try{
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/harga/roblox'), {
+      perRobux, perRobuxGamepass, perRobuxGift, diskonPersen, voucherAktif, updatedAt: Date.now()
+    });
+    toast('✅ Harga disimpan!');
+  }catch(e){ alert('Gagal: '+e.message); }
+};
+
+// ===== VOUCHER =====
+function loadVouchers(){
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'vouchers'), (snap)=>{
+    const d = snap.val() || {};
+    const list = document.getElementById('listVouchers');
+    const keys = Object.keys(d);
+    if(keys.length === 0){
+      list.innerHTML = '<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada voucher</div>';
+      return;
+    }
+    list.innerHTML = '';
+    keys.forEach(code=>{
+      const v = d[code];
+      const isExpired = v.expiry && v.expiry > 0 && Date.now() > v.expiry;
+      const isHabis = v.quota && v.used >= v.quota;
+      const statusColor = (v.active === false || isExpired || isHabis) ? '#ef4444' : '#4ade80';
+      const statusText = v.active === false ? 'NONAKTIF' : isExpired ? 'EXPIRED' : isHabis ? 'HABIS' : 'AKTIF';
+      const valText = v.type === 'persen' ? `${v.value}%` : `Rp${(v.value||0).toLocaleString('id-ID')}`;
+
+      const card = document.createElement('div');
+      card.className = 'item-card';
+      card.style.borderColor = statusColor + '40';
+      card.innerHTML = `
+        <div class="item-head">
+          <div>
+            <b style="font-family:monospace;font-size:16px;letter-spacing:1px">🎟️ ${code}</b>
+            <div style="font-size:11px;color:#5a5a5a;margin-top:4px">Potongan: <b style="color:#4ade80">${valText}</b></div>
+          </div>
+          <span class="badge" style="background:${statusColor}20;color:${statusColor};border:1px solid ${statusColor}60">${statusText}</span>
+        </div>
+        <div class="item-body">
+          Min belanja: <b>Rp${(v.minPurchase||0).toLocaleString('id-ID')}</b> • Max potongan: <b>${v.maxDiscount ? 'Rp'+v.maxDiscount.toLocaleString('id-ID') : 'Unlimited'}</b><br>
+          Kuota: <b>${v.used||0}/${v.quota||'∞'}</b> ${v.expiry ? `• Expired: <b>${new Date(v.expiry).toLocaleString('id-ID')}</b>` : ''}
+        </div>
+        <div class="item-actions">
+          <button class="btn btn-primary btn-sm" onclick="editVoucher('${code}')">✏️ Edit</button>
+          <button class="btn btn-warn btn-sm" onclick="toggleVoucherActive('${code}', ${v.active !== false})">${v.active !== false ? '❌ Nonaktifkan' : '✅ Aktifkan'}</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteVoucher('${code}')">🗑️ Hapus</button>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  });
+}
+
+window.updateVoucherForm = ()=>{
+  const type = document.getElementById('vType').value;
+  document.getElementById('vValueHint').innerText = type === 'persen' ? 'Isi 10 = potongan 10%' : 'Isi 5000 = potongan Rp5.000';
+};
+
+window.clearVoucherForm = ()=>{
+  document.getElementById('vEditCode').value = '';
+  document.getElementById('vCode').value = '';
+  document.getElementById('vCode').disabled = false;
+  document.getElementById('vType').value = 'persen';
+  document.getElementById('vValue').value = '';
+  document.getElementById('vMinPurchase').value = 0;
+  document.getElementById('vMaxDiscount').value = 0;
+  document.getElementById('vQuota').value = 100;
+  document.getElementById('vActive').value = 'true';
+  document.getElementById('vExpiry').value = '';
+  updateVoucherForm();
+};
+
+window.editVoucher = async (code)=>{
+  const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'vouchers/' + code));
+  const v = snap.val();
+  if(!v) return;
+  document.getElementById('vEditCode').value = code;
+  document.getElementById('vCode').value = code;
+  document.getElementById('vCode').disabled = true;
+  document.getElementById('vType').value = v.type || 'persen';
+  document.getElementById('vValue').value = v.value || 0;
+  document.getElementById('vMinPurchase').value = v.minPurchase || 0;
+  document.getElementById('vMaxDiscount').value = v.maxDiscount || 0;
+  document.getElementById('vQuota').value = v.quota || 100;
+  document.getElementById('vActive').value = v.active === false ? 'false' : 'true';
+  document.getElementById('vExpiry').value = v.expiry ? new Date(v.expiry).toISOString().slice(0,16) : '';
+  updateVoucherForm();
+  document.getElementById('page-voucher').scrollIntoView({behavior:'smooth'});
+};
+
+window.saveVoucher = async ()=>{
+  const editCode = document.getElementById('vEditCode').value;
+  const code = (document.getElementById('vCode').value || '').trim().toUpperCase();
+  const type = document.getElementById('vType').value;
+  const value = parseInt(document.getElementById('vValue').value) || 0;
+  const minPurchase = parseInt(document.getElementById('vMinPurchase').value) || 0;
+  const maxDiscount = parseInt(document.getElementById('vMaxDiscount').value) || 0;
+  const quota = parseInt(document.getElementById('vQuota').value) || 100;
+  const active = document.getElementById('vActive').value === 'true';
+  const expiryInput = document.getElementById('vExpiry').value;
+  const expiry = expiryInput ? new Date(expiryInput).getTime() : 0;
+
+  if(!code){ alert('Isi kode voucher!'); return; }
+  if(!/^[A-Z0-9_-]+$/.test(code)){ alert('Kode cuma boleh huruf, angka, _ dan -'); return; }
+  if(value <= 0){ alert('Nilai potongan harus > 0'); return; }
+  if(type === 'persen' && value > 100){ alert('Persen maksimal 100'); return; }
+
+  try{
+    const existingSnap = await window.wafaGet(window.wafaRef(window.wafaDB, 'vouchers/' + code));
+    const existing = existingSnap.val() || {};
+    const data = {
+      code, type, value, minPurchase, maxDiscount, quota, active, expiry,
+      used: existing.used || 0,
+      createdAt: existing.createdAt || Date.now(),
+      updatedAt: Date.now()
+    };
+    await window.wafaSet(window.wafaRef(window.wafaDB, 'vouchers/' + code), data);
+    toast('✅ Voucher ' + code + ' disimpan!');
+    clearVoucherForm();
+  }catch(e){ alert('Gagal: '+e.message); }
+};
+
+window.toggleVoucherActive = async (code, currentActive)=>{
+  try{
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'vouchers/' + code), { active: !currentActive, updatedAt: Date.now() });
+    toast('✅ Status voucher diubah');
+  }catch(e){ alert('Gagal: '+e.message); }
+};
+
+window.deleteVoucher = async (code)=>{
+  if(!confirm(`Hapus voucher ${code}?`)) return;
+  try{
+    await window.wafaRemove(window.wafaRef(window.wafaDB, 'vouchers/' + code));
+    toast('🗑️ Voucher dihapus');
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
