@@ -57,7 +57,6 @@
 .leaderboard-right b{font-size:14px;color:#4ade80;font-weight:800;display:block}
 .leaderboard-right small{font-size:10px;color:#5a5a5a;display:block;margin-top:2px}
 
-/* KETERANGAN */
 .keterangan-header{margin-top:28px;padding:14px 18px;background:linear-gradient(135deg,rgba(74,144,226,0.15),rgba(107,92,231,0.15));border:1px solid rgba(74,144,226,0.4);border-radius:14px;text-align:center}
 .keterangan-title-main{font-size:13px;font-weight:800;color:#fff;line-height:1.5;letter-spacing:0.3px}
 .keterangan-card{margin-top:14px;padding:18px;background:#141414;border:1px solid #2a2a2a;border-radius:14px}
@@ -77,7 +76,6 @@
 .keterangan-col-list li::before{content:counter(item) ".";position:absolute;left:0;color:#4a90e2;font-weight:800}
 .keterangan-col-list li:last-child{margin-bottom:0}
 
-/* DUKUNGAN */
 .dukungan-card{margin-top:14px;padding:22px 18px;background:linear-gradient(135deg,rgba(74,144,226,0.08),rgba(107,92,231,0.08));border:1px solid rgba(74,144,226,0.3);border-radius:16px}
 .dukungan-header{text-align:center;margin-bottom:18px}
 .dukungan-emoji{font-size:36px;margin-bottom:8px;line-height:1}
@@ -108,7 +106,6 @@
 .dukungan-footer-text b{color:#4ade80}
 .dukungan-thanks{font-size:11px;color:#4ade80;font-weight:700}
 
-/* POPUP */
 .popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.3s ease}
 .popup-overlay.show{display:flex}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -126,6 +123,8 @@
 .popup-btn.tiktok:hover{border-color:#00f2ea;background:rgba(0,242,234,0.1)}
 .popup-btn.facebook:hover{border-color:#1877F2;background:rgba(24,119,242,0.1)}
 .popup-btn.whatsapp:hover{border-color:#25D366;background:rgba(37,211,102,0.1)}
+.popup-btn.youtube:hover{border-color:#FF0000;background:rgba(255,0,0,0.1)}
+.popup-btn.telegram:hover{border-color:#0088cc;background:rgba(0,136,204,0.1)}
 
 @media (max-width:768px){
   .feature-grid{grid-template-columns:1fr 1fr}
@@ -166,7 +165,6 @@ onAuthStateChanged(auth, (user)=>{
 <div id="wsContent">
 
 <div id="homePage" class="ws-section">
-
   <div class="hero-banner">
     <div class="hero-bg" id="heroBg" style="background-image:url('./killua-bg.webp')"></div>
     <div class="hero-overlay"></div>
@@ -230,7 +228,6 @@ Selamat datang di rumah baru kalian.</div>
       <div class="dukungan-thanks">Terima kasih udah jadi bagian dari perjalanan kami! 🙏</div>
     </div>
   </div>
-
 </div>
 
 <div id="robloxPage" class="ws-section" style="display:none">
@@ -885,19 +882,37 @@ async function sendLayanan(){
 }
 function addBotMsg(txt){ const c=document.getElementById('layananChat'); if(!c) return; const d=document.createElement('div');d.className='msg bot';d.innerText=txt;c.appendChild(d);c.scrollTop=c.scrollHeight; }
 
-// POPUP PROMO
+// ============================================
+// POPUP PROMO — SELALU MUNCUL (bisa diatur intervalnya)
+// ============================================
 function checkPopupPromo(){
   if(!window.wafaDB || !window.wafaOnValue){ setTimeout(checkPopupPromo, 500); return; }
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/popup'), (snap)=>{
     const d = snap.val();
-    if(!d || d.active === false) return;
-    if(!d.title || !d.buttons || d.buttons.length === 0) return;
-    const showPerDay = d.showPerDay || 1;
-    const today = new Date().toISOString().slice(0,10);
-    const storageKey = 'wafa_popup_' + today;
-    const shown = parseInt(localStorage.getItem(storageKey) || '0');
-    if(shown >= showPerDay) return;
-    setTimeout(()=>{ showPopupPromo(d); localStorage.setItem(storageKey, shown + 1); }, 2000);
+    console.log('📢 Popup data:', d);
+    if(!d){ console.log('❌ Popup data kosong'); return; }
+    if(d.active === false){ console.log('❌ Popup nonaktif'); return; }
+    if(!d.title){ console.log('❌ Title kosong'); return; }
+    
+    // Cek cooldown (kalo everyMinutes = 0, langsung tampil)
+    const everyMinutes = d.everyMinutes || 0;
+    const lastShown = parseInt(localStorage.getItem('wafa_popup_last') || '0');
+    const now = Date.now();
+    
+    if(everyMinutes > 0){
+      const cooldown = everyMinutes * 60 * 1000;
+      const sisa = cooldown - (now - lastShown);
+      if(sisa > 0){ 
+        console.log('⏳ Cooldown, muncul dalam ' + Math.ceil(sisa/60000) + ' menit lagi'); 
+        return; 
+      }
+    }
+    
+    console.log('✅ Tampilkan popup dalam 1.5 detik...');
+    setTimeout(()=>{ 
+      showPopupPromo(d); 
+      localStorage.setItem('wafa_popup_last', now.toString());
+    }, 1500);
   });
 }
 function detectPlatformClass(url){
@@ -905,6 +920,10 @@ function detectPlatformClass(url){
   if(u.includes('discord')) return 'discord'; if(u.includes('instagram')) return 'instagram';
   if(u.includes('tiktok')) return 'tiktok'; if(u.includes('facebook') || u.includes('fb.com')) return 'facebook';
   if(u.includes('wa.me') || u.includes('whatsapp')) return 'whatsapp';
+  if(u.includes('twitter') || u.includes('x.com')) return 'twitter';
+  if(u.includes('youtube')) return 'youtube';
+  if(u.includes('sociabuzz')) return 'sociabuzz';
+  if(u.includes('telegram') || u.includes('t.me')) return 'telegram';
   return '';
 }
 function getNativeScheme(url){
@@ -914,36 +933,60 @@ function getNativeScheme(url){
   if(u.includes('tiktok.com/')) return 'snssdk1233://';
   if(u.includes('facebook.com/') || u.includes('fb.com/')) return 'fb://';
   if(u.includes('wa.me/') || u.includes('whatsapp.com/')) return 'whatsapp://';
+  if(u.includes('twitter.com/') || u.includes('x.com/')) return 'twitter://';
+  if(u.includes('youtube.com/') || u.includes('youtu.be/')) return 'youtube://';
+  if(u.includes('t.me/') || u.includes('telegram.me/')) return 'tg://';
   return null;
 }
 function showPopupPromo(d){
-  const overlay = document.getElementById('popupPromo'); const img = document.getElementById('popupImg');
+  const overlay = document.getElementById('popupPromo'); 
+  const img = document.getElementById('popupImg');
   document.getElementById('popupTitleEl').innerText = d.title || '🎉 Promo Spesial!';
   document.getElementById('popupDescEl').innerText = d.desc || '';
-  if(d.image){ img.src = d.image; img.style.display = 'block'; } else { img.style.display = 'none'; }
-  const btnContainer = document.getElementById('popupButtonsContainer'); btnContainer.innerHTML = '';
+  
+  if(d.image){ img.src = d.image; img.style.display = 'block'; } 
+  else { img.style.display = 'none'; }
+  
+  const btnContainer = document.getElementById('popupButtonsContainer'); 
+  btnContainer.innerHTML = '';
+  
   (d.buttons || []).forEach(btn=>{
     if(!btn.label || !btn.url) return;
-    const a = document.createElement('a'); a.href = btn.url; a.target = '_blank'; a.rel = 'noopener';
+    
+    const a = document.createElement('a'); 
+    a.href = btn.url; 
+    a.target = '_blank'; 
+    a.rel = 'noopener';
     a.className = 'popup-btn ' + detectPlatformClass(btn.url);
     a.innerHTML = `${btn.icon || '🔗'} ${btn.label}`;
+    
     a.addEventListener('click', function(e){
       const nativeScheme = getNativeScheme(btn.url);
       if(nativeScheme){
         const startTime = Date.now();
-        const iframe = document.createElement('iframe'); iframe.style.display = 'none'; iframe.src = nativeScheme;
-        document.body.appendChild(iframe); setTimeout(()=>{ try{ iframe.remove(); }catch(err){} }, 2000);
-        setTimeout(function(){ if(Date.now() - startTime < 2000){ window.open(btn.url, '_blank'); } }, 1500);
+        const iframe = document.createElement('iframe'); 
+        iframe.style.display = 'none'; 
+        iframe.src = nativeScheme;
+        document.body.appendChild(iframe); 
+        setTimeout(()=>{ try{ iframe.remove(); }catch(err){} }, 2000);
+        setTimeout(function(){ 
+          if(Date.now() - startTime < 2000){ 
+            window.open(btn.url, '_blank'); 
+          }
+        }, 1500);
       }
     });
     btnContainer.appendChild(a);
   });
+  
   overlay.classList.add('show');
 }
 function closePopupPromo(){ document.getElementById('popupPromo').classList.remove('show'); }
 document.getElementById('popupPromo')?.addEventListener('click', (e)=>{ if(e.target.id === 'popupPromo') closePopupPromo(); });
 
-// LOAD KETERANGAN (dengan default fallback)
+// ============================================
+// KETERANGAN — dengan default fallback
+// ============================================
 function loadKeteranganDinamis(){
   if(!window.wafaDB || !window.wafaOnValue){ setTimeout(loadKeteranganDinamis, 500); return; }
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/keterangan'), (snap)=>{
@@ -988,21 +1031,10 @@ Jumlah Robux Sesuai Map`
     if(d.active === false){ section.style.display = 'none'; return; }
     section.style.display = 'block';
 
-    const headerTitle = d.headerTitle || DEFAULT.headerTitle;
-    const flag = d.flag || DEFAULT.flag;
+    document.getElementById('ketHeaderTitle').innerText = d.headerTitle || DEFAULT.headerTitle;
+    document.getElementById('ketFlag').innerText = d.flag || DEFAULT.flag;
+
     const welcome = d.welcome || DEFAULT.welcome;
-    const whyTitle = d.whyTitle || DEFAULT.whyTitle;
-    const whyList = d.whyList || DEFAULT.whyList;
-    const col1Title = d.col1Title || DEFAULT.col1Title;
-    const col1List = d.col1List || DEFAULT.col1List;
-    const col2Title = d.col2Title || DEFAULT.col2Title;
-    const col2List = d.col2List || DEFAULT.col2List;
-    const col3Title = d.col3Title || DEFAULT.col3Title;
-    const col3List = d.col3List || DEFAULT.col3List;
-
-    document.getElementById('ketHeaderTitle').innerText = headerTitle;
-    document.getElementById('ketFlag').innerText = flag;
-
     const welcomeLines = welcome.split('\n').filter(l=>l.trim());
     let welcomeHtml = '';
     welcomeLines.forEach(line=>{
@@ -1011,17 +1043,23 @@ Jumlah Robux Sesuai Map`
     });
     document.getElementById('ketWelcomeBox').innerHTML = welcomeHtml;
 
-    document.getElementById('ketWhyTitle').innerText = whyTitle;
+    document.getElementById('ketWhyTitle').innerText = d.whyTitle || DEFAULT.whyTitle;
+    const whyList = d.whyList || DEFAULT.whyList;
     const whyItems = whyList.split('\n').filter(l=>l.trim());
     let whyHtml = '';
     whyItems.forEach(item=>{ whyHtml += `<div class="keterangan-item"><span class="check">✔</span> ${item}</div>`; });
     document.getElementById('ketWhyList').innerHTML = whyHtml;
 
-    document.getElementById('ketCol1Title').innerText = col1Title;
+    document.getElementById('ketCol1Title').innerText = d.col1Title || DEFAULT.col1Title;
+    const col1List = d.col1List || DEFAULT.col1List;
     document.getElementById('ketCol1List').innerHTML = col1List.split('\n').filter(l=>l.trim()).map(i=>`<li>${i}</li>`).join('');
-    document.getElementById('ketCol2Title').innerText = col2Title;
+
+    document.getElementById('ketCol2Title').innerText = d.col2Title || DEFAULT.col2Title;
+    const col2List = d.col2List || DEFAULT.col2List;
     document.getElementById('ketCol2List').innerHTML = col2List.split('\n').filter(l=>l.trim()).map(i=>`<li>${i}</li>`).join('');
-    document.getElementById('ketCol3Title').innerText = col3Title;
+
+    document.getElementById('ketCol3Title').innerText = d.col3Title || DEFAULT.col3Title;
+    const col3List = d.col3List || DEFAULT.col3List;
     document.getElementById('ketCol3List').innerHTML = col3List.split('\n').filter(l=>l.trim()).map(i=>`<li>${i}</li>`).join('');
   });
 }
