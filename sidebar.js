@@ -160,14 +160,12 @@ function wsGo(page){
 function wsOpen(page){
   wsCloseSidebar();
   
-  // Beranda bebas akses
   if(page === 'beranda'){
     if(typeof goHome === 'function') goHome();
     else window.location.href = 'index.html';
     return;
   }
   
-  // Menu yang butuh login
   const protectedPages = {
     'pesanan': { name: 'Pesanan Saya', target: 'pesanan' },
     'dompet':  { name: 'Dompet',       target: 'dompet' },
