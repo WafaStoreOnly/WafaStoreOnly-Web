@@ -42,76 +42,6 @@ input:focus{border-color:var(--primary)}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:480px){.card{padding:22px}}
 </style>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { 
-  getAuth, GoogleAuthProvider, signInWithPopup, getRedirectResult,
-  RecaptchaVerifier, signInWithPhoneNumber, signInWithCustomToken,
-  setPersistence, browserLocalPersistence
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getDatabase, ref, get, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-const firebaseConfig = { 
-  apiKey: "AIzaSyDTkQVpME0XRQmk9Jo7eDQuf0OFY8stm_8", 
-  authDomain: "wafastoreonly.firebaseapp.com", 
-  databaseURL: "https://wafastoreonly-default-rtdb.asia-southeast1.firebasedatabase.app", 
-  projectId: "wafastoreonly", 
-  storageBucket: "wafastoreonly.firebasestorage.app", 
-  messagingSenderId: "208012194307", 
-  appId: "1:208012194307:web:551a540b0151333da69436" 
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-// Set persistence ke LOCAL biar session tahan error "missing initial state"
-setPersistence(auth, browserLocalPersistence)
-  .then(() => console.log('✅ Auth persistence: LOCAL'))
-  .catch((e) => console.warn('⚠️ Persistence error:', e));
-
-window._auth = auth;
-window._db = db;
-window._ref = ref;
-window._get = get;
-window._set = set;
-window._update = update;
-window._onValue = onValue;
-window._provider = new GoogleAuthProvider();
-window._GoogleSign = signInWithPopup;
-window._getRedirectResult = getRedirectResult;
-window._RecaptchaVerifier = RecaptchaVerifier;
-window._signInWithPhoneNumber = signInWithPhoneNumber;
-window._signInWithCustomToken = signInWithCustomToken;
-
-// LOAD BRANDING & THEME
-function loadLoginSettings(){
-  onValue(ref(db, 'settings/branding'), (snap)=>{
-    const d = snap.val();
-    if(!d) return;
-    if(d.logo){
-      const logoImg = document.getElementById('loginLogo');
-      if(logoImg) logoImg.src = d.logo;
-      const fav = document.querySelector('link[rel="icon"]') || document.createElement('link');
-      fav.rel='icon'; fav.href=d.logo;
-      document.head.appendChild(fav);
-    }
-    if(d.brandName){
-      document.getElementById('loginBrandName').innerText = d.brandName;
-      document.title = 'Login - ' + d.brandName;
-    }
-    if(d.tagline){
-      document.getElementById('loginTagline').innerText = d.tagline;
-    }
-  });
-  onValue(ref(db, 'settings/theme'), (snap)=>{
-    const d = snap.val();
-    if(!d) return;
-    if(d.primary) document.documentElement.style.setProperty('--primary', d.primary);
-    if(d.accent) document.documentElement.style.setProperty('--accent', d.accent);
-  });
-}
-loadLoginSettings();
-</script>
 </head>
 <body>
 
@@ -155,11 +85,45 @@ loadLoginSettings();
 </div>
 
 <script type="module">
-let confirmationResult = null;
-const auth = window._auth;
-const db = window._db;
+// ============================================
+// IMPORT SEMUA DI 1 SCRIPT
+// ============================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  getRedirectResult,
+  RecaptchaVerifier, 
+  signInWithPhoneNumber, 
+  signInWithCustomToken,
+  setPersistence, 
+  browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, get, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-// ===== HELPER =====
+const firebaseConfig = { 
+  apiKey: "AIzaSyDTkQVpME0XRQmk9Jo7eDQuf0OFY8stm_8", 
+  authDomain: "wafastoreonly.firebaseapp.com", 
+  databaseURL: "https://wafastoreonly-default-rtdb.asia-southeast1.firebasedatabase.app", 
+  projectId: "wafastoreonly", 
+  storageBucket: "wafastoreonly.firebasestorage.app", 
+  messagingSenderId: "208012194307", 
+  appId: "1:208012194307:web:551a540b0151333da69436" 
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+// Set persistence LOCAL biar stabil
+setPersistence(auth, browserLocalPersistence)
+  .then(() => console.log('✅ Auth persistence: LOCAL'))
+  .catch((e) => console.warn('⚠️ Persistence error:', e));
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
 function showError(msg){
   const box = document.getElementById('errorBox');
   if(!box) return;
@@ -178,7 +142,9 @@ function hideLoading(){
   if(ov) ov.classList.remove('show');
 }
 
-// ===== REDIRECT AFTER LOGIN =====
+// ============================================
+// REDIRECT AFTER LOGIN
+// ============================================
 function redirectAfterLogin(){
   const target = sessionStorage.getItem('wafa_redirect_after_login') || 'index';
   sessionStorage.removeItem('wafa_redirect_after_login');
@@ -190,40 +156,80 @@ function redirectAfterLogin(){
   else window.location.href = 'index.html';
 }
 
-// ===== ENSURE USER DI FIREBASE =====
+// ============================================
+// ENSURE USER DI FIREBASE
+// ============================================
 async function ensureUserExists(user, extra){
-  const snap = await get(ref(db, 'users/'+user.uid));
-  if(!snap.exists()){
-    let defaultName = user.displayName || 
-                      (user.email ? user.email.split('@')[0] : '') || 
-                      user.phoneNumber || 
-                      'User';
-    const userData = {
-      uid: user.uid,
-      email: user.email || (extra && extra.email) || '',
-      phone: user.phoneNumber || (extra && extra.phone) || '',
-      name: defaultName,
-      nickname: defaultName,
-      avatar: user.photoURL || (extra && extra.avatar) || '',
-      provider: (extra && extra.provider) || 'unknown',
-      saldo: 0,
-      created: Date.now()
-    };
-    await set(ref(db, 'users/'+user.uid), userData);
-    console.log('✅ User baru dibuat:', user.uid);
-  }
-  localStorage.setItem('wafa_uid', user.uid);
-  const fresh = (await get(ref(db, 'users/'+user.uid))).val();
-  if(fresh){
-    localStorage.setItem('wafa_user', JSON.stringify({
-      nickname: fresh.nickname || fresh.name || 'User',
-      email: fresh.email || '',
-      saldo: fresh.saldo || 0
-    }));
+  try{
+    const snap = await get(ref(db, 'users/'+user.uid));
+    if(!snap.exists()){
+      let defaultName = user.displayName || 
+                        (user.email ? user.email.split('@')[0] : '') || 
+                        user.phoneNumber || 
+                        'User';
+      const userData = {
+        uid: user.uid,
+        email: user.email || (extra && extra.email) || '',
+        phone: user.phoneNumber || (extra && extra.phone) || '',
+        name: defaultName,
+        nickname: defaultName,
+        avatar: user.photoURL || (extra && extra.avatar) || '',
+        provider: (extra && extra.provider) || 'unknown',
+        saldo: 0,
+        created: Date.now()
+      };
+      await set(ref(db, 'users/'+user.uid), userData);
+      console.log('✅ User baru dibuat:', user.uid);
+    }
+    localStorage.setItem('wafa_uid', user.uid);
+    const fresh = (await get(ref(db, 'users/'+user.uid))).val();
+    if(fresh){
+      localStorage.setItem('wafa_user', JSON.stringify({
+        nickname: fresh.nickname || fresh.name || 'User',
+        email: fresh.email || '',
+        saldo: fresh.saldo || 0
+      }));
+    }
+  }catch(e){
+    console.error('ensureUserExists error:', e);
+    throw e;
   }
 }
 
-// ===== CEK URL QUERY =====
+// ============================================
+// LOAD BRANDING & THEME
+// ============================================
+function loadLoginSettings(){
+  onValue(ref(db, 'settings/branding'), (snap)=>{
+    const d = snap.val();
+    if(!d) return;
+    if(d.logo){
+      const logoImg = document.getElementById('loginLogo');
+      if(logoImg) logoImg.src = d.logo;
+      const fav = document.querySelector('link[rel="icon"]') || document.createElement('link');
+      fav.rel='icon'; fav.href=d.logo;
+      document.head.appendChild(fav);
+    }
+    if(d.brandName){
+      document.getElementById('loginBrandName').innerText = d.brandName;
+      document.title = 'Login - ' + d.brandName;
+    }
+    if(d.tagline){
+      document.getElementById('loginTagline').innerText = d.tagline;
+    }
+  });
+  onValue(ref(db, 'settings/theme'), (snap)=>{
+    const d = snap.val();
+    if(!d) return;
+    if(d.primary) document.documentElement.style.setProperty('--primary', d.primary);
+    if(d.accent) document.documentElement.style.setProperty('--accent', d.accent);
+  });
+}
+loadLoginSettings();
+
+// ============================================
+// CEK URL QUERY (Discord/TikTok callback)
+// ============================================
 const urlParams = new URLSearchParams(window.location.search);
 const customToken = urlParams.get('custom_token');
 const providerParam = urlParams.get('provider');
@@ -234,7 +240,9 @@ if(errorParam){
   window.history.replaceState({}, '', 'login.html');
 }
 
-// ===== HANDLE CUSTOM TOKEN (Discord/TikTok) =====
+// ============================================
+// HANDLE CUSTOM TOKEN (Discord/TikTok)
+// ============================================
 if(customToken){
   (async function(){
     try{
@@ -256,19 +264,22 @@ if(customToken){
   })();
 }
 
-// ===== INIT RECAPTCHA =====
+// ============================================
+// INIT RECAPTCHA
+// ============================================
 try{
   window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'normal', theme: 'dark' });
   window.recaptchaVerifier.render();
 }catch(e){ console.log('Recaptcha init error:', e); }
 
 // ============================================
-// LOGIN GOOGLE — PAKAI POPUP (biar ga error sessionStorage)
+// LOGIN GOOGLE — POPUP
 // ============================================
 document.getElementById('btnGoogle').onclick = async function(){
   try{
     console.log('🔵 Login Google via POPUP...');
-    const result = await signInWithPopup(auth, new GoogleAuthProvider());
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
     const user = result.user;
     console.log('✅ Google login sukses:', user.uid);
     await ensureUserExists(user, { provider: 'google.com' });
@@ -288,7 +299,9 @@ document.getElementById('btnGoogle').onclick = async function(){
   }
 };
 
-// ===== HANDLE REDIRECT RESULT (fallback untuk Google redirect lama) =====
+// ============================================
+// HANDLE REDIRECT RESULT (Fallback)
+// ============================================
 getRedirectResult(auth).then(async function(result){
   if(result && result.user){
     const user = result.user;
@@ -302,15 +315,16 @@ getRedirectResult(auth).then(async function(result){
   }
 }).catch(function(e){ 
   console.log('Redirect result error:', e);
-  // Kalau error "missing initial state", cuma log aja — gak munculin error ke user
-  if(e.code === 'auth/argument-error' || e.message.includes('missing initial state')){
-    console.log('ℹ️ Ignore "missing initial state" error — bakal pakai Popup');
+  if(e.message && e.message.includes('missing initial state')){
+    console.log('ℹ️ Ignore "missing initial state" — bakal pakai Popup');
   }
 });
 
 // ============================================
 // WHATSAPP OTP
 // ============================================
+let confirmationResult = null;
+
 document.getElementById('btnSendOTP').onclick = async function(){
   let phone = document.getElementById('phone').value.trim();
   if(phone.startsWith('0')) phone = '+62' + phone.slice(1);
