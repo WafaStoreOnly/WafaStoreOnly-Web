@@ -481,7 +481,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div style="font-size:13px;color:#a8a8a8;line-height:1.9">
           <b style="color:#e8e8e8">Web URL:</b> <a href="https://wafastoreonly-official.vercel.app" style="color:#4a90e2" target="_blank">wafastoreonly-official.vercel.app</a><br>
           <b style="color:#e8e8e8">Firebase:</b> wafastoreonly<br>
-          <b style="color:#e8e8e8">Version:</b> Admin Panel v3.8
+          <b style="color:#e8e8e8">Version:</b> Admin Panel v3.9
         </div>
       </div>
     </div>
@@ -619,16 +619,76 @@ window.lihatBukti = async (id)=>{
   const w = window.open('');
   w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${o.bukti}"></body></html>`);
 };
+
+// ============================================
+// DELETE DISCORD MESSAGE — FIXED
+// ============================================
 async function deleteDiscordMessage(messageId){
-  if(!messageId || !window.WEBHOOK_ORDER_PROSES) return false;
+  if(!messageId || !window.WEBHOOK_ORDER_PROSES){ 
+    console.log('❌ Delete gagal: messageId kosong atau webhook kosong');
+    return false; 
+  }
   try{
     const match = window.WEBHOOK_ORDER_PROSES.match(/webhooks\/(\d+)\/([^\/]+)/);
-    if(!match) return false;
-    const webhookId = match[1]; const webhookToken = match[2];
+    if(!match){ 
+      console.log('❌ Webhook URL invalid');
+      return false; 
+    }
+    const webhookId = match[1]; 
+    const webhookToken = match[2];
     const url = `https://discord.com/api/webhooks/${webhookId}/${webhookToken}/messages/${messageId}`;
-    const res = await fetch(url, { method: 'DELETE' }); return res.ok;
-  }catch(e){ return false; }
+    
+    console.log('🗑️ Delete pesan Discord:', messageId);
+    const res = await fetch(url, { method: 'DELETE' });
+    
+    if(res.ok || res.status === 204){
+      console.log('✅ Pesan berhasil dihapus:', messageId);
+      return true;
+    } else {
+      const errText = await res.text();
+      console.log('❌ Gagal hapus pesan:', res.status, errText);
+      return false;
+    }
+  }catch(e){ 
+    console.log('❌ Delete Discord error:', e); 
+    return false; 
+  }
 }
+
+// Fungsi hapus SEMUA pesan order (retry up to 3x per pesan)
+async function deleteAllOrderMessages(o){
+  if(!o) return;
+  
+  let ids = [];
+  if(o.discordMessageIds && Array.isArray(o.discordMessageIds)){
+    ids = [...o.discordMessageIds];
+  } else if(o.discordMessageId){
+    ids = [o.discordMessageId];
+  }
+  
+  if(ids.length === 0){
+    console.log('⚠️ Tidak ada message ID untuk dihapus');
+    return;
+  }
+  
+  console.log('🗑️ Menghapus ' + ids.length + ' pesan Discord...');
+  
+  for(const id of ids){
+    let success = false;
+    for(let attempt = 1; attempt <= 3; attempt++){
+      success = await deleteDiscordMessage(id);
+      if(success) break;
+      console.log(`⏳ Retry ${attempt}/3 untuk pesan ${id}...`);
+      await new Promise(r => setTimeout(r, 1000));
+    }
+  }
+  
+  console.log('✅ Selesai hapus pesan Discord');
+}
+
+// ============================================
+// PROSES SELESAI
+// ============================================
 window.prosesSelesai = async (id)=>{
   try{
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), { status:'selesai', selesaiAt:Date.now() });
@@ -637,7 +697,10 @@ window.prosesSelesai = async (id)=>{
     const logData = { id: id, nickname: o.nickname || 'User', username: o.username || '-', jumlah: o.jumlah || 0, date: o.date || '-', selesaiAt: Date.now(), status: 'selesai' };
     await window.wafaSet(window.wafaRef(window.wafaDB, 'logs/'+id), logData);
     cleanupOldLogs();
-    if(o.discordMessageId){ await deleteDiscordMessage(o.discordMessageId); }
+    
+    // Hapus SEMUA pesan Discord (embed + gambar/tombol)
+    await deleteAllOrderMessages(o);
+    
     let detailPesanan = '';
     const method = (o.method || 'username').toLowerCase();
     const methodLabel = method === 'username' ? '🎮 Via Username' : method === 'gamepass' ? '🎫 Via Gamepass' : method === 'gift' ? '🎁 Gift In Game' : method;
@@ -647,28 +710,38 @@ window.prosesSelesai = async (id)=>{
     if(o.metodeBayar === 'saldo'){ detailPesanan += `• Pembayaran: **💰 Saldo Web**\n`; }
     if(o.voucherCode) detailPesanan += `• Voucher: **${o.voucherCode}** (-Rp${(o.voucherPotongan||0).toLocaleString('id-ID')})\n`;
     detailPesanan += `• Total Bayar: **Rp${(o.total||0).toLocaleString('id-ID')}**\n`;
+    
     if(window.WEBHOOK_ORDER_DONE){
       fetch(window.WEBHOOK_ORDER_DONE, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content: `✅ **TRANSAKSI SELESAI - DONE**\n\n━━━━━━━━━━━━━━━━━━━━\n📦 **Order #${id.toString().slice(-6)}**\n━━━━━━━━━━━━━━━━━━━━\n👤 Buyer: **${o.nickname || 'User'}**\n📧 Email: ${sensorEmail(o.email||'-')}\n🆔 UID: \`${o.uid || '-'}\`\n📅 Order Dibuat: ${o.date || '-'}\n${detailPesanan}\n━━━━━━━━━━━━━━━━━━━━\n🕐 **Selesai: ${new Date().toLocaleString('id-ID')}**\n✅ Status: **COMPLETED**\n━━━━━━━━━━━━━━━━━━━━\n\n🔒 Pesan orderan sudah dihapus dari channel proses.` }) }).catch(()=>{});
     }
     toast('✅ Order diselesaikan!');
   }catch(e){ alert('Gagal: '+e.message); }
 };
+
+// ============================================
+// PROSES BATAL
+// ============================================
 window.prosesBatal = async (id, alasan)=>{
   try{
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), { status:'batal', batalReason:alasan, batalAt:Date.now() });
     const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'orders/'+id));
     const o = snap.val();
-    if(o.discordMessageId){ await deleteDiscordMessage(o.discordMessageId); }
+    
+    // Hapus SEMUA pesan Discord
+    await deleteAllOrderMessages(o);
+    
     let detailPesanan = '';
     const method = (o.method || 'username').toLowerCase();
     const methodLabel = method === 'username' ? '🎮 Via Username' : method === 'gamepass' ? '🎫 Via Gamepass' : method === 'gift' ? '🎁 Gift In Game' : method;
     detailPesanan += `\n**📋 DETAIL PESANAN:**\n• Metode: **${methodLabel}**\n• Username Roblox: **${o.username || '-'}**\n• Jumlah Robux: **${o.jumlah || 0} Robux**\n• Total: **Rp${(o.total||0).toLocaleString('id-ID')}**\n`;
+    
     if(window.WEBHOOK_ORDER_DONE){
       fetch(window.WEBHOOK_ORDER_DONE, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content: `❌ **TRANSAKSI DIBATALKAN**\n\n━━━━━━━━━━━━━━━━━━━━\n📦 **Order #${id.toString().slice(-6)}**\n━━━━━━━━━━━━━━━━━━━━\n👤 Buyer: **${o.nickname || 'User'}**\n📧 Email: ${sensorEmail(o.email||'-')}\n${detailPesanan}\n❌ **Alasan: ${alasan}**\n🕐 Dibatalkan: ${new Date().toLocaleString('id-ID')}\n━━━━━━━━━━━━━━━━━━━━\n\n🔒 Pesan orderan sudah dihapus dari channel proses.` }) }).catch(()=>{});
     }
     toast('❌ Order dibatalkan');
   }catch(e){ alert('Gagal: '+e.message); }
 };
+
 async function cleanupOldLogs(){
   try{
     const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'logs'));
