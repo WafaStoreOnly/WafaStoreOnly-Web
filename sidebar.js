@@ -60,6 +60,10 @@
           👤 <span>Profil</span>
         </div>
 
+        <div class="ws-item" id="wsMenuLeaderboard" onclick="wsOpen('leaderboard')">
+          🏆 <span>Leaderboard</span>
+        </div>
+
         <div class="ws-item" id="wsMenuAdmin" style="display:none" onclick="wsOpen('admin')">
           🛡️ <span>Admin Panel</span>
         </div>
@@ -182,6 +186,9 @@ function wsOpen(page){
     window.location.href = 'dompet.html';
   } else if(page === 'profil'){
     window.location.href = 'profil.html';
+  } else if(page === 'leaderboard'){
+    if(typeof openLeaderboard === 'function') openLeaderboard();
+    else window.location.href = 'index.html#leaderboard';
   } else if(page === 'admin'){
     window.location.href = 'admin.html';
   }
@@ -189,7 +196,7 @@ function wsOpen(page){
 
 function wsSetActive(menu){
   document.querySelectorAll('.ws-item').forEach(i=>i.classList.remove('active'));
-  const map = { 'beranda': 'wsMenuBeranda', 'pesanan': 'wsMenuPesanan', 'dompet': 'wsMenuDompet', 'profil': 'wsMenuProfil', 'admin': 'wsMenuAdmin' };
+  const map = { 'beranda': 'wsMenuBeranda', 'pesanan': 'wsMenuPesanan', 'dompet': 'wsMenuDompet', 'profil': 'wsMenuProfil', 'leaderboard': 'wsMenuLeaderboard', 'admin': 'wsMenuAdmin' };
   const id = map[menu];
   if(id){ const el = document.getElementById(id); if(el) el.classList.add('active'); }
 }
@@ -222,7 +229,6 @@ async function wsLoadUser(){
     }
     const uid = localStorage.getItem('wafa_uid');
     if(!uid){
-      // Guest mode
       const el1 = document.getElementById('wsUserName');
       const el2 = document.getElementById('wsUserEmail');
       const el3 = document.getElementById('wsHeaderUser');
