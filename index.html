@@ -173,6 +173,108 @@
 }
 .keterangan-col-list li:last-child { margin-bottom: 0; }
 
+/* ===== DUKUNGAN SECTION ===== */
+.dukungan-card {
+  margin-top: 14px;
+  padding: 22px 18px;
+  background: linear-gradient(135deg, rgba(74,144,226,0.08), rgba(107,92,231,0.08));
+  border: 1px solid rgba(74,144,226,0.3);
+  border-radius: 16px;
+}
+.dukungan-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+.dukungan-emoji {
+  font-size: 36px;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+.dukungan-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+.dukungan-sub {
+  font-size: 12px;
+  color: #a8a8a8;
+  line-height: 1.7;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.dukungan-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.dukungan-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-decoration: none;
+  transition: 0.2s;
+  cursor: pointer;
+  text-align: center;
+}
+.dukungan-btn:hover {
+  transform: translateY(-3px);
+  text-decoration: none;
+}
+.dukungan-icon {
+  font-size: 26px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.dukungan-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #e8e8e8;
+}
+.dukungan-desc {
+  font-size: 10px;
+  color: #8a8a8a;
+  line-height: 1.4;
+}
+.dukungan-btn.discord:hover { border-color: #5865F2; box-shadow: 0 8px 24px rgba(88,101,242,0.25); }
+.dukungan-btn.discord:hover .dukungan-label { color: #5865F2; }
+.dukungan-btn.instagram:hover { border-color: #E4405F; box-shadow: 0 8px 24px rgba(228,64,95,0.25); }
+.dukungan-btn.instagram:hover .dukungan-label { color: #E4405F; }
+.dukungan-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 8px 24px rgba(0,242,234,0.25); }
+.dukungan-btn.tiktok:hover .dukungan-label { color: #00f2ea; }
+.dukungan-btn.facebook:hover { border-color: #1877F2; box-shadow: 0 8px 24px rgba(24,119,242,0.25); }
+.dukungan-btn.facebook:hover .dukungan-label { color: #1877F2; }
+
+.dukungan-footer {
+  text-align: center;
+  padding: 14px;
+  background: rgba(74,222,128,0.06);
+  border: 1px solid rgba(74,222,128,0.2);
+  border-radius: 12px;
+}
+.dukungan-footer-text {
+  font-size: 12px;
+  color: #a8a8a8;
+  line-height: 1.7;
+  margin-bottom: 6px;
+}
+.dukungan-footer-text b {
+  color: #4ade80;
+}
+.dukungan-thanks {
+  font-size: 11px;
+  color: #4ade80;
+  font-weight: 700;
+}
+
 /* ===== POPUP PROMO ===== */
 .popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.3s ease}
 .popup-overlay.show{display:flex}
@@ -185,12 +287,15 @@
 .popup-title{font-size:20px;font-weight:800;color:#e8e8e8;margin-bottom:10px;letter-spacing:-0.5px}
 .popup-desc{font-size:13px;color:#a8a8a8;line-height:1.6;margin-bottom:18px;white-space:pre-wrap}
 .popup-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:14px;margin-top:8px;font-weight:700;font-size:13px;color:#e8e8e8;text-decoration:none;cursor:pointer;transition:0.15s}
-.popup-btn:hover{border-color:#4a90e2;background:#222;text-decoration:none;color:#e8e8e8}
-.popup-btn.discord:hover{border-color:#5865F2}
-.popup-btn.instagram:hover{border-color:#E4405F}
-.popup-btn.facebook:hover{border-color:#1877F2}
-.popup-btn.tiktok:hover{border-color:#00f2ea}
-.popup-btn.whatsapp:hover{border-color:#25D366}
+.popup-btn:hover{border-color:#4a90e2;background:#222;text-decoration:none;color:#e8e8e8;transform:translateY(-2px)}
+.popup-btn.discord:hover{border-color:#5865F2;background:rgba(88,101,242,0.1)}
+.popup-btn.instagram:hover{border-color:#E4405F;background:rgba(228,64,95,0.1)}
+.popup-btn.tiktok:hover{border-color:#00f2ea;background:rgba(0,242,234,0.1)}
+.popup-btn.facebook:hover{border-color:#1877F2;background:rgba(24,119,242,0.1)}
+.popup-btn.whatsapp:hover{border-color:#25D366;background:rgba(37,211,102,0.1)}
+.popup-btn.twitter:hover{border-color:#1DA1F2;background:rgba(29,161,242,0.1)}
+.popup-btn.youtube:hover{border-color:#FF0000;background:rgba(255,0,0,0.1)}
+.popup-btn.telegram:hover{border-color:#0088cc;background:rgba(0,136,204,0.1)}
 
 @media (max-width:768px){
   .feature-grid{grid-template-columns:1fr 1fr}
@@ -203,6 +308,10 @@
   .hero-sub{font-size:12px}
   .keterangan-3col{grid-template-columns:1fr}
   .keterangan-title-main{font-size:12px}
+  .dukungan-grid{grid-template-columns:1fr 1fr}
+  .dukungan-btn{padding:14px 8px}
+  .dukungan-icon{font-size:22px}
+  .dukungan-label{font-size:12px}
 }
 </style>
 <script type="module">
@@ -306,6 +415,46 @@ Selamat datang di rumah baru kalian.</div>
       </div>
     </div>
   </div>
+
+  <!-- ===== DUKUNGAN SECTION ===== -->
+  <div class="dukungan-card">
+    <div class="dukungan-header">
+      <div class="dukungan-emoji">💚</div>
+      <div class="dukungan-title">Dukung & Support Kami</div>
+      <div class="dukungan-sub">WafaStoreOnly adalah toko kecil yang dikelola secara mandiri. Dukungan kalian sangat berarti untuk kami terus berkembang dan memberikan pelayanan terbaik!</div>
+    </div>
+
+    <div class="dukungan-grid">
+      <a href="https://discord.gg/wafastoreonly" target="_blank" rel="noopener" class="dukungan-btn discord">
+        <span class="dukungan-icon">🎮</span>
+        <span class="dukungan-label">Join Discord</span>
+        <span class="dukungan-desc">Info promo & bantuan</span>
+      </a>
+      <a href="https://instagram.com/wafastoreonly" target="_blank" rel="noopener" class="dukungan-btn instagram">
+        <span class="dukungan-icon">📷</span>
+        <span class="dukungan-label">Follow Instagram</span>
+        <span class="dukungan-desc">Update stok & promo</span>
+      </a>
+      <a href="https://tiktok.com/@wafastoreonly" target="_blank" rel="noopener" class="dukungan-btn tiktok">
+        <span class="dukungan-icon">🎵</span>
+        <span class="dukungan-label">Follow TikTok</span>
+        <span class="dukungan-desc">Konten seru & tutorial</span>
+      </a>
+      <a href="https://facebook.com/wafastoreonly" target="_blank" rel="noopener" class="dukungan-btn facebook">
+        <span class="dukungan-icon">👍</span>
+        <span class="dukungan-label">Follow Facebook</span>
+        <span class="dukungan-desc">Komunitas & info</span>
+      </a>
+    </div>
+
+    <div class="dukungan-footer">
+      <div class="dukungan-footer-text">
+        🚀 <b>Bantu kami upgrade web!</b> Setiap follow, join, dan share dari kalian bikin WafaStoreOnly tambah semangat buat ngasih harga termurah & pelayanan tercepat.
+      </div>
+      <div class="dukungan-thanks">Terima kasih udah jadi bagian dari perjalanan kami! 🙏</div>
+    </div>
+  </div>
+  <!-- ===== END DUKUNGAN ===== -->
 
 </div>
 
@@ -542,9 +691,6 @@ function sensorUsernameRbx(u){
   return u.slice(0, 3) + '****' + u.slice(-3);
 }
 
-// ==========================================
-// VALIDASI USERNAME ROBLOX
-// ==========================================
 async function validateRobloxUsername(username) {
   if (!username || username.trim().length < 3) {
     return { valid: false, message: 'Username minimal 3 karakter' };
@@ -997,7 +1143,6 @@ async function uploadBuktiFromChat(input){
 setInterval(checkExpired,5000);
 setInterval(()=>{if(document.getElementById('pesananPage') && document.getElementById('pesananPage').style.display=='block')renderPesanan();},1000);
 
-// ===== PEMBAYARAN =====
 let lastOrderData = null;
 let metodeBayar = 'saldo';
 
@@ -1335,7 +1480,6 @@ function buatPesananDanUpload(){
   toggleLayanan();
 }
 
-// ===== CHAT =====
 let chatUnsubscribe = null;
 function toggleLayanan(){
   if(!requireLogin('Chat Admin', 'index')) return;
@@ -1417,6 +1561,34 @@ function checkPopupPromo(){
   });
 }
 
+function detectPlatformClass(url){
+  if(!url) return '';
+  const u = url.toLowerCase();
+  if(u.includes('discord')) return 'discord';
+  if(u.includes('instagram')) return 'instagram';
+  if(u.includes('tiktok')) return 'tiktok';
+  if(u.includes('facebook') || u.includes('fb.com')) return 'facebook';
+  if(u.includes('wa.me') || u.includes('whatsapp')) return 'whatsapp';
+  if(u.includes('twitter') || u.includes('x.com')) return 'twitter';
+  if(u.includes('youtube')) return 'youtube';
+  if(u.includes('telegram') || u.includes('t.me')) return 'telegram';
+  return '';
+}
+
+function getNativeScheme(url){
+  if(!url) return null;
+  const u = url.toLowerCase();
+  if(u.includes('discord.gg/') || u.includes('discord.com/invite/')) return null;
+  if(u.includes('instagram.com/')) return 'instagram://app';
+  if(u.includes('tiktok.com/')) return 'snssdk1233://';
+  if(u.includes('facebook.com/') || u.includes('fb.com/')) return 'fb://';
+  if(u.includes('wa.me/') || u.includes('whatsapp.com/')) return 'whatsapp://';
+  if(u.includes('twitter.com/') || u.includes('x.com/')) return 'twitter://';
+  if(u.includes('youtube.com/') || u.includes('youtu.be/')) return 'youtube://';
+  if(u.includes('t.me/') || u.includes('telegram.me/')) return 'tg://';
+  return null;
+}
+
 function showPopupPromo(d){
   const overlay = document.getElementById('popupPromo');
   const img = document.getElementById('popupImg');
@@ -1434,12 +1606,32 @@ function showPopupPromo(d){
   btnContainer.innerHTML = '';
   (d.buttons || []).forEach(btn=>{
     if(!btn.label || !btn.url) return;
+    
     const a = document.createElement('a');
     a.href = btn.url;
     a.target = '_blank';
     a.rel = 'noopener';
-    a.className = 'popup-btn';
+    a.className = 'popup-btn ' + detectPlatformClass(btn.url);
     a.innerHTML = `${btn.icon || '🔗'} ${btn.label}`;
+    
+    a.addEventListener('click', function(e){
+      const nativeScheme = getNativeScheme(btn.url);
+      if(nativeScheme){
+        const startTime = Date.now();
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = nativeScheme;
+        document.body.appendChild(iframe);
+        setTimeout(()=>{ try{ iframe.remove(); }catch(err){} }, 2000);
+        
+        setTimeout(function(){
+          if(Date.now() - startTime < 2000){
+            window.open(btn.url, '_blank');
+          }
+        }, 1500);
+      }
+    });
+    
     btnContainer.appendChild(a);
   });
   
@@ -1510,7 +1702,6 @@ function loadKeteranganDinamis(){
   });
 }
 
-// ===== INIT =====
 if(typeof loadHargaConfig === 'function'){
   loadHargaConfig().then(()=>{ renderUsername(); renderGamepass(); });
 } else {
