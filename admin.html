@@ -132,8 +132,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .popup-btn-preview.tiktok{border-color:#00f2ea;background:rgba(0,242,234,0.1)}
 .popup-btn-preview.facebook{border-color:#1877F2;background:rgba(24,119,242,0.1)}
 .popup-btn-preview.whatsapp{border-color:#25D366;background:rgba(37,211,102,0.1)}
-.popup-btn-preview.youtube{border-color:#FF0000;background:rgba(255,0,0,0.1)}
-.popup-btn-preview.telegram{border-color:#0088cc;background:rgba(0,136,204,0.1)}
+.popup-btn-preview.sociabuzz{border-color:#FF6B35;background:rgba(255,107,53,0.1)}
 @media (max-width:900px){
   #adminSidebar{transform:translateX(-100%)}
   #adminSidebar.open{transform:translateX(0)}
@@ -295,29 +294,16 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       <div class="page-sub">Atur logo, nama brand, & banner web</div>
       <div class="card">
         <div class="card-title">Brand Identity</div>
-        <div class="brand-preview">
-          <img id="previewLogo" src="./logo.png" alt="logo">
-          <div><b id="previewBrandName">WafaStoreOnly</b><small id="previewTagline">Top Up Robux Cepat & Aman</small></div>
-        </div>
+        <div class="brand-preview"><img id="previewLogo" src="./logo.png" alt="logo"><div><b id="previewBrandName">WafaStoreOnly</b><small id="previewTagline">Top Up Robux Cepat & Aman</small></div></div>
         <div class="input-group"><label>Nama Brand</label><input id="inputBrandName" placeholder="WafaStoreOnly"></div>
         <div class="input-group"><label>Tagline</label><input id="inputTagline" placeholder="Top Up Robux Cepat & Aman"></div>
-        <div class="input-group">
-          <label>Logo (max 500KB)</label>
-          <input type="file" id="inputLogoFile" accept="image/*" style="display:none" onchange="uploadLogo(this)">
-          <label for="inputLogoFile" class="upload-btn">📸 Upload Logo Baru</label>
-          <span style="font-size:11px;color:#5a5a5a;margin-left:10px" id="logoFileName">Belum ada file</span>
-        </div>
+        <div class="input-group"><label>Logo (max 500KB)</label><input type="file" id="inputLogoFile" accept="image/*" style="display:none" onchange="uploadLogo(this)"><label for="inputLogoFile" class="upload-btn">📸 Upload Logo Baru</label><span style="font-size:11px;color:#5a5a5a;margin-left:10px" id="logoFileName">Belum ada file</span></div>
         <button class="btn btn-success" onclick="saveBranding()">💾 Simpan Branding</button>
       </div>
       <div class="card">
         <div class="card-title">Banner Home</div>
         <div class="banner-preview" id="bannerPreview">Belum ada banner</div>
-        <div class="input-group">
-          <label>Banner Image (max 500KB)</label>
-          <input type="file" id="inputBannerFile" accept="image/*" style="display:none" onchange="uploadBanner(this)">
-          <label for="inputBannerFile" class="upload-btn">🖼️ Upload Banner Baru</label>
-          <span style="font-size:11px;color:#5a5a5a;margin-left:10px" id="bannerFileName">Belum ada file</span>
-        </div>
+        <div class="input-group"><label>Banner Image (max 500KB)</label><input type="file" id="inputBannerFile" accept="image/*" style="display:none" onchange="uploadBanner(this)"><label for="inputBannerFile" class="upload-btn">🖼️ Upload Banner Baru</label><span style="font-size:11px;color:#5a5a5a;margin-left:10px" id="bannerFileName">Belum ada file</span></div>
         <button class="btn btn-success" onclick="saveBanner()">💾 Simpan Banner</button>
       </div>
     </div>
@@ -330,29 +316,22 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div class="input-group"><label>Status Pop-up</label><select id="popupActive"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div>
         <div class="input-group"><label>Judul Pop-up</label><input id="popupTitle" placeholder="Contoh: 🎉 Promo Spesial Hari Ini!"></div>
         <div class="input-group"><label>Deskripsi</label><textarea id="popupDesc" placeholder="Contoh: Gabung server Discord & follow sosmed kami buat dapet promo!" style="min-height:80px"></textarea></div>
-        <div class="input-group">
-          <label>Gambar (opsional, max 500KB)</label>
-          <input type="file" id="popupImgFile" accept="image/*" style="display:none" onchange="uploadPopupImg(this)">
-          <label for="popupImgFile" class="upload-btn">🖼️ Upload Gambar</label>
-          <span style="font-size:11px;color:#5a5a5a;margin-left:10px" id="popupImgName">Belum ada gambar</span>
-        </div>
-        <div class="input-group"><label>Tampilkan Berapa Kali Per Hari</label><input id="popupShowPerDay" type="number" value="1" min="1" max="10"><small>Default: 1x per hari per user</small></div>
+        <div class="input-group"><label>Gambar (opsional, max 500KB)</label><input type="file" id="popupImgFile" accept="image/*" style="display:none" onchange="uploadPopupImg(this)"><label for="popupImgFile" class="upload-btn">🖼️ Upload Gambar</label><span style="font-size:11px;color:#5a5a5a;margin-left:10px" id="popupImgName">Belum ada gambar</span></div>
+        <div class="input-group"><label>Tampilkan Setiap (menit)</label><input id="popupEveryMinutes" type="number" value="0" min="0"><small><b>0</b> = selalu muncul setiap buka web | <b>30</b> = muncul lagi setelah 30 menit | <b>1440</b> = sekali sehari</small></div>
       </div>
       <div class="card">
         <div class="card-title">Tombol Sosial Media</div>
-        <div style="font-size:12px;color:#8a8a8a;margin-bottom:14px">Tambahin tombol link. Bisa Discord, Instagram, Facebook, TikTok, WhatsApp, dll. Klik otomatis ke app-nya.</div>
+        <div style="font-size:12px;color:#8a8a8a;margin-bottom:14px">Tambahin tombol link. Bisa Discord, Instagram, Facebook, TikTok, WhatsApp, Sociabuzz dll. Klik otomatis ke app-nya.</div>
         <div id="popupButtonsList" style="margin-bottom:14px"></div>
         <button class="btn btn-primary" onclick="addPopupButton()" style="margin-bottom:14px">➕ Tambah Tombol</button>
         <div style="background:#0f0f0f;border:1px solid #2a2a2a;border-radius:10px;padding:12px;font-size:11px;color:#8a8a8a;line-height:1.7">
-          💡 <b style="color:#e8e8e8">Tips Icon:</b> Pakai emoji: 🎮 (Discord), 📷 (IG), 🎵 (TikTok), 👍 (FB), 💬 (WA)<br>
+          💡 <b style="color:#e8e8e8">Tips Icon:</b> Pakai emoji: 🎮 (Discord), 📷 (IG), 🎵 (TikTok), 👍 (FB), 💬 (WA), 💖 (Sociabuzz)<br>
           🔗 <b style="color:#e8e8e8">Tips URL:</b> Link https langsung kebuka ke app kalau user install app-nya.
         </div>
       </div>
       <div class="card">
         <div class="card-title">Preview</div>
-        <div id="popupPreview" style="background:#0a0a0a;border:1px solid #2a2a2a;border-radius:14px;padding:20px;text-align:center">
-          <div style="color:#5a5a5a;font-size:12px">Preview muncul di sini...</div>
-        </div>
+        <div id="popupPreview" style="background:#0a0a0a;border:1px solid #2a2a2a;border-radius:14px;padding:20px;text-align:center"><div style="color:#5a5a5a;font-size:12px">Preview muncul di sini...</div></div>
       </div>
       <button class="btn btn-success" onclick="savePopup()" style="width:100%;justify-content:center;padding:14px">💾 Simpan Pop-up</button>
     </div>
@@ -424,11 +403,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
     <div class="page" id="page-games" style="display:none">
       <div class="page-title">Game Icons</div>
       <div class="page-sub">Upload & atur logo game untuk ditampilkan di web user</div>
-      <div class="card">
-        <div class="card-title">Daftar Game</div>
-        <div style="font-size:12px;color:#8a8a8a;margin-bottom:16px">Klik tombol Upload Logo buat ganti icon game. Perubahan otomatis muncul di web user.</div>
-        <div class="game-grid" id="gameGrid"></div>
-      </div>
+      <div class="card"><div class="card-title">Daftar Game</div><div style="font-size:12px;color:#8a8a8a;margin-bottom:16px">Klik tombol Upload Logo buat ganti icon game.</div><div class="game-grid" id="gameGrid"></div></div>
     </div>
 
     <div class="page" id="page-welcome" style="display:none">
@@ -451,21 +426,21 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div class="card-title">Via Username</div>
         <div class="input-group"><label>Status</label><select id="syaratActiveUsername"><option value="true">Tampil</option><option value="false">Sembunyikan</option></select></div>
         <div class="input-group"><label>Judul</label><input id="syaratTitleUsername" placeholder="SYARAT ROBUX VIA USERNAME"></div>
-        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsUsername" style="min-height:130px" placeholder="Proses kilat 5-10 menit"></textarea></div>
+        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsUsername" style="min-height:130px"></textarea></div>
         <button class="btn btn-success" onclick="saveSyarat('username')">💾 Simpan Username</button>
       </div>
       <div class="card">
         <div class="card-title">Via Gamepass</div>
         <div class="input-group"><label>Status</label><select id="syaratActiveGamepass"><option value="true">Tampil</option><option value="false">Sembunyikan</option></select></div>
         <div class="input-group"><label>Judul</label><input id="syaratTitleGamepass" placeholder="SYARAT ROBUX VIA GAMEPASS"></div>
-        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsGamepass" style="min-height:130px" placeholder="Proses ± 5-7 hari"></textarea></div>
+        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsGamepass" style="min-height:130px"></textarea></div>
         <button class="btn btn-success" onclick="saveSyarat('gamepass')">💾 Simpan Gamepass</button>
       </div>
       <div class="card">
         <div class="card-title">Via Gift In Game</div>
         <div class="input-group"><label>Status</label><select id="syaratActiveGift"><option value="true">Tampil</option><option value="false">Sembunyikan</option></select></div>
         <div class="input-group"><label>Judul</label><input id="syaratTitleGift" placeholder="SYARAT ROBUX VIA GIFT IN GAME"></div>
-        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsGift" style="min-height:130px" placeholder="Stand by di server map"></textarea></div>
+        <div class="input-group"><label>Daftar Syarat</label><textarea id="syaratItemsGift" style="min-height:130px"></textarea></div>
         <button class="btn btn-success" onclick="saveSyarat('gift')">💾 Simpan Gift</button>
       </div>
     </div>
@@ -476,9 +451,6 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       <div class="card">
         <div class="card-title">Status Announcement</div>
         <div class="input-group"><label>Status</label><select id="inputAnnActive"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div>
-        <div style="font-size:12px;color:#8a8a8a;line-height:1.7;background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:14px">
-          ℹ️ Announcement di beranda udah <b style="color:#e8e8e8">hardcoded</b> step-by-step.
-        </div>
         <button class="btn btn-success" onclick="saveAnnouncement()">💾 Simpan Status</button>
       </div>
     </div>
@@ -491,10 +463,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div class="input-group"><label>Warna Primary</label><input type="color" id="inputPrimary" value="#4a90e2" style="height:50px;cursor:pointer"></div>
         <div class="input-group"><label>Warna Accent</label><input type="color" id="inputAccent" value="#6b5ce7" style="height:50px;cursor:pointer"></div>
         <div style="background:linear-gradient(90deg,#4a90e2,#6b5ce7);height:60px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;margin-bottom:14px" id="themePreview">Preview Warna</div>
-        <div style="display:flex;gap:10px">
-          <button class="btn btn-success" onclick="saveTheme()">💾 Simpan Theme</button>
-          <button class="btn btn-grey" onclick="resetTheme()">🔄 Reset Default</button>
-        </div>
+        <div style="display:flex;gap:10px"><button class="btn btn-success" onclick="saveTheme()">💾 Simpan Theme</button><button class="btn btn-grey" onclick="resetTheme()">🔄 Reset Default</button></div>
       </div>
     </div>
 
@@ -512,7 +481,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div style="font-size:13px;color:#a8a8a8;line-height:1.9">
           <b style="color:#e8e8e8">Web URL:</b> <a href="https://wafastoreonly-official.vercel.app" style="color:#4a90e2" target="_blank">wafastoreonly-official.vercel.app</a><br>
           <b style="color:#e8e8e8">Firebase:</b> wafastoreonly<br>
-          <b style="color:#e8e8e8">Version:</b> Admin Panel v3.7
+          <b style="color:#e8e8e8">Version:</b> Admin Panel v3.8
         </div>
       </div>
     </div>
@@ -543,7 +512,6 @@ function closeSidebar(){
   document.getElementById('adminSidebar').classList.remove('open');
   document.getElementById('sbOverlay').style.display='none';
 }
-
 function checkAuthReady(){
   if(window.wafaAuth && window.wafaDB && window.wafaOnValue && window.wafaGet){
     window.wafaAuth.onAuthStateChanged((user)=>{
@@ -575,20 +543,17 @@ function switchPage(menu){
   if(el) el.classList.add('active');
   closeSidebar();
 }
-
 function toast(msg){
   let t = document.getElementById('admToast');
   t.innerText = msg; t.classList.add('show');
   clearTimeout(t._timer);
   t._timer = setTimeout(()=>t.classList.remove('show'), 2500);
 }
-
 function logoutAdmin(){
   if(!confirm('Logout dari admin panel?')) return;
   localStorage.removeItem('wafa_uid');
   window.wafaAuth.signOut().then(()=>{ location.href='login.html'; }).catch(()=>{ location.href='login.html'; });
 }
-
 async function handleUrlAction(){
   const urlParams = new URLSearchParams(window.location.search);
   const actionId = urlParams.get('id'); const action = urlParams.get('action');
@@ -654,7 +619,6 @@ window.lihatBukti = async (id)=>{
   const w = window.open('');
   w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${o.bukti}"></body></html>`);
 };
-
 async function deleteDiscordMessage(messageId){
   if(!messageId || !window.WEBHOOK_ORDER_PROSES) return false;
   try{
@@ -665,7 +629,6 @@ async function deleteDiscordMessage(messageId){
     const res = await fetch(url, { method: 'DELETE' }); return res.ok;
   }catch(e){ return false; }
 }
-
 window.prosesSelesai = async (id)=>{
   try{
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), { status:'selesai', selesaiAt:Date.now() });
@@ -690,7 +653,6 @@ window.prosesSelesai = async (id)=>{
     toast('✅ Order diselesaikan!');
   }catch(e){ alert('Gagal: '+e.message); }
 };
-
 window.prosesBatal = async (id, alasan)=>{
   try{
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), { status:'batal', batalReason:alasan, batalAt:Date.now() });
@@ -707,7 +669,6 @@ window.prosesBatal = async (id, alasan)=>{
     toast('❌ Order dibatalkan');
   }catch(e){ alert('Gagal: '+e.message); }
 };
-
 async function cleanupOldLogs(){
   try{
     const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'logs'));
@@ -716,7 +677,6 @@ async function cleanupOldLogs(){
     Object.entries(data).forEach(([key, log])=>{ if(log.selesaiAt && log.selesaiAt < sevenDaysAgo){ window.wafaRemove(window.wafaRef(window.wafaDB, 'logs/'+key)); } });
   }catch(e){ console.log('Cleanup error:', e); }
 }
-
 window.hapusOrder = async (id)=>{
   if(!confirm('Hapus order #'+id.toString().slice(-6)+'?')) return;
   try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'orders/'+id)); toast('🗑️ Order dihapus'); }catch(e){ alert('Gagal: '+e.message); }
@@ -740,14 +700,12 @@ function loadTopups(){
     });
   });
 }
-
 window.lihatBuktiTopup = async (id)=>{
   const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'topup_saldo/'+id));
   const t = snap.val(); if(!t || !t.bukti){ alert('Bukti tidak ada'); return; }
   const w = window.open('');
   w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${t.bukti}"></body></html>`);
 };
-
 window.approveTopup = async (id)=>{
   if(!confirm('Approve top up ini? Saldo user bakal otomatis ditambah.')) return;
   try{
@@ -761,13 +719,11 @@ window.approveTopup = async (id)=>{
     toast(`✅ Saldo Rp${nominal.toLocaleString('id-ID')} ditambah!`);
   }catch(e){ alert('Gagal: '+e.message); }
 };
-
 window.rejectTopup = async (id)=>{
   const alasan = prompt('Alasan tolak?', 'Bukti tidak valid');
   if(alasan === null) return;
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'topup_saldo/'+id), { status:'batal', batalReason:alasan }); toast('❌ Top up ditolak'); }catch(e){ alert('Gagal: '+e.message); }
 };
-
 window.hapusTopup = async (id)=>{
   if(!confirm('Hapus top up #'+id.toString().slice(-6)+'?')) return;
   try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'topup_saldo/'+id)); toast('🗑️ Dihapus'); }catch(e){ alert('Gagal: '+e.message); }
@@ -775,7 +731,6 @@ window.hapusTopup = async (id)=>{
 
 let currentChatUid = null;
 let chatUnsubscribe = null;
-
 function loadChats(){
   const list = document.getElementById('listChat');
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'chats'), (snap)=>{
@@ -798,7 +753,6 @@ function loadChats(){
     });
   });
 }
-
 window.openChat = async (uid)=>{
   currentChatUid = uid;
   document.getElementById('listChat').style.display = 'none';
@@ -816,14 +770,12 @@ window.openChat = async (uid)=>{
     c.scrollTop = c.scrollHeight;
   });
 };
-
 window.closeChat = ()=>{
   currentChatUid = null;
   if(chatUnsubscribe){ chatUnsubscribe(); chatUnsubscribe = null; }
   document.getElementById('chatBox').style.display = 'none';
   document.getElementById('listChat').style.display = 'block';
 };
-
 window.sendReply = async ()=>{
   if(!currentChatUid) return;
   const inp = document.getElementById('chatText'); const t = inp.value.trim(); if(!t) return;
@@ -844,7 +796,6 @@ function loadCustomers(){
     });
   });
 }
-
 window.editSaldo = async (uid, saldoLama)=>{
   const input = prompt(`Edit saldo user.\n\nSaldo sekarang: Rp${saldoLama.toLocaleString('id-ID')}\n\nMasukkan saldo baru:`, saldoLama);
   if(input === null) return;
@@ -855,7 +806,6 @@ window.editSaldo = async (uid, saldoLama)=>{
 
 let logoBase64 = null;
 let bannerBase64 = null;
-
 function loadBranding(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/branding'), (snap)=>{
     const d = snap.val(); if(!d) return;
@@ -865,7 +815,6 @@ function loadBranding(){
     if(d.banner){ document.getElementById('bannerPreview').style.backgroundImage = `url('${d.banner}')`; document.getElementById('bannerPreview').innerText = ''; }
   });
 }
-
 window.uploadLogo = (input)=>{
   const file = input.files[0]; if(!file) return;
   if(file.size > 500*1024){ alert('❌ Logo max 500KB'); input.value=''; return; }
@@ -873,7 +822,6 @@ window.uploadLogo = (input)=>{
   reader.onload = (e)=>{ logoBase64 = e.target.result; document.getElementById('previewLogo').src = logoBase64; document.getElementById('sbLogo').src = logoBase64; document.getElementById('logoFileName').innerText = '✅ ' + file.name; };
   reader.readAsDataURL(file);
 };
-
 window.uploadBanner = (input)=>{
   const file = input.files[0]; if(!file) return;
   if(file.size > 500*1024){ alert('❌ Banner max 500KB'); input.value=''; return; }
@@ -881,14 +829,12 @@ window.uploadBanner = (input)=>{
   reader.onload = (e)=>{ bannerBase64 = e.target.result; document.getElementById('bannerPreview').style.backgroundImage = `url('${bannerBase64}')`; document.getElementById('bannerPreview').innerText = ''; document.getElementById('bannerFileName').innerText = '✅ ' + file.name; };
   reader.readAsDataURL(file);
 };
-
 window.saveBranding = async ()=>{
   const brandName = document.getElementById('inputBrandName').value.trim();
   const tagline = document.getElementById('inputTagline').value.trim();
   if(!brandName){ alert('Isi nama brand dulu!'); return; }
   try{ const data = { brandName, tagline, updatedAt: Date.now() }; if(logoBase64) data.logo = logoBase64; await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/branding'), data); logoBase64 = null; toast('✅ Branding disimpan!'); }catch(e){ alert('Gagal: '+e.message); }
 };
-
 window.saveBanner = async ()=>{
   if(!bannerBase64){ alert('Upload banner dulu!'); return; }
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/branding'), { banner: bannerBase64, updatedAt: Date.now() }); bannerBase64 = null; toast('✅ Banner disimpan!'); }catch(e){ alert('Gagal: '+e.message); }
@@ -902,11 +848,7 @@ const GAME_LIST = [
   { key: 'genshin', name: 'Genshin Impact', defaultLogo: './genshin.png', active: false },
   { key: 'valorant', name: 'Valorant', defaultLogo: './valorant.png', active: false }
 ];
-
-function loadGames(){
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/games'), (snap)=>{ const d = snap.val() || {}; renderGameGrid(d); });
-}
-
+function loadGames(){ window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/games'), (snap)=>{ const d = snap.val() || {}; renderGameGrid(d); }); }
 function renderGameGrid(data){
   const grid = document.getElementById('gameGrid'); grid.innerHTML = '';
   GAME_LIST.forEach(g=>{
@@ -919,7 +861,6 @@ function renderGameGrid(data){
     grid.appendChild(card);
   });
 }
-
 window.uploadGameLogo = (key, input)=>{
   const file = input.files[0]; if(!file) return;
   if(file.size > 500*1024){ alert('❌ Logo max 500KB'); input.value=''; return; }
@@ -927,18 +868,15 @@ window.uploadGameLogo = (key, input)=>{
   reader.onload = async (e)=>{ const base64 = e.target.result; try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/games/' + key), { logo: base64, updatedAt: Date.now() }); toast(`✅ Logo ${key} berhasil diupload!`); }catch(err){ alert('Gagal: '+err.message); } };
   reader.readAsDataURL(file);
 };
-
 window.editGameName = async (key, oldName)=>{
   const newName = prompt(`Edit nama game untuk "${key}":`, oldName);
   if(newName === null || !newName.trim()) return;
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/games/' + key), { name: newName.trim(), updatedAt: Date.now() }); toast(`✅ Nama game diubah jadi "${newName.trim()}"`); }catch(e){ alert('Gagal: '+e.message); }
 };
-
 window.toggleGameActive = async (key, currentActive)=>{
   const newStatus = !currentActive;
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/games/' + key), { active: newStatus, updatedAt: Date.now() }); toast(`✅ Game ${key} ${newStatus ? 'diaktifkan' : 'dinonaktifkan'}`); }catch(e){ alert('Gagal: '+e.message); }
 };
-
 window.resetGameLogo = async (key)=>{
   if(!confirm('Reset logo ke default?')) return;
   try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'settings/games/' + key + '/logo')); toast(`✅ Logo ${key} direset`); }catch(e){ alert('Gagal: '+e.message); }
@@ -953,7 +891,6 @@ function loadWelcome(){
     if(d.message) document.getElementById('welcomeMessage').value = d.message;
   });
 }
-
 window.saveWelcome = async ()=>{
   const active = document.getElementById('welcomeActive').value === 'true';
   const title = document.getElementById('welcomeTitle').value.trim();
@@ -976,7 +913,6 @@ function loadSyarat(){
     });
   });
 }
-
 window.saveSyarat = async (key)=>{
   const cap = key.charAt(0).toUpperCase() + key.slice(1);
   const active = document.getElementById('syaratActive' + cap).value === 'true';
@@ -987,14 +923,8 @@ window.saveSyarat = async (key)=>{
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/syarat/' + key), { active, title, items, updatedAt: Date.now() }); toast('✅ Syarat ' + cap + ' disimpan!'); }catch(e){ alert('Gagal: '+e.message); }
 };
 
-function loadAnnouncement(){
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/announcement'), (snap)=>{ const d = snap.val(); if(!d) return; document.getElementById('inputAnnActive').value = d.active === false ? 'false' : 'true'; });
-}
-
-window.saveAnnouncement = async ()=>{
-  const active = document.getElementById('inputAnnActive').value === 'true';
-  try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/announcement'), { active, updatedAt: Date.now() }); toast('✅ Status announcement disimpan!'); }catch(e){ alert('Gagal: '+e.message); }
-};
+function loadAnnouncement(){ window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/announcement'), (snap)=>{ const d = snap.val(); if(!d) return; document.getElementById('inputAnnActive').value = d.active === false ? 'false' : 'true'; }); }
+window.saveAnnouncement = async ()=>{ const active = document.getElementById('inputAnnActive').value === 'true'; try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/announcement'), { active, updatedAt: Date.now() }); toast('✅ Status announcement disimpan!'); }catch(e){ alert('Gagal: '+e.message); } };
 
 function loadTheme(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/theme'), (snap)=>{
@@ -1006,7 +936,6 @@ function loadTheme(){
   document.getElementById('inputPrimary').addEventListener('input', updateThemePreview);
   document.getElementById('inputAccent').addEventListener('input', updateThemePreview);
 }
-
 function updateThemePreview(){
   const p = document.getElementById('inputPrimary').value;
   const a = document.getElementById('inputAccent').value;
@@ -1014,13 +943,7 @@ function updateThemePreview(){
   el.style.background = `linear-gradient(90deg, ${p}, ${a})`;
   el.innerText = `Preview: ${p} → ${a}`;
 }
-
-window.saveTheme = async ()=>{
-  const primary = document.getElementById('inputPrimary').value;
-  const accent = document.getElementById('inputAccent').value;
-  try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/theme'), { primary, accent, updatedAt: Date.now() }); toast('✅ Theme disimpan! Refresh web user untuk lihat hasilnya.'); }catch(e){ alert('Gagal: '+e.message); }
-};
-
+window.saveTheme = async ()=>{ const primary = document.getElementById('inputPrimary').value; const accent = document.getElementById('inputAccent').value; try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/theme'), { primary, accent, updatedAt: Date.now() }); toast('✅ Theme disimpan!'); }catch(e){ alert('Gagal: '+e.message); } };
 window.resetTheme = async ()=>{
   if(!confirm('Reset warna ke default?')) return;
   document.getElementById('inputPrimary').value = '#4a90e2';
@@ -1043,14 +966,12 @@ function loadHarga(){
     document.getElementById(id)?.addEventListener('input', ()=>{ renderPreviewHarga({ perRobux: parseInt(document.getElementById('inpPerRobux').value) || 160, perRobuxGamepass: parseInt(document.getElementById('inpPerRobuxGamepass').value) || 140, perRobuxGift: parseInt(document.getElementById('inpPerRobuxGift').value) || 95, diskonPersen: parseInt(document.getElementById('inpDiskonPersen').value) || 0 }); });
   });
 }
-
 function renderPreviewHarga(d){
   const p = d.perRobux || 160; const gp = d.perRobuxGamepass || 140; const g = d.perRobuxGift || 95;
   const disc = d.diskonPersen || 0; const coret = disc > 0 ? Math.round(p / (1 - disc/100)) : p;
   const el = document.getElementById('previewHarga'); if(!el) return;
   el.innerHTML = `<b style="color:#e8e8e8">Via Username:</b> Rp${p.toLocaleString('id-ID')}/robux ${disc > 0 ? `<span style="color:#5a5a5a;text-decoration:line-through;margin-left:6px">Rp${coret.toLocaleString('id-ID')}</span> <span style="color:#ef4444;font-size:11px">-${disc}%</span>` : ''}<br><b style="color:#e8e8e8">Via Gamepass:</b> Rp${gp.toLocaleString('id-ID')}/robux<br><b style="color:#e8e8e8">Gift In Game:</b> Rp${g.toLocaleString('id-ID')}/robux<br><b style="color:#e8e8e8">Contoh 100 Robux (username):</b> Rp${(100*p).toLocaleString('id-ID')}`;
 }
-
 window.saveHarga = async ()=>{
   const perRobux = parseInt(document.getElementById('inpPerRobux').value) || 160;
   const perRobuxGamepass = parseInt(document.getElementById('inpPerRobuxGamepass').value) || 140;
@@ -1081,9 +1002,7 @@ function loadVouchers(){
     });
   });
 }
-
 window.updateVoucherForm = ()=>{ const type = document.getElementById('vType').value; document.getElementById('vValueHint').innerText = type === 'persen' ? 'Isi 10 = potongan 10%' : 'Isi 5000 = potongan Rp5.000'; };
-
 window.clearVoucherForm = ()=>{
   document.getElementById('vEditCode').value = '';
   document.getElementById('vCode').value = '';
@@ -1097,7 +1016,6 @@ window.clearVoucherForm = ()=>{
   document.getElementById('vExpiry').value = '';
   updateVoucherForm();
 };
-
 window.editVoucher = async (code)=>{
   const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'vouchers/' + code));
   const v = snap.val(); if(!v) return;
@@ -1114,7 +1032,6 @@ window.editVoucher = async (code)=>{
   updateVoucherForm();
   document.getElementById('page-voucher').scrollIntoView({behavior:'smooth'});
 };
-
 window.saveVoucher = async ()=>{
   const editCode = document.getElementById('vEditCode').value;
   const code = (document.getElementById('vCode').value || '').trim().toUpperCase();
@@ -1138,17 +1055,12 @@ window.saveVoucher = async ()=>{
     toast('✅ Voucher ' + code + ' disimpan!'); clearVoucherForm();
   }catch(e){ alert('Gagal: '+e.message); }
 };
+window.toggleVoucherActive = async (code, currentActive)=>{ try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'vouchers/' + code), { active: !currentActive, updatedAt: Date.now() }); toast('✅ Status voucher diubah'); }catch(e){ alert('Gagal: '+e.message); } };
+window.deleteVoucher = async (code)=>{ if(!confirm(`Hapus voucher ${code}?`)) return; try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'vouchers/' + code)); toast('🗑️ Voucher dihapus'); }catch(e){ alert('Gagal: '+e.message); } };
 
-window.toggleVoucherActive = async (code, currentActive)=>{
-  try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'vouchers/' + code), { active: !currentActive, updatedAt: Date.now() }); toast('✅ Status voucher diubah'); }catch(e){ alert('Gagal: '+e.message); }
-};
-
-window.deleteVoucher = async (code)=>{
-  if(!confirm(`Hapus voucher ${code}?`)) return;
-  try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'vouchers/' + code)); toast('🗑️ Voucher dihapus'); }catch(e){ alert('Gagal: '+e.message); }
-};
-
+// ============================================
 // POP-UP PROMO
+// ============================================
 let popupButtons = [];
 let popupImgBase64 = null;
 
@@ -1158,7 +1070,7 @@ function loadPopup(){
     document.getElementById('popupActive').value = d.active === false ? 'false' : 'true';
     if(d.title) document.getElementById('popupTitle').value = d.title;
     if(d.desc) document.getElementById('popupDesc').value = d.desc;
-    if(d.showPerDay) document.getElementById('popupShowPerDay').value = d.showPerDay;
+    document.getElementById('popupEveryMinutes').value = d.everyMinutes || 0;
     if(d.image){ popupImgBase64 = d.image; document.getElementById('popupImgName').innerText = '✅ Gambar sudah ada'; }
     popupButtons = d.buttons || [];
     renderPopupButtons();
@@ -1166,7 +1078,6 @@ function loadPopup(){
   });
   ['popupTitle','popupDesc'].forEach(id=>{ document.getElementById(id)?.addEventListener('input', renderPopupPreview); });
 }
-
 function renderPopupButtons(){
   const list = document.getElementById('popupButtonsList'); if(!list) return;
   list.innerHTML = '';
@@ -1176,11 +1087,9 @@ function renderPopupButtons(){
     list.appendChild(row);
   });
 }
-
 window.addPopupButton = ()=>{ popupButtons.push({ icon: '🔗', label: '', url: '' }); renderPopupButtons(); renderPopupPreview(); };
 window.removePopupButton = (idx)=>{ popupButtons.splice(idx, 1); renderPopupButtons(); renderPopupPreview(); };
 window.updatePopupBtn = (idx, key, value)=>{ popupButtons[idx][key] = value; renderPopupPreview(); };
-
 window.uploadPopupImg = (input)=>{
   const file = input.files[0]; if(!file) return;
   if(file.size > 500*1024){ alert('❌ Gambar max 500KB'); input.value=''; return; }
@@ -1188,16 +1097,17 @@ window.uploadPopupImg = (input)=>{
   reader.onload = (e)=>{ popupImgBase64 = e.target.result; document.getElementById('popupImgName').innerText = '✅ ' + file.name; renderPopupPreview(); };
   reader.readAsDataURL(file);
 };
-
 function detectPlatformClass(url){
   if(!url) return ''; const u = url.toLowerCase();
   if(u.includes('discord')) return 'discord'; if(u.includes('instagram')) return 'instagram';
   if(u.includes('tiktok')) return 'tiktok'; if(u.includes('facebook') || u.includes('fb.com')) return 'facebook';
-  if(u.includes('wa.me') || u.includes('whatsapp')) return 'whatsapp'; if(u.includes('twitter') || u.includes('x.com')) return 'twitter';
-  if(u.includes('youtube')) return 'youtube'; if(u.includes('telegram') || u.includes('t.me')) return 'telegram';
+  if(u.includes('wa.me') || u.includes('whatsapp')) return 'whatsapp'; 
+  if(u.includes('sociabuzz')) return 'sociabuzz';
+  if(u.includes('twitter') || u.includes('x.com')) return 'twitter';
+  if(u.includes('youtube')) return 'youtube';
+  if(u.includes('telegram') || u.includes('t.me')) return 'telegram';
   return '';
 }
-
 function renderPopupPreview(){
   const el = document.getElementById('popupPreview'); if(!el) return;
   const title = document.getElementById('popupTitle')?.value || '🎉 Promo Spesial!';
@@ -1206,14 +1116,15 @@ function renderPopupPreview(){
   popupButtons.forEach(btn=>{ if(btn.label && btn.url){ const cls = detectPlatformClass(btn.url); buttonsHtml += `<div class="popup-btn-preview ${cls}">${btn.icon || '🔗'} ${btn.label}</div>`; } });
   el.innerHTML = `<div style="background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:24px;max-width:340px;margin:0 auto">${popupImgBase64 ? `<img src="${popupImgBase64}" style="width:100%;border-radius:12px;margin-bottom:14px">` : ''}<div style="font-size:18px;font-weight:800;color:#e8e8e8;margin-bottom:8px">${title}</div><div style="font-size:12px;color:#a8a8a8;line-height:1.6;margin-bottom:14px">${desc}</div>${buttonsHtml}</div>`;
 }
-
 window.savePopup = async ()=>{
-  const data = { active: document.getElementById('popupActive').value === 'true', title: document.getElementById('popupTitle').value.trim(), desc: document.getElementById('popupDesc').value.trim(), showPerDay: parseInt(document.getElementById('popupShowPerDay').value) || 1, buttons: popupButtons.filter(b=>b.label && b.url), updatedAt: Date.now() };
+  const data = { active: document.getElementById('popupActive').value === 'true', title: document.getElementById('popupTitle').value.trim(), desc: document.getElementById('popupDesc').value.trim(), everyMinutes: parseInt(document.getElementById('popupEveryMinutes').value) || 0, buttons: popupButtons.filter(b=>b.label && b.url), updatedAt: Date.now() };
   if(popupImgBase64) data.image = popupImgBase64;
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/popup'), data); toast('✅ Pop-up disimpan!'); }catch(e){ alert('Gagal: '+e.message); }
 };
 
+// ============================================
 // KETERANGAN
+// ============================================
 function loadKeterangan(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/keterangan'), (snap)=>{
     const d = snap.val() || {};
@@ -1231,7 +1142,6 @@ function loadKeterangan(){
     if(d.col3List) document.getElementById('ketCol3List').value = d.col3List;
   });
 }
-
 window.saveKeterangan = async ()=>{
   const data = { active: document.getElementById('ketActive').value === 'true', headerTitle: document.getElementById('ketHeaderTitle').value.trim(), flag: document.getElementById('ketFlag').value.trim(), welcome: document.getElementById('ketWelcome').value, whyTitle: document.getElementById('ketWhyTitle').value.trim(), whyList: document.getElementById('ketWhyList').value, col1Title: document.getElementById('ketCol1Title').value.trim(), col1List: document.getElementById('ketCol1List').value, col2Title: document.getElementById('ketCol2Title').value.trim(), col2List: document.getElementById('ketCol2List').value, col3Title: document.getElementById('ketCol3Title').value.trim(), col3List: document.getElementById('ketCol3List').value, updatedAt: Date.now() };
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/keterangan'), data); toast('✅ Keterangan disimpan!'); }catch(e){ alert('Gagal: '+e.message); }
