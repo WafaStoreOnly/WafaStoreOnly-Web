@@ -126,9 +126,6 @@
 .popup-btn.tiktok:hover{border-color:#00f2ea;background:rgba(0,242,234,0.1)}
 .popup-btn.facebook:hover{border-color:#1877F2;background:rgba(24,119,242,0.1)}
 .popup-btn.whatsapp:hover{border-color:#25D366;background:rgba(37,211,102,0.1)}
-.popup-btn.twitter:hover{border-color:#1DA1F2;background:rgba(29,161,242,0.1)}
-.popup-btn.youtube:hover{border-color:#FF0000;background:rgba(255,0,0,0.1)}
-.popup-btn.telegram:hover{border-color:#0088cc;background:rgba(0,136,204,0.1)}
 
 @media (max-width:768px){
   .feature-grid{grid-template-columns:1fr 1fr}
@@ -160,9 +157,7 @@ window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onV
 window.wafaAuth=auth;
 window.DISCORD_URL="https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
 onAuthStateChanged(auth, (user)=>{ 
-  if(user && !localStorage.getItem('wafa_uid')){ 
-    localStorage.setItem('wafa_uid', user.uid); 
-  }
+  if(user && !localStorage.getItem('wafa_uid')){ localStorage.setItem('wafa_uid', user.uid); }
   if(typeof wsLoadUser === 'function') wsLoadUser();
 });
 </script>
@@ -187,26 +182,10 @@ onAuthStateChanged(auth, (user)=>{
   </div>
 
   <div class="feature-grid">
-    <div class="feature-card">
-      <div class="feature-label">Mode</div>
-      <div class="feature-title">Manual Control</div>
-      <div class="feature-desc">Order diproses Owner</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-label">Checkout</div>
-      <div class="feature-title">Fast & Simple</div>
-      <div class="feature-desc">Isi form dalam hitungan detik</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-label">Tracking</div>
-      <div class="feature-title">Real-time Status</div>
-      <div class="feature-desc">Pantau dengan Order ID</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-label">Support</div>
-      <div class="feature-title">Official CS</div>
-      <div class="feature-desc">Terhubung ke channel Owner</div>
-    </div>
+    <div class="feature-card"><div class="feature-label">Mode</div><div class="feature-title">Manual Control</div><div class="feature-desc">Order diproses Owner</div></div>
+    <div class="feature-card"><div class="feature-label">Checkout</div><div class="feature-title">Fast & Simple</div><div class="feature-desc">Isi form dalam hitungan detik</div></div>
+    <div class="feature-card"><div class="feature-label">Tracking</div><div class="feature-title">Real-time Status</div><div class="feature-desc">Pantau dengan Order ID</div></div>
+    <div class="feature-card"><div class="feature-label">Support</div><div class="feature-title">Official CS</div><div class="feature-desc">Terhubung ke channel Owner</div></div>
   </div>
 
   <div class="welcome-box" id="welcomeBox">
@@ -217,74 +196,35 @@ Selamat datang di rumah baru kalian.</div>
   </div>
 
   <div id="keteranganSection" style="display:none">
-    <div class="keterangan-header">
-      <div class="keterangan-title-main" id="ketHeaderTitle">⭐ WAFASTOREONLY — TOP UP ROBUX TERMURAH, TERCEPAT & TERPERCAYA ⭐</div>
-    </div>
-
+    <div class="keterangan-header"><div class="keterangan-title-main" id="ketHeaderTitle"></div></div>
     <div class="keterangan-card">
-      <div class="keterangan-flag" id="ketFlag">🇮🇩 INDONESIA</div>
-      <div id="ketWelcomeBox">
-        <p class="keterangan-text">Halo semuanya! Selamat datang di Website Resmi <b>WafaStoreOnly</b>! 👋</p>
-      </div>
+      <div class="keterangan-flag" id="ketFlag"></div>
+      <div id="ketWelcomeBox"></div>
     </div>
-
     <div class="keterangan-card">
-      <div class="keterangan-section-title" id="ketWhyTitle">💎 KENAPA TOP UP DI WAFASTOREONLY?</div>
+      <div class="keterangan-section-title" id="ketWhyTitle"></div>
       <div class="keterangan-list" id="ketWhyList"></div>
     </div>
-
-    <div class="keterangan-3col" id="ket3Col">
-      <div class="keterangan-col">
-        <div class="keterangan-col-title" id="ketCol1Title">⚡ Via Username</div>
-        <ol class="keterangan-col-list" id="ketCol1List"></ol>
-      </div>
-      <div class="keterangan-col">
-        <div class="keterangan-col-title" id="ketCol2Title">🎫 Via Gamepass</div>
-        <ol class="keterangan-col-list" id="ketCol2List"></ol>
-      </div>
-      <div class="keterangan-col">
-        <div class="keterangan-col-title" id="ketCol3Title">🎁 Via Gift In Game</div>
-        <ol class="keterangan-col-list" id="ketCol3List"></ol>
-      </div>
+    <div class="keterangan-3col">
+      <div class="keterangan-col"><div class="keterangan-col-title" id="ketCol1Title"></div><ol class="keterangan-col-list" id="ketCol1List"></ol></div>
+      <div class="keterangan-col"><div class="keterangan-col-title" id="ketCol2Title"></div><ol class="keterangan-col-list" id="ketCol2List"></ol></div>
+      <div class="keterangan-col"><div class="keterangan-col-title" id="ketCol3Title"></div><ol class="keterangan-col-list" id="ketCol3List"></ol></div>
     </div>
   </div>
 
-  <!-- DUKUNGAN -->
   <div class="dukungan-card">
     <div class="dukungan-header">
       <div class="dukungan-emoji">💚</div>
       <div class="dukungan-title">Dukung & Support Kami</div>
       <div class="dukungan-sub">WafaStoreOnly adalah toko kecil yang dikelola secara mandiri. Setiap follow, join, dan dukungan kalian sangat berarti untuk kami terus berkembang, upgrade server, dan memberikan pelayanan terbaik! 💚</div>
     </div>
-
     <div class="dukungan-grid">
-      <a href="https://discord.gg/Vwfd4A9AC" target="_blank" rel="noopener" class="dukungan-btn discord">
-        <img src="./discord.png" alt="Discord" class="dukungan-logo">
-        <span class="dukungan-label">Join Discord</span>
-        <span class="dukungan-desc">Info promo & bantuan</span>
-      </a>
-      <a href="https://instagram.com/muhammadabiwafaali" target="_blank" rel="noopener" class="dukungan-btn instagram">
-        <img src="./instagram.png" alt="Instagram" class="dukungan-logo">
-        <span class="dukungan-label">Follow Instagram</span>
-        <span class="dukungan-desc">Update stok & promo</span>
-      </a>
-      <a href="https://tiktok.com/@wafastore_03" target="_blank" rel="noopener" class="dukungan-btn tiktok">
-        <img src="./tiktok.png" alt="TikTok" class="dukungan-logo">
-        <span class="dukungan-label">Follow TikTok</span>
-        <span class="dukungan-desc">Konten seru & tutorial</span>
-      </a>
-      <a href="https://facebook.com/share/1KKXKYfYyU/" target="_blank" rel="noopener" class="dukungan-btn facebook">
-        <img src="./facebook.png" alt="Facebook" class="dukungan-logo">
-        <span class="dukungan-label">Follow Facebook</span>
-        <span class="dukungan-desc">Komunitas & info</span>
-      </a>
-      <a href="https://sociabuzz.com/awa_newstream/tribe" target="_blank" rel="noopener" class="dukungan-btn sociabuzz" style="grid-column: span 2;">
-        <img src="./sociabuzz.png" alt="Sociabuzz" class="dukungan-logo">
-        <span class="dukungan-label">Support / Donasi</span>
-        <span class="dukungan-desc">Dukung kami di Sociabuzz — bantu upgrade web & server!</span>
-      </a>
+      <a href="https://discord.gg/Vwfd4A9AC" target="_blank" rel="noopener" class="dukungan-btn discord"><img src="./discord.png" alt="Discord" class="dukungan-logo"><span class="dukungan-label">Join Discord</span><span class="dukungan-desc">Info promo & bantuan</span></a>
+      <a href="https://instagram.com/muhammadabiwafaali" target="_blank" rel="noopener" class="dukungan-btn instagram"><img src="./instagram.png" alt="Instagram" class="dukungan-logo"><span class="dukungan-label">Follow Instagram</span><span class="dukungan-desc">Update stok & promo</span></a>
+      <a href="https://tiktok.com/@wafastore_03" target="_blank" rel="noopener" class="dukungan-btn tiktok"><img src="./tiktok.png" alt="TikTok" class="dukungan-logo"><span class="dukungan-label">Follow TikTok</span><span class="dukungan-desc">Konten seru & tutorial</span></a>
+      <a href="https://facebook.com/share/1KKXKYfYyU/" target="_blank" rel="noopener" class="dukungan-btn facebook"><img src="./facebook.png" alt="Facebook" class="dukungan-logo"><span class="dukungan-label">Follow Facebook</span><span class="dukungan-desc">Komunitas & info</span></a>
+      <a href="https://sociabuzz.com/awa_newstream/tribe" target="_blank" rel="noopener" class="dukungan-btn sociabuzz" style="grid-column: span 2;"><img src="./sociabuzz.png" alt="Sociabuzz" class="dukungan-logo"><span class="dukungan-label">Support / Donasi</span><span class="dukungan-desc">Dukung kami di Sociabuzz — bantu upgrade web & server!</span></a>
     </div>
-
     <div class="dukungan-footer">
       <div class="dukungan-footer-text">🚀 <b>Bantu kami upgrade web!</b> Setiap follow, join, dan share dari kalian bikin WafaStoreOnly tambah semangat buat ngasih harga termurah & pelayanan tercepat.</div>
       <div class="dukungan-thanks">Terima kasih udah jadi bagian dari perjalanan kami! 🙏</div>
@@ -375,10 +315,7 @@ Selamat datang di rumah baru kalian.</div>
     <div class="tab" id="tabQris" onclick="pilihBayar('qris',this)">QRIS</div>
   </div>
   <div id="pay-saldo" style="margin-top:14px">
-    <div class="pay-card">
-      <div style="width:44px;height:44px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px">💰</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:700;color:#e8e8e8">Saldo Dompet Kamu</div><div style="font-size:18px;font-weight:800;color:#4ade80;margin-top:2px" id="saldoNow">Rp0</div></div>
-    </div>
+    <div class="pay-card"><div style="width:44px;height:44px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px">💰</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#e8e8e8">Saldo Dompet Kamu</div><div style="font-size:18px;font-weight:800;color:#4ade80;margin-top:2px" id="saldoNow">Rp0</div></div></div>
     <div id="saldoInfo" style="margin-top:12px;font-size:12px;padding:14px;border-radius:10px;background:#141414;border:1px solid #2a2a2a;text-align:center;color:#a8a8a8">Cek saldo...</div>
     <button class="btn btn-primary" id="btnBayarSaldo" onclick="bayarDenganSaldo()">💰 Bayar Pakai Saldo</button>
   </div>
@@ -416,10 +353,7 @@ Selamat datang di rumah baru kalian.</div>
 <div id="pesananPage" class="ws-section" style="display:none">
   <div style="font-weight:800;font-size:18px">Pesanan Saya</div>
   <div id="listPesanan" style="margin-top:16px"></div>
-  <div id="emptyPesanan" style="text-align:center;margin-top:60px;color:#5a5a5a">
-    <div style="font-size:48px;opacity:0.5">📦</div>
-    <div style="font-size:13px;margin-top:12px">Belum ada pesanan</div>
-  </div>
+  <div id="emptyPesanan" style="text-align:center;margin-top:60px;color:#5a5a5a"><div style="font-size:48px;opacity:0.5">📦</div><div style="font-size:13px;margin-top:12px">Belum ada pesanan</div></div>
 </div>
 
 <div id="leaderboardPage" class="ws-section" style="display:none">
@@ -427,10 +361,7 @@ Selamat datang di rumah baru kalian.</div>
   <div style="font-weight:800;font-size:20px;margin-top:8px">🏆 Leaderboard</div>
   <p style="font-size:12px;color:#8a8a8a;margin-top:6px;margin-bottom:16px">Top 10 pembeli Robux terbanyak</p>
   <div id="leaderboardList" style="display:grid;gap:10px"></div>
-  <div id="leaderboardEmpty" style="text-align:center;margin-top:60px;color:#5a5a5a;display:none">
-    <div style="font-size:48px;opacity:0.5">🏆</div>
-    <div style="font-size:13px;margin-top:12px">Belum ada data leaderboard</div>
-  </div>
+  <div id="leaderboardEmpty" style="text-align:center;margin-top:60px;color:#5a5a5a;display:none"><div style="font-size:48px;opacity:0.5">🏆</div><div style="font-size:13px;margin-top:12px">Belum ada data leaderboard</div></div>
 </div>
 
 </div>
@@ -464,25 +395,14 @@ Selamat datang di rumah baru kalian.</div>
 <script src="./harga-voucher.js"></script>
 <script src="./sidebar.js"></script>
 <script>
-function isLoggedIn(){
-  const uid = localStorage.getItem('wafa_uid');
-  return !!(uid && window.wafaAuth && window.wafaAuth.currentUser);
-}
+function isLoggedIn(){ const uid = localStorage.getItem('wafa_uid'); return !!(uid && window.wafaAuth && window.wafaAuth.currentUser); }
 function requireLogin(actionName, redirectTarget){
   if(isLoggedIn()) return true;
-  if(confirm(`🔒 ${actionName} butuh login dulu.\n\nMau login sekarang?`)){
-    sessionStorage.setItem('wafa_redirect_after_login', redirectTarget || 'index');
-    window.location.href = 'login.html';
-  }
+  if(confirm(`🔒 ${actionName} butuh login dulu.\n\nMau login sekarang?`)){ sessionStorage.setItem('wafa_redirect_after_login', redirectTarget || 'index'); window.location.href = 'login.html'; }
   return false;
 }
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
-function sensorUsernameRbx(u){
-  if(!u || u === '-') return '-';
-  if(u.length <= 3) return u[0] + '***';
-  if(u.length <= 6) return u.slice(0, 2) + '***' + u.slice(-1);
-  return u.slice(0, 3) + '****' + u.slice(-3);
-}
+function sensorUsernameRbx(u){ if(!u || u === '-') return '-'; if(u.length <= 3) return u[0] + '***'; if(u.length <= 6) return u.slice(0, 2) + '***' + u.slice(-1); return u.slice(0, 3) + '****' + u.slice(-3); }
 
 async function validateRobloxUsername(username) {
   if (!username || username.trim().length < 3) return { valid: false, message: 'Username minimal 3 karakter' };
@@ -630,7 +550,6 @@ function attachFirebaseListener(orderId){
     });
   }catch(e){}
 }
-
 function saveOrder(data){
   let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]');
   data.id=Date.now(); data.date=new Date().toLocaleString('id-ID'); data.status='verifikasi'; data.bukti=''; data.expiry=Date.now()+(10*60*1000);
@@ -642,7 +561,6 @@ function saveOrder(data){
   try{ if(window.wafaDB){ window.wafaSet(window.wafaRef(window.wafaDB,'orders/'+data.id), data); } }catch(e){}
   return data.id;
 }
-
 function sendDiscordWithBukti(o, dataUrl, judul){
   const baseUrl = "https://wafastoreonly-official.vercel.app/";
   const selesaiUrl = `${baseUrl}admin.html?id=${o.id}&action=selesai`;
@@ -675,7 +593,6 @@ function sendDiscordWithBukti(o, dataUrl, judul){
     });
   }, 1000);
 }
-
 function getSisaWaktu(expiry){let sisa=expiry-Date.now();if(sisa<=0)return"00:00";let m=Math.floor(sisa/60000);let s=Math.floor((sisa%60000)/1000);return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;}
 function checkExpired(){
   let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]'); let changed=false; let now=Date.now();
@@ -688,7 +605,6 @@ function checkExpired(){
   });
   if(changed){ localStorage.setItem('wafa_orders',JSON.stringify(orders)); if(document.getElementById('pesananPage') && document.getElementById('pesananPage').style.display=='block') renderPesanan(); }
 }
-
 function renderPesanan(){
  let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]');
  let list=document.getElementById('listPesanan'); let empty=document.getElementById('emptyPesanan');
@@ -712,7 +628,6 @@ function renderPesanan(){
   list.appendChild(d);
  });
 }
-
 async function uploadBukti(id){
   if(!requireLogin('Upload Bukti', 'index')) return;
   let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]');
@@ -737,7 +652,6 @@ async function uploadBukti(id){
     }; r.readAsDataURL(file);
   }; input.click();
 }
-
 async function uploadBuktiFromChat(input){
   if(!requireLogin('Upload Bukti', 'index')) { input.value=''; return; }
   let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]');
@@ -756,7 +670,6 @@ async function uploadBuktiFromChat(input){
     sendDiscordWithBukti(o, r.result, `💸 **BUKTI TF MASUK! [VALID ✅]**`);
   }; r.readAsDataURL(file); input.value='';
 }
-
 setInterval(checkExpired,5000);
 setInterval(()=>{if(document.getElementById('pesananPage') && document.getElementById('pesananPage').style.display=='block')renderPesanan();},1000);
 
@@ -991,8 +904,7 @@ function detectPlatformClass(url){
   if(!url) return ''; const u = url.toLowerCase();
   if(u.includes('discord')) return 'discord'; if(u.includes('instagram')) return 'instagram';
   if(u.includes('tiktok')) return 'tiktok'; if(u.includes('facebook') || u.includes('fb.com')) return 'facebook';
-  if(u.includes('wa.me') || u.includes('whatsapp')) return 'whatsapp'; if(u.includes('twitter') || u.includes('x.com')) return 'twitter';
-  if(u.includes('youtube')) return 'youtube'; if(u.includes('telegram') || u.includes('t.me')) return 'telegram';
+  if(u.includes('wa.me') || u.includes('whatsapp')) return 'whatsapp';
   return '';
 }
 function getNativeScheme(url){
@@ -1002,9 +914,6 @@ function getNativeScheme(url){
   if(u.includes('tiktok.com/')) return 'snssdk1233://';
   if(u.includes('facebook.com/') || u.includes('fb.com/')) return 'fb://';
   if(u.includes('wa.me/') || u.includes('whatsapp.com/')) return 'whatsapp://';
-  if(u.includes('twitter.com/') || u.includes('x.com/')) return 'twitter://';
-  if(u.includes('youtube.com/') || u.includes('youtu.be/')) return 'youtube://';
-  if(u.includes('t.me/') || u.includes('telegram.me/')) return 'tg://';
   return null;
 }
 function showPopupPromo(d){
@@ -1034,25 +943,86 @@ function showPopupPromo(d){
 function closePopupPromo(){ document.getElementById('popupPromo').classList.remove('show'); }
 document.getElementById('popupPromo')?.addEventListener('click', (e)=>{ if(e.target.id === 'popupPromo') closePopupPromo(); });
 
-// LOAD KETERANGAN
+// LOAD KETERANGAN (dengan default fallback)
 function loadKeteranganDinamis(){
   if(!window.wafaDB || !window.wafaOnValue){ setTimeout(loadKeteranganDinamis, 500); return; }
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/keterangan'), (snap)=>{
-    const d = snap.val(); const section = document.getElementById('keteranganSection');
+    const d = snap.val() || {};
+    const section = document.getElementById('keteranganSection');
     if(!section) return;
-    if(!d || d.active === false){ section.style.display = 'none'; return; }
+
+    const DEFAULT = {
+      headerTitle: '⭐ WAFASTOREONLY - TOP UP ROBUX TERMURAH, TERCEPAT & TERPERCAYA ⭐',
+      flag: '🇮🇩 INDONESIA',
+      welcome: `Halo semuanya! Selamat datang di Website Resmi **WafaStoreOnly**! 👋
+
+Terima kasih banyak buat kalian yang sudah mampir dan support toko kecil ini. Disini adalah tempat **TERPERCAYA** untuk kalian yang mau **TOP UP ROBUX MURAH, CEPAT & LEGAL 100%!**`,
+      whyTitle: '💎 KENAPA TOP UP DI WAFASTOREONLY?',
+      whyList: `Harga Termurah & Bersaing - Dijamin paling murah!
+Proses Super Cepat 1-15 Menit (Max 1 jam jika antri)
+100% Aman & Legal - No Hack / No Bug / Anti Banned
+All Payment ON - QRIS, DANA, GOPAY, OVO, SHOPEEPAY, BANK, PULSA
+Fast Respon & Ready 24 Jam (Kalau gak tidur)
+Via Username (Estimasi 1-5 Menit)
+Via Gamepass (Estimasi 5-7 Day)
+Via Gift In Game (Estimasi 5-10 Menit)
+Rate Robux Selalu Update Ikut Kurs
+Ada Bonus & Promo Setiap Hari!`,
+      col1Title: '⚡ Via Username',
+      col1List: `Fast Proses 5-10 Menit
+Pastikan Username Benar
+Pastikan 2FA Aktif
+Pastikan Akun Tidak Limit`,
+      col2Title: '🎫 Via Gamepass',
+      col2List: `Proses ± 5-7 Hari
+Pastikan Username Benar
+Gamepass Harus Publik
+Setting Gamepass Sesuai`,
+      col3Title: '🎁 Via Gift In Game',
+      col3List: `Wajib Stand By di Server Map
+Pastikan Username Benar
+Nama Item Sesuai
+Jumlah Robux Sesuai Map`
+    };
+
+    if(d.active === false){ section.style.display = 'none'; return; }
     section.style.display = 'block';
-    if(d.headerTitle) document.getElementById('ketHeaderTitle').innerText = d.headerTitle;
-    if(d.flag) document.getElementById('ketFlag').innerText = d.flag;
-    if(d.welcome){ const lines = d.welcome.split('\n').filter(l=>l.trim()); let html = ''; lines.forEach(line=>{ let formatted = line.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); html += `<p class="keterangan-text">${formatted}</p>`; }); document.getElementById('ketWelcomeBox').innerHTML = html; }
-    if(d.whyTitle) document.getElementById('ketWhyTitle').innerText = d.whyTitle;
-    if(d.whyList){ const items = d.whyList.split('\n').filter(l=>l.trim()); let html = ''; items.forEach(item=>{ html += `<div class="keterangan-item"><span class="check">✔</span> ${item}</div>`; }); document.getElementById('ketWhyList').innerHTML = html; }
-    if(d.col1Title) document.getElementById('ketCol1Title').innerText = d.col1Title;
-    if(d.col1List){ const items = d.col1List.split('\n').filter(l=>l.trim()); document.getElementById('ketCol1List').innerHTML = items.map(i=>`<li>${i}</li>`).join(''); }
-    if(d.col2Title) document.getElementById('ketCol2Title').innerText = d.col2Title;
-    if(d.col2List){ const items = d.col2List.split('\n').filter(l=>l.trim()); document.getElementById('ketCol2List').innerHTML = items.map(i=>`<li>${i}</li>`).join(''); }
-    if(d.col3Title) document.getElementById('ketCol3Title').innerText = d.col3Title;
-    if(d.col3List){ const items = d.col3List.split('\n').filter(l=>l.trim()); document.getElementById('ketCol3List').innerHTML = items.map(i=>`<li>${i}</li>`).join(''); }
+
+    const headerTitle = d.headerTitle || DEFAULT.headerTitle;
+    const flag = d.flag || DEFAULT.flag;
+    const welcome = d.welcome || DEFAULT.welcome;
+    const whyTitle = d.whyTitle || DEFAULT.whyTitle;
+    const whyList = d.whyList || DEFAULT.whyList;
+    const col1Title = d.col1Title || DEFAULT.col1Title;
+    const col1List = d.col1List || DEFAULT.col1List;
+    const col2Title = d.col2Title || DEFAULT.col2Title;
+    const col2List = d.col2List || DEFAULT.col2List;
+    const col3Title = d.col3Title || DEFAULT.col3Title;
+    const col3List = d.col3List || DEFAULT.col3List;
+
+    document.getElementById('ketHeaderTitle').innerText = headerTitle;
+    document.getElementById('ketFlag').innerText = flag;
+
+    const welcomeLines = welcome.split('\n').filter(l=>l.trim());
+    let welcomeHtml = '';
+    welcomeLines.forEach(line=>{
+      let formatted = line.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+      welcomeHtml += `<p class="keterangan-text">${formatted}</p>`;
+    });
+    document.getElementById('ketWelcomeBox').innerHTML = welcomeHtml;
+
+    document.getElementById('ketWhyTitle').innerText = whyTitle;
+    const whyItems = whyList.split('\n').filter(l=>l.trim());
+    let whyHtml = '';
+    whyItems.forEach(item=>{ whyHtml += `<div class="keterangan-item"><span class="check">✔</span> ${item}</div>`; });
+    document.getElementById('ketWhyList').innerHTML = whyHtml;
+
+    document.getElementById('ketCol1Title').innerText = col1Title;
+    document.getElementById('ketCol1List').innerHTML = col1List.split('\n').filter(l=>l.trim()).map(i=>`<li>${i}</li>`).join('');
+    document.getElementById('ketCol2Title').innerText = col2Title;
+    document.getElementById('ketCol2List').innerHTML = col2List.split('\n').filter(l=>l.trim()).map(i=>`<li>${i}</li>`).join('');
+    document.getElementById('ketCol3Title').innerText = col3Title;
+    document.getElementById('ketCol3List').innerHTML = col3List.split('\n').filter(l=>l.trim()).map(i=>`<li>${i}</li>`).join('');
   });
 }
 
