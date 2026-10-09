@@ -123,8 +123,7 @@
 .popup-btn.tiktok:hover{border-color:#00f2ea;background:rgba(0,242,234,0.1)}
 .popup-btn.facebook:hover{border-color:#1877F2;background:rgba(24,119,242,0.1)}
 .popup-btn.whatsapp:hover{border-color:#25D366;background:rgba(37,211,102,0.1)}
-.popup-btn.youtube:hover{border-color:#FF0000;background:rgba(255,0,0,0.1)}
-.popup-btn.telegram:hover{border-color:#0088cc;background:rgba(0,136,204,0.1)}
+.popup-btn.sociabuzz:hover{border-color:#FF6B35;background:rgba(255,107,53,0.1)}
 
 @media (max-width:768px){
   .feature-grid{grid-template-columns:1fr 1fr}
@@ -220,7 +219,7 @@ Selamat datang di rumah baru kalian.</div>
       <a href="https://discord.gg/Vwfd4A9AC" target="_blank" rel="noopener" class="dukungan-btn discord"><img src="./discord.png" alt="Discord" class="dukungan-logo"><span class="dukungan-label">Join Discord</span><span class="dukungan-desc">Info promo & bantuan</span></a>
       <a href="https://instagram.com/muhammadabiwafaali" target="_blank" rel="noopener" class="dukungan-btn instagram"><img src="./instagram.png" alt="Instagram" class="dukungan-logo"><span class="dukungan-label">Follow Instagram</span><span class="dukungan-desc">Update stok & promo</span></a>
       <a href="https://tiktok.com/@wafastore_03" target="_blank" rel="noopener" class="dukungan-btn tiktok"><img src="./tiktok.png" alt="TikTok" class="dukungan-logo"><span class="dukungan-label">Follow TikTok</span><span class="dukungan-desc">Konten seru & tutorial</span></a>
-      <a href="https://facebook.com/share/1KKXKYfYyU/" target="_blank" rel="noopener" class="dukungan-btn facebook"><img src="./facebook.png" alt="Facebook" class="dukungan-logo"><span class="dukungan-label">Follow Facebook</span><span class="dukungan-desc">Komunitas & info</span></a>
+      <a href="https://facebook.com/kang.santri.salafi.405527" target="_blank" rel="noopener" class="dukungan-btn facebook"><img src="./facebook.png" alt="Facebook" class="dukungan-logo"><span class="dukungan-label">Follow Facebook</span><span class="dukungan-desc">Komunitas & info</span></a>
       <a href="https://sociabuzz.com/awa_newstream/tribe" target="_blank" rel="noopener" class="dukungan-btn sociabuzz" style="grid-column: span 2;"><img src="./sociabuzz.png" alt="Sociabuzz" class="dukungan-logo"><span class="dukungan-label">Support / Donasi</span><span class="dukungan-desc">Dukung kami di Sociabuzz — bantu upgrade web & server!</span></a>
     </div>
     <div class="dukungan-footer">
@@ -558,38 +557,92 @@ function saveOrder(data){
   try{ if(window.wafaDB){ window.wafaSet(window.wafaRef(window.wafaDB,'orders/'+data.id), data); } }catch(e){}
   return data.id;
 }
-function sendDiscordWithBukti(o, dataUrl, judul){
+
+// ============================================
+// SEND DISCORD WITH BUKTI — FIXED (simpan multiple message IDs)
+// ============================================
+async function sendDiscordWithBukti(o, dataUrl, judul){
   const baseUrl = "https://wafastoreonly-official.vercel.app/";
   const selesaiUrl = `${baseUrl}admin.html?id=${o.id}&action=selesai`;
   const batalUrl = `${baseUrl}admin.html?id=${o.id}&action=batal`;
+  
   let extra = '';
   if(o.method == 'gamepass' && o.gamepassLink) extra = `🔗 Link Gamepass: ${o.gamepassLink}`;
   if(o.method == 'gift' && o.item){ extra = `🎁 Item: ${o.item}`; if(o.privateServer) extra += `\n🔗 Private Server: ${o.privateServer}`; }
   if(o.voucherCode) extra += `\n🎟️ Voucher: ${o.voucherCode} (-Rp${(o.voucherPotongan||0).toLocaleString('id-ID')})`;
-  const embedData = { title: `📦 Order #${o.id.toString().slice(-6)}`, color: 0x4a90e2, fields: [
-    { name: "👤 Username Roblox", value: String(o.username || '-'), inline: true },
-    { name: "📊 Jumlah", value: `${o.jumlah} Robux`, inline: true },
-    { name: "💰 Total", value: `Rp${o.total.toLocaleString('id-ID')}`, inline: true },
-    { name: "🔧 Metode", value: String(o.method || '-'), inline: true },
-    { name: "📧 Buyer", value: sensorEmail(o.email||'-'), inline: true },
-    { name: "🕐 Tanggal", value: String(o.date || '-'), inline: true }
-  ], footer: { text: `UID: ${o.uid || '-'} • Status: OTOMATIS DIPROSES ⚡` } };
+  
+  const embedData = {
+    title: `📦 Order #${o.id.toString().slice(-6)}`,
+    color: 0x4a90e2,
+    fields: [
+      { name: "👤 Username Roblox", value: String(o.username || '-'), inline: true },
+      { name: "📊 Jumlah", value: `${o.jumlah} Robux`, inline: true },
+      { name: "💰 Total", value: `Rp${o.total.toLocaleString('id-ID')}`, inline: true },
+      { name: "🔧 Metode", value: String(o.method || '-'), inline: true },
+      { name: "📧 Buyer", value: sensorEmail(o.email||'-'), inline: true },
+      { name: "🕐 Tanggal", value: String(o.date || '-'), inline: true }
+    ],
+    footer: { text: `UID: ${o.uid || '-'} • Status: OTOMATIS DIPROSES ⚡` }
+  };
   if(extra) embedData.description = extra;
-  fetch(window.DISCORD_URL+"?with_components=true", { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content: `💸 **BUKTI TF MASUK! [VALID ✅]**`, embeds: [embedData] }) }).catch(e=>console.log('Err 1:', e));
-  setTimeout(()=>{
-    fetch(dataUrl).then(r=>r.blob()).then(blob=>{
-      let form = new FormData();
-      form.append('payload_json', JSON.stringify({ content: '', components: [{ type: 1, components: [
-        { type: 2, style: 5, label: "✅ KONFIRMASI SELESAI", url: selesaiUrl },
-        { type: 2, style: 5, label: "❌ BATALKAN", url: batalUrl }
-      ]}]}));
-      form.append('files[0]', blob, `bukti-${o.id}.jpg`);
-      fetch(window.DISCORD_URL+"?with_components=true", { method:'POST', body: form }).then(r=>r.json()).then(data=>{
-        if(data && data.id && window.wafaDB){ window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+o.id), { discordMessageId: data.id, discordChannelId: data.channel_id }).catch(e=>console.log('Save msg id error:', e)); }
-      }).catch(e=>console.log('Err 2:', e));
+  
+  const allMessageIds = [];
+  let lastChannelId = '';
+  
+  // PESAN 1: Embed (dengan ?wait=true biar dapet ID)
+  try{
+    const res1 = await fetch(window.DISCORD_URL+"?wait=true", {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ content: `💸 **BUKTI TF MASUK! [VALID ✅]**`, embeds: [embedData] })
     });
+    const data1 = await res1.json();
+    if(data1 && data1.id){
+      allMessageIds.push(data1.id);
+      if(data1.channel_id) lastChannelId = data1.channel_id;
+      console.log('✅ Pesan 1 terkirim, ID:', data1.id);
+    }
+  }catch(e){ console.log('Err pesan 1:', e); }
+  
+  // PESAN 2: Gambar + Tombol
+  setTimeout(async ()=>{
+    try{
+      const blob = await (await fetch(dataUrl)).blob();
+      let form = new FormData();
+      form.append('payload_json', JSON.stringify({
+        content: '',
+        components: [{
+          type: 1,
+          components: [
+            { type: 2, style: 5, label: "✅ KONFIRMASI SELESAI", url: selesaiUrl },
+            { type: 2, style: 5, label: "❌ BATALKAN", url: batalUrl }
+          ]
+        }]
+      }));
+      form.append('files[0]', blob, `bukti-${o.id}.jpg`);
+      
+      const res2 = await fetch(window.DISCORD_URL+"?wait=true", { method:'POST', body: form });
+      const data2 = await res2.json();
+      if(data2 && data2.id){
+        allMessageIds.push(data2.id);
+        if(data2.channel_id) lastChannelId = data2.channel_id;
+        console.log('✅ Pesan 2 terkirim, ID:', data2.id);
+      }
+      
+      // Simpan SEMUA message ID ke Firebase
+      if(allMessageIds.length > 0 && window.wafaDB){
+        await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+o.id), {
+          discordMessageIds: allMessageIds,
+          discordMessageId: allMessageIds[allMessageIds.length - 1],
+          discordChannelId: lastChannelId,
+          updatedAt: Date.now()
+        });
+        console.log('✅ Message IDs disimpan:', allMessageIds);
+      }
+    }catch(e){ console.log('Err pesan 2:', e); }
   }, 1000);
 }
+
 function getSisaWaktu(expiry){let sisa=expiry-Date.now();if(sisa<=0)return"00:00";let m=Math.floor(sisa/60000);let s=Math.floor((sisa%60000)/1000);return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;}
 function checkExpired(){
   let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]'); let changed=false; let now=Date.now();
@@ -645,7 +698,7 @@ async function uploadBukti(id){
       localStorage.setItem('wafa_orders',JSON.stringify(orders2)); renderPesanan();
       try{ if(window.wafaDB){ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), {status:'proses', bukti:r.result, expiry:null}); } }catch(e){ console.log('Update FB error:', e); }
       addBotMsg(`✅ Bukti TF #${id.toString().slice(-6)} valid!\n\n⚡ Pesanan kamu LANGSUNG DIPROSES!`);
-      sendDiscordWithBukti(o, r.result, `💸 **BUKTI TF MASUK! [VALID ✅]**`);
+      await sendDiscordWithBukti(o, r.result, `💸 **BUKTI TF MASUK! [VALID ✅]**`);
     }; r.readAsDataURL(file);
   }; input.click();
 }
@@ -664,7 +717,7 @@ async function uploadBuktiFromChat(input){
     localStorage.setItem('wafa_orders',JSON.stringify(orders)); renderPesanan();
     try{ if(window.wafaDB){ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+o.id), {status:'proses', bukti:r.result, expiry:null}); } }catch(e){ console.log('Update FB error:', e); }
     addBotMsg(`✅ Bukti TF #${o.id.toString().slice(-6)} valid!\n\n⚡ Pesanan kamu LANGSUNG DIPROSES!`);
-    sendDiscordWithBukti(o, r.result, `💸 **BUKTI TF MASUK! [VALID ✅]**`);
+    await sendDiscordWithBukti(o, r.result, `💸 **BUKTI TF MASUK! [VALID ✅]**`);
   }; r.readAsDataURL(file); input.value='';
 }
 setInterval(checkExpired,5000);
@@ -882,37 +935,18 @@ async function sendLayanan(){
 }
 function addBotMsg(txt){ const c=document.getElementById('layananChat'); if(!c) return; const d=document.createElement('div');d.className='msg bot';d.innerText=txt;c.appendChild(d);c.scrollTop=c.scrollHeight; }
 
-// ============================================
-// POPUP PROMO — SELALU MUNCUL (bisa diatur intervalnya)
-// ============================================
+// POPUP PROMO
 function checkPopupPromo(){
   if(!window.wafaDB || !window.wafaOnValue){ setTimeout(checkPopupPromo, 500); return; }
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/popup'), (snap)=>{
     const d = snap.val();
-    console.log('📢 Popup data:', d);
-    if(!d){ console.log('❌ Popup data kosong'); return; }
-    if(d.active === false){ console.log('❌ Popup nonaktif'); return; }
-    if(!d.title){ console.log('❌ Title kosong'); return; }
-    
-    // Cek cooldown (kalo everyMinutes = 0, langsung tampil)
+    if(!d || d.active === false) return;
+    if(!d.title) return;
     const everyMinutes = d.everyMinutes || 0;
     const lastShown = parseInt(localStorage.getItem('wafa_popup_last') || '0');
     const now = Date.now();
-    
-    if(everyMinutes > 0){
-      const cooldown = everyMinutes * 60 * 1000;
-      const sisa = cooldown - (now - lastShown);
-      if(sisa > 0){ 
-        console.log('⏳ Cooldown, muncul dalam ' + Math.ceil(sisa/60000) + ' menit lagi'); 
-        return; 
-      }
-    }
-    
-    console.log('✅ Tampilkan popup dalam 1.5 detik...');
-    setTimeout(()=>{ 
-      showPopupPromo(d); 
-      localStorage.setItem('wafa_popup_last', now.toString());
-    }, 1500);
+    if(everyMinutes > 0){ const cooldown = everyMinutes * 60 * 1000; if(now - lastShown < cooldown) return; }
+    setTimeout(()=>{ showPopupPromo(d); localStorage.setItem('wafa_popup_last', now.toString()); }, 1500);
   });
 }
 function detectPlatformClass(url){
@@ -920,10 +954,7 @@ function detectPlatformClass(url){
   if(u.includes('discord')) return 'discord'; if(u.includes('instagram')) return 'instagram';
   if(u.includes('tiktok')) return 'tiktok'; if(u.includes('facebook') || u.includes('fb.com')) return 'facebook';
   if(u.includes('wa.me') || u.includes('whatsapp')) return 'whatsapp';
-  if(u.includes('twitter') || u.includes('x.com')) return 'twitter';
-  if(u.includes('youtube')) return 'youtube';
   if(u.includes('sociabuzz')) return 'sociabuzz';
-  if(u.includes('telegram') || u.includes('t.me')) return 'telegram';
   return '';
 }
 function getNativeScheme(url){
@@ -933,131 +964,73 @@ function getNativeScheme(url){
   if(u.includes('tiktok.com/')) return 'snssdk1233://';
   if(u.includes('facebook.com/') || u.includes('fb.com/')) return 'fb://';
   if(u.includes('wa.me/') || u.includes('whatsapp.com/')) return 'whatsapp://';
-  if(u.includes('twitter.com/') || u.includes('x.com/')) return 'twitter://';
-  if(u.includes('youtube.com/') || u.includes('youtu.be/')) return 'youtube://';
-  if(u.includes('t.me/') || u.includes('telegram.me/')) return 'tg://';
   return null;
 }
 function showPopupPromo(d){
-  const overlay = document.getElementById('popupPromo'); 
-  const img = document.getElementById('popupImg');
+  const overlay = document.getElementById('popupPromo'); const img = document.getElementById('popupImg');
   document.getElementById('popupTitleEl').innerText = d.title || '🎉 Promo Spesial!';
   document.getElementById('popupDescEl').innerText = d.desc || '';
-  
-  if(d.image){ img.src = d.image; img.style.display = 'block'; } 
-  else { img.style.display = 'none'; }
-  
-  const btnContainer = document.getElementById('popupButtonsContainer'); 
-  btnContainer.innerHTML = '';
-  
+  if(d.image){ img.src = d.image; img.style.display = 'block'; } else { img.style.display = 'none'; }
+  const btnContainer = document.getElementById('popupButtonsContainer'); btnContainer.innerHTML = '';
   (d.buttons || []).forEach(btn=>{
     if(!btn.label || !btn.url) return;
-    
-    const a = document.createElement('a'); 
-    a.href = btn.url; 
-    a.target = '_blank'; 
-    a.rel = 'noopener';
+    const a = document.createElement('a'); a.href = btn.url; a.target = '_blank'; a.rel = 'noopener';
     a.className = 'popup-btn ' + detectPlatformClass(btn.url);
     a.innerHTML = `${btn.icon || '🔗'} ${btn.label}`;
-    
     a.addEventListener('click', function(e){
       const nativeScheme = getNativeScheme(btn.url);
       if(nativeScheme){
         const startTime = Date.now();
-        const iframe = document.createElement('iframe'); 
-        iframe.style.display = 'none'; 
-        iframe.src = nativeScheme;
-        document.body.appendChild(iframe); 
-        setTimeout(()=>{ try{ iframe.remove(); }catch(err){} }, 2000);
-        setTimeout(function(){ 
-          if(Date.now() - startTime < 2000){ 
-            window.open(btn.url, '_blank'); 
-          }
-        }, 1500);
+        const iframe = document.createElement('iframe'); iframe.style.display = 'none'; iframe.src = nativeScheme;
+        document.body.appendChild(iframe); setTimeout(()=>{ try{ iframe.remove(); }catch(err){} }, 2000);
+        setTimeout(function(){ if(Date.now() - startTime < 2000){ window.open(btn.url, '_blank'); } }, 1500);
       }
     });
     btnContainer.appendChild(a);
   });
-  
   overlay.classList.add('show');
 }
 function closePopupPromo(){ document.getElementById('popupPromo').classList.remove('show'); }
 document.getElementById('popupPromo')?.addEventListener('click', (e)=>{ if(e.target.id === 'popupPromo') closePopupPromo(); });
 
-// ============================================
-// KETERANGAN — dengan default fallback
-// ============================================
+// LOAD KETERANGAN
 function loadKeteranganDinamis(){
   if(!window.wafaDB || !window.wafaOnValue){ setTimeout(loadKeteranganDinamis, 500); return; }
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/keterangan'), (snap)=>{
     const d = snap.val() || {};
     const section = document.getElementById('keteranganSection');
     if(!section) return;
-
     const DEFAULT = {
       headerTitle: '⭐ WAFASTOREONLY - TOP UP ROBUX TERMURAH, TERCEPAT & TERPERCAYA ⭐',
       flag: '🇮🇩 INDONESIA',
-      welcome: `Halo semuanya! Selamat datang di Website Resmi **WafaStoreOnly**! 👋
-
-Terima kasih banyak buat kalian yang sudah mampir dan support toko kecil ini. Disini adalah tempat **TERPERCAYA** untuk kalian yang mau **TOP UP ROBUX MURAH, CEPAT & LEGAL 100%!**`,
+      welcome: `Halo semuanya! Selamat datang di Website Resmi **WafaStoreOnly**! 👋\n\nTerima kasih banyak buat kalian yang sudah mampir dan support toko kecil ini. Disini adalah tempat **TERPERCAYA** untuk kalian yang mau **TOP UP ROBUX MURAH, CEPAT & LEGAL 100%!**`,
       whyTitle: '💎 KENAPA TOP UP DI WAFASTOREONLY?',
-      whyList: `Harga Termurah & Bersaing - Dijamin paling murah!
-Proses Super Cepat 1-15 Menit (Max 1 jam jika antri)
-100% Aman & Legal - No Hack / No Bug / Anti Banned
-All Payment ON - QRIS, DANA, GOPAY, OVO, SHOPEEPAY, BANK, PULSA
-Fast Respon & Ready 24 Jam (Kalau gak tidur)
-Via Username (Estimasi 1-5 Menit)
-Via Gamepass (Estimasi 5-7 Day)
-Via Gift In Game (Estimasi 5-10 Menit)
-Rate Robux Selalu Update Ikut Kurs
-Ada Bonus & Promo Setiap Hari!`,
-      col1Title: '⚡ Via Username',
-      col1List: `Fast Proses 5-10 Menit
-Pastikan Username Benar
-Pastikan 2FA Aktif
-Pastikan Akun Tidak Limit`,
-      col2Title: '🎫 Via Gamepass',
-      col2List: `Proses ± 5-7 Hari
-Pastikan Username Benar
-Gamepass Harus Publik
-Setting Gamepass Sesuai`,
-      col3Title: '🎁 Via Gift In Game',
-      col3List: `Wajib Stand By di Server Map
-Pastikan Username Benar
-Nama Item Sesuai
-Jumlah Robux Sesuai Map`
+      whyList: `Harga Termurah & Bersaing - Dijamin paling murah!\nProses Super Cepat 1-15 Menit (Max 1 jam jika antri)\n100% Aman & Legal - No Hack / No Bug / Anti Banned\nAll Payment ON - QRIS, DANA, GOPAY, OVO, SHOPEEPAY, BANK, PULSA\nFast Respon & Ready 24 Jam (Kalau gak tidur)\nAda Bonus & Promo Setiap Hari!`,
+      col1Title: '⚡ Via Username', col1List: `Fast Proses 5-10 Menit\nPastikan Username Benar\nPastikan 2FA Aktif\nPastikan Akun Tidak Limit`,
+      col2Title: '🎫 Via Gamepass', col2List: `Proses ± 5-7 Hari\nPastikan Username Benar\nGamepass Harus Publik\nSetting Gamepass Sesuai`,
+      col3Title: '🎁 Via Gift In Game', col3List: `Wajib Stand By di Server Map\nPastikan Username Benar\nNama Item Sesuai\nJumlah Robux Sesuai Map`
     };
-
     if(d.active === false){ section.style.display = 'none'; return; }
     section.style.display = 'block';
-
     document.getElementById('ketHeaderTitle').innerText = d.headerTitle || DEFAULT.headerTitle;
     document.getElementById('ketFlag').innerText = d.flag || DEFAULT.flag;
-
     const welcome = d.welcome || DEFAULT.welcome;
     const welcomeLines = welcome.split('\n').filter(l=>l.trim());
     let welcomeHtml = '';
-    welcomeLines.forEach(line=>{
-      let formatted = line.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
-      welcomeHtml += `<p class="keterangan-text">${formatted}</p>`;
-    });
+    welcomeLines.forEach(line=>{ let formatted = line.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); welcomeHtml += `<p class="keterangan-text">${formatted}</p>`; });
     document.getElementById('ketWelcomeBox').innerHTML = welcomeHtml;
-
     document.getElementById('ketWhyTitle').innerText = d.whyTitle || DEFAULT.whyTitle;
     const whyList = d.whyList || DEFAULT.whyList;
     const whyItems = whyList.split('\n').filter(l=>l.trim());
     let whyHtml = '';
     whyItems.forEach(item=>{ whyHtml += `<div class="keterangan-item"><span class="check">✔</span> ${item}</div>`; });
     document.getElementById('ketWhyList').innerHTML = whyHtml;
-
     document.getElementById('ketCol1Title').innerText = d.col1Title || DEFAULT.col1Title;
     const col1List = d.col1List || DEFAULT.col1List;
     document.getElementById('ketCol1List').innerHTML = col1List.split('\n').filter(l=>l.trim()).map(i=>`<li>${i}</li>`).join('');
-
     document.getElementById('ketCol2Title').innerText = d.col2Title || DEFAULT.col2Title;
     const col2List = d.col2List || DEFAULT.col2List;
     document.getElementById('ketCol2List').innerHTML = col2List.split('\n').filter(l=>l.trim()).map(i=>`<li>${i}</li>`).join('');
-
     document.getElementById('ketCol3Title').innerText = d.col3Title || DEFAULT.col3Title;
     const col3List = d.col3List || DEFAULT.col3List;
     document.getElementById('ketCol3List').innerHTML = col3List.split('\n').filter(l=>l.trim()).map(i=>`<li>${i}</li>`).join('');
