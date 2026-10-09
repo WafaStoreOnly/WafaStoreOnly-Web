@@ -37,20 +37,6 @@
 .welcome-tagline{font-size:11px;color:#8a8a8a;letter-spacing:3px;line-height:1.8;position:relative;z-index:2;text-transform:uppercase}
 .welcome-msg{margin-top:16px;font-size:11px;color:#a8a8a8;line-height:1.7;position:relative;z-index:2;font-family:'Courier New',monospace;white-space:pre-wrap}
 .welcome-msg b{color:#fff;font-weight:700}
-.ann-box{background:#141414;border:1px solid #2a2a2a;border-radius:14px;padding:18px;margin-top:14px}
-.ann-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.ann-head-icon{font-size:22px}
-.ann-head-title{font-size:14px;font-weight:800;color:#e8e8e8}
-.ann-head-sub{font-size:10px;color:#5a5a5a;margin-top:2px}
-.ann-step{background:#0a0a0a;border:1px solid #2a2a2a;border-left:3px solid #4a90e2;border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
-.ann-step.green{border-left-color:#4ade80}
-.ann-step.warn{border-left-color:#fbbf24;background:rgba(251,191,36,0.05)}
-.ann-step-num{width:26px;height:26px;background:#1a1a1a;border:1px solid #3a3a3a;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#e8e8e8;flex-shrink:0}
-.ann-step.green .ann-step-num{border-color:#4ade80;color:#4ade80}
-.ann-step.warn .ann-step-num{border-color:#fbbf24;color:#fbbf24}
-.ann-step-title{font-size:12px;font-weight:700;color:#e8e8e8;margin-bottom:3px}
-.ann-step-desc{font-size:11px;color:#8a8a8a;line-height:1.5}
-.ann-step-desc b{color:#e8e8e8}
 .syarat-box-modern{background:#141414;border:1px solid #2a2a2a;border-radius:14px;padding:16px;margin-top:16px}
 .syarat-title{font-weight:800;font-size:12px;color:#e8e8e8;margin-bottom:14px;letter-spacing:0.5px}
 .syarat-item{display:flex;gap:10px;align-items:flex-start;background:#0a0a0a;border-radius:8px;padding:10px 12px;margin-bottom:6px;border-left:2px solid #4a90e2;font-size:12px;color:#a8a8a8;line-height:1.5}
@@ -58,27 +44,154 @@
 .syarat-num{width:20px;height:20px;background:#1a1a1a;border:1px solid #3a3a3a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:#e8e8e8;flex-shrink:0;margin-top:1px}
 .syarat-item.green{border-left-color:#4ade80}
 .syarat-item.green .syarat-num{border-color:#4ade80;color:#4ade80}
-.panduan-title{font-weight:800;font-size:15px;color:#e8e8e8;display:flex;align-items:center;gap:8px;margin:22px 0 12px}
-.panduan-item{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;transition:0.15s;margin-bottom:10px}
-.panduan-item:hover{border-color:#3a3a3a;background:#1a1a1a}
-.panduan-icon{width:42px;height:42px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.panduan-info{flex:1}
-.panduan-info b{font-size:13px;color:#e8e8e8;display:block;margin-bottom:2px}
-.panduan-info span{font-size:11px;color:#8a8a8a;line-height:1.5;display:block}
-.panduan-arrow{color:#5a5a5a;font-size:16px}
-.log-item{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;transition:0.15s}
-.log-item:hover{border-color:#3a3a3a}
-.log-item .check{width:32px;height:32px;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.log-item .info{flex:1;min-width:0}
-.log-item .info b{font-size:13px;color:#e8e8e8;display:block;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.log-item .info span{font-size:10px;color:#5a5a5a;display:block;margin-top:2px}
-.log-item .right{text-align:right;flex-shrink:0}
-.log-item .right b{font-size:13px;color:#4ade80;font-weight:700;display:block}
-.log-item .right small{font-size:10px;color:#5a5a5a;display:block;margin-top:2px}
 .usr-status{font-size:12px;margin-top:6px;padding:10px 12px;border-radius:8px;font-weight:600;line-height:1.5}
 .usr-status.loading{background:rgba(74,144,226,0.1);border:1px solid rgba(74,144,226,0.4);color:#4a90e2}
 .usr-status.ok{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.4);color:#4ade80}
 .usr-status.err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.4);color:#ef4444}
+.leaderboard-item{background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;transition:0.15s}
+.leaderboard-rank{width:42px;height:42px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;flex-shrink:0;color:#8a8a8a}
+.leaderboard-info{flex:1;min-width:0}
+.leaderboard-info b{font-size:14px;color:#e8e8e8;display:block;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.leaderboard-info span{font-size:11px;color:#5a5a5a;display:block;margin-top:2px}
+.leaderboard-right{text-align:right;flex-shrink:0}
+.leaderboard-right b{font-size:14px;color:#4ade80;font-weight:800;display:block}
+.leaderboard-right small{font-size:10px;color:#5a5a5a;display:block;margin-top:2px}
+
+/* ===== KETERANGAN SECTION ===== */
+.keterangan-header {
+  margin-top: 28px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, rgba(74,144,226,0.15), rgba(107,92,231,0.15));
+  border: 1px solid rgba(74,144,226,0.4);
+  border-radius: 14px;
+  text-align: center;
+}
+.keterangan-title-main {
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.5;
+  letter-spacing: 0.3px;
+}
+.keterangan-card {
+  margin-top: 14px;
+  padding: 18px;
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 14px;
+}
+.keterangan-flag {
+  display: inline-block;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #e8e8e8;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+.keterangan-text {
+  font-size: 12px;
+  color: #a8a8a8;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+.keterangan-text b { color: #e8e8e8; font-weight: 700; }
+.keterangan-text:last-child { margin-bottom: 0; }
+.keterangan-section-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #e8e8e8;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.keterangan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.keterangan-item {
+  font-size: 12px;
+  color: #a8a8a8;
+  line-height: 1.6;
+  padding-left: 4px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.keterangan-item .check {
+  color: #4ade80;
+  font-weight: 900;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+.keterangan-3col {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.keterangan-col {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 14px;
+}
+.keterangan-col-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #e8e8e8;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #2a2a2a;
+}
+.keterangan-col-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: item;
+}
+.keterangan-col-list li {
+  font-size: 11px;
+  color: #a8a8a8;
+  line-height: 1.5;
+  padding-left: 22px;
+  position: relative;
+  margin-bottom: 6px;
+  counter-increment: item;
+}
+.keterangan-col-list li::before {
+  content: counter(item) ".";
+  position: absolute;
+  left: 0;
+  color: #4a90e2;
+  font-weight: 800;
+}
+.keterangan-col-list li:last-child { margin-bottom: 0; }
+
+/* ===== POPUP PROMO ===== */
+.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.3s ease}
+.popup-overlay.show{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.popup-box{background:#141414;border:1px solid #2a2a2a;border-radius:20px;padding:24px;max-width:400px;width:100%;max-height:90vh;overflow-y:auto;animation:popupSlide 0.4s ease;text-align:center;position:relative}
+@keyframes popupSlide{from{transform:scale(0.9) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.popup-close{position:absolute;top:14px;right:14px;width:32px;height:32px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#8a8a8a;font-size:16px;transition:0.15s}
+.popup-close:hover{background:#2a2a2a;color:#e8e8e8}
+.popup-img{width:100%;border-radius:12px;margin-bottom:16px}
+.popup-title{font-size:20px;font-weight:800;color:#e8e8e8;margin-bottom:10px;letter-spacing:-0.5px}
+.popup-desc{font-size:13px;color:#a8a8a8;line-height:1.6;margin-bottom:18px;white-space:pre-wrap}
+.popup-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:14px;margin-top:8px;font-weight:700;font-size:13px;color:#e8e8e8;text-decoration:none;cursor:pointer;transition:0.15s}
+.popup-btn:hover{border-color:#4a90e2;background:#222;text-decoration:none;color:#e8e8e8}
+.popup-btn.discord:hover{border-color:#5865F2}
+.popup-btn.instagram:hover{border-color:#E4405F}
+.popup-btn.facebook:hover{border-color:#1877F2}
+.popup-btn.tiktok:hover{border-color:#00f2ea}
+.popup-btn.whatsapp:hover{border-color:#25D366}
+
 @media (max-width:768px){
   .feature-grid{grid-template-columns:1fr 1fr}
   .hero-title{font-size:32px;letter-spacing:-1px}
@@ -88,6 +201,8 @@
 @media (max-width:480px){
   .hero-title{font-size:28px}
   .hero-sub{font-size:12px}
+  .keterangan-3col{grid-template-columns:1fr}
+  .keterangan-title-main{font-size:12px}
 }
 </style>
 <script type="module">
@@ -102,7 +217,6 @@ window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onV
 window.wafaAuth=auth;
 window.DISCORD_URL="https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
 
-// AUTH LISTENER (tanpa auto-redirect)
 onAuthStateChanged(auth, (user)=>{ 
   if(user && !localStorage.getItem('wafa_uid')){ 
     localStorage.setItem('wafa_uid', user.uid); 
@@ -160,101 +274,37 @@ onAuthStateChanged(auth, (user)=>{
 Selamat datang di rumah baru kalian.</div>
   </div>
 
-  <div class="ann-box" id="annBanner">
-    <div class="ann-head">
-      <div class="ann-head-icon">📢</div>
-      <div>
-        <div class="ann-head-title" id="annTitle">CARA ORDER DI WAFASTOREONLY</div>
-        <div class="ann-head-sub">Ikuti langkah-langkah dibawah ya</div>
+  <div id="keteranganSection" style="display:none">
+    <div class="keterangan-header">
+      <div class="keterangan-title-main" id="ketHeaderTitle">⭐ WAFASTOREONLY — TOP UP ROBUX TERMURAH, TERCEPAT & TERPERCAYA ⭐</div>
+    </div>
+
+    <div class="keterangan-card">
+      <div class="keterangan-flag" id="ketFlag">🇮🇩 INDONESIA</div>
+      <div id="ketWelcomeBox">
+        <p class="keterangan-text">Halo semuanya! Selamat datang di Website Resmi <b>WafaStoreOnly</b>! 👋</p>
       </div>
     </div>
-    <div class="ann-step">
-      <div class="ann-step-num">1</div>
-      <div>
-        <div class="ann-step-title">Buka Menu Top Up Game</div>
-        <div class="ann-step-desc">Klik menu <b>Top Up Game</b> di sidebar, terus pilih game yang mau di top up.</div>
+
+    <div class="keterangan-card">
+      <div class="keterangan-section-title" id="ketWhyTitle">💎 KENAPA TOP UP DI WAFASTOREONLY?</div>
+      <div class="keterangan-list" id="ketWhyList"></div>
+    </div>
+
+    <div class="keterangan-3col" id="ket3Col">
+      <div class="keterangan-col">
+        <div class="keterangan-col-title" id="ketCol1Title">⚡ Via Username</div>
+        <ol class="keterangan-col-list" id="ketCol1List"></ol>
+      </div>
+      <div class="keterangan-col">
+        <div class="keterangan-col-title" id="ketCol2Title">🎫 Via Gamepass</div>
+        <ol class="keterangan-col-list" id="ketCol2List"></ol>
+      </div>
+      <div class="keterangan-col">
+        <div class="keterangan-col-title" id="ketCol3Title">🎁 Via Gift In Game</div>
+        <ol class="keterangan-col-list" id="ketCol3List"></ol>
       </div>
     </div>
-    <div class="ann-step">
-      <div class="ann-step-num">2</div>
-      <div>
-        <div class="ann-step-title">Pilih Nominal Robux</div>
-        <div class="ann-step-desc">Masukkan username Roblox & pilih paket. Mulai <b>100 - 10.000 Robux</b>.</div>
-      </div>
-    </div>
-    <div class="ann-step">
-      <div class="ann-step-num">3</div>
-      <div>
-        <div class="ann-step-title">Pilih Payment & Bayar</div>
-        <div class="ann-step-desc">Pilih metode: <b>QRIS / DANA / GoPay / Seabank</b>. Bayar sesuai total.</div>
-      </div>
-    </div>
-    <div class="ann-step green">
-      <div class="ann-step-num">4</div>
-      <div>
-        <div class="ann-step-title">Upload Bukti & Tunggu</div>
-        <div class="ann-step-desc">Upload bukti TF yang jelas. Robux masuk <b>5-30 menit</b> otomatis.</div>
-      </div>
-    </div>
-    <div class="ann-step warn">
-      <div class="ann-step-num">!</div>
-      <div>
-        <div class="ann-step-title">Penting!</div>
-        <div class="ann-step-desc">Salah username = Robux hilang. Pastikan akun tidak private & join group WafaStoreOnly jika disuruh.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="panduan-title">🗺️ Panduan Cepat</div>
-
-  <div class="panduan-item" onclick="openRoblox()">
-    <div class="panduan-icon">⚡</div>
-    <div class="panduan-info">
-      <b>Mau Top Up Game?</b>
-      <span>Klik menu Top Up Game di sidebar, pilih game & paket.</span>
-    </div>
-    <div class="panduan-arrow">→</div>
-  </div>
-
-  <div class="panduan-item" onclick="window.location.href='dompet.html'">
-    <div class="panduan-icon">💰</div>
-    <div class="panduan-info">
-      <b>Mau Isi Saldo Web?</b>
-      <span>Klik menu Dompet, isi nominal, transfer & upload bukti TF.</span>
-    </div>
-    <div class="panduan-arrow">→</div>
-  </div>
-
-  <div class="panduan-item" onclick="openPesanan()">
-    <div class="panduan-icon">📦</div>
-    <div class="panduan-info">
-      <b>Mau Cek Pesanan?</b>
-      <span>Klik menu Pesanan buat liat status order kamu.</span>
-    </div>
-    <div class="panduan-arrow">→</div>
-  </div>
-
-  <div class="panduan-item" onclick="toggleLayanan()">
-    <div class="panduan-icon">💬</div>
-    <div class="panduan-info">
-      <b>Butuh Bantuan Admin?</b>
-      <span>Klik tombol chat di kanan bawah.</span>
-    </div>
-    <div class="panduan-arrow">→</div>
-  </div>
-
-  <div class="panduan-item" onclick="window.location.href='profil.html'">
-    <div class="panduan-icon">👤</div>
-    <div class="panduan-info">
-      <b>Edit Profil Kamu</b>
-      <span>Klik menu Profil buat ganti nama, foto, & kelola akun.</span>
-    </div>
-    <div class="panduan-arrow">→</div>
-  </div>
-
-  <div class="panduan-title" id="logs" style="margin-top:28px">📢 Order Terbaru Selesai</div>
-  <div id="recentLogs" style="display:grid;gap:8px;margin-bottom:20px">
-    <div style="text-align:center;color:#5a5a5a;font-size:12px;padding:20px">Loading...</div>
   </div>
 
 </div>
@@ -429,6 +479,17 @@ Selamat datang di rumah baru kalian.</div>
   </div>
 </div>
 
+<div id="leaderboardPage" class="ws-section" style="display:none">
+  <div style="color:#8a8a8a;font-size:12px;margin:10px 0;cursor:pointer" onclick="goHome()">← Kembali</div>
+  <div style="font-weight:800;font-size:20px;margin-top:8px">🏆 Leaderboard</div>
+  <p style="font-size:12px;color:#8a8a8a;margin-top:6px;margin-bottom:16px">Top 10 pembeli Robux terbanyak</p>
+  <div id="leaderboardList" style="display:grid;gap:10px"></div>
+  <div id="leaderboardEmpty" style="text-align:center;margin-top:60px;color:#5a5a5a;display:none">
+    <div style="font-size:48px;opacity:0.5">🏆</div>
+    <div style="font-size:13px;margin-top:12px">Belum ada data leaderboard</div>
+  </div>
+</div>
+
 </div>
 
 <div id="layananBtn" onclick="toggleLayanan()">💬</div>
@@ -446,11 +507,20 @@ Selamat datang di rumah baru kalian.</div>
   </div>
 </div>
 
+<div class="popup-overlay" id="popupPromo">
+  <div class="popup-box">
+    <div class="popup-close" onclick="closePopupPromo()">✕</div>
+    <img id="popupImg" class="popup-img" style="display:none">
+    <div class="popup-title" id="popupTitleEl">🎉 Promo Spesial!</div>
+    <div class="popup-desc" id="popupDescEl">Gabung sosmed kami!</div>
+    <div id="popupButtonsContainer"></div>
+  </div>
+</div>
+
 <script src="./qris-dinamis.js"></script>
 <script src="./harga-voucher.js"></script>
 <script src="./sidebar.js"></script>
 <script>
-// ===== CEK LOGIN =====
 function isLoggedIn(){
   const uid = localStorage.getItem('wafa_uid');
   return !!(uid && window.wafaAuth && window.wafaAuth.currentUser);
@@ -535,14 +605,15 @@ async function checkUsernameRoblox(inputId) {
     input.dataset.valid = 'true';
     input.dataset.robloxId = result.id;
     input.dataset.robloxDisplayName = result.displayName;
+    input.dataset.robloxUsername = result.username;
   } else {
     setStatus(status, 'err', result.message);
     input.dataset.valid = 'false';
     delete input.dataset.robloxId;
     delete input.dataset.robloxDisplayName;
+    delete input.dataset.robloxUsername;
   }
 }
-// ==========================================
 
 async function cekBuktiValid(file){
   let loading=document.createElement('div');
@@ -555,8 +626,6 @@ async function cekBuktiValid(file){
     let {data:{text}}=await Tesseract.recognize(file,'ind+eng');
     let lower=text.toLowerCase();
     let lowerNoSpace=lower.replace(/\s/g,'');
-    console.log('=== OCR DEBUG ===');
-    console.log('TEXT:', text);
 
     document.getElementById('cek-status').innerText='2/2 Cek penerima...';
     let angkaSaja = lowerNoSpace.replace(/o/g,'0').replace(/[^0-9]/g,'');
@@ -566,7 +635,6 @@ async function cekBuktiValid(file){
     let isAngka = ciriAngka.some(x => angkaSaja.includes(x));
     let isNama = ciriNama.some(x => teksSaja.includes(x));
     let isQris = lower.includes('qris') || lower.includes('qr ');
-    console.log('isAngka:', isAngka, '| isNama:', isNama, '| isQris:', isQris);
     if(!isAngka && !isNama && !isQris){ document.getElementById('loadingDetect').remove(); return {valid:false,reason:`❌ SALAH TUJUAN!\n\nSistem ga nemu nomor/nama WafaStoreOnly di bukti TF.`}; }
 
     document.getElementById('loadingDetect').remove();
@@ -602,7 +670,6 @@ function calcUsername(){
   let p = window.hargaConfig.perRobux || 160;
   document.getElementById('tRbx').innerText=`Total: ${j} Robux = Rp${(j*p).toLocaleString('id-ID')}`;
 }
-
 function renderGamepass(){
   let g=document.getElementById('gridGamepass');g.innerHTML='';
   let p = window.hargaConfig.perRobuxGamepass || 140;
@@ -632,7 +699,7 @@ function calcGift(){
 }
 document.getElementById('giftItem')?.addEventListener('input',calcGift);
 
-function hideAll(){ ['homePage','robloxPage','paymentPage','pesananPage'].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display='none';}); }
+function hideAll(){ ['homePage','robloxPage','paymentPage','pesananPage','leaderboardPage'].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display='none';}); }
 function goHome(){ hideAll(); document.getElementById('homePage').style.display='block'; if(typeof wsSetTitle==='function') wsSetTitle('WafaStoreOnly'); if(typeof wsSetActive==='function') wsSetActive('beranda'); }
 
 function openRoblox(){ 
@@ -644,9 +711,7 @@ function openRoblox(){
   renderUsername(); 
   renderGamepass(); 
 }
-
 function backToRoblox(){ hideAll(); document.getElementById('robloxPage').style.display='block'; }
-
 function openPesanan(){ 
   if(!requireLogin('Pesanan Saya', 'pesanan')) return;
   hideAll(); 
@@ -654,6 +719,82 @@ function openPesanan(){
   if(typeof wsSetTitle==='function') wsSetTitle('📦 Pesanan Saya'); 
   if(typeof wsSetActive==='function') wsSetActive('pesanan'); 
   renderPesanan(); 
+}
+
+function openLeaderboard(){
+  hideAll();
+  document.getElementById('leaderboardPage').style.display = 'block';
+  if(typeof wsSetTitle === 'function') wsSetTitle('🏆 Leaderboard');
+  if(typeof wsSetActive === 'function') wsSetActive('leaderboard');
+  renderLeaderboard();
+  window.scrollTo(0,0);
+}
+
+function renderLeaderboard(){
+  if(!window.wafaDB || !window.wafaOnValue){ setTimeout(renderLeaderboard, 500); return; }
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'logs'), (snap)=>{
+    const data = snap.val() || {};
+    const logs = Object.values(data);
+    const list = document.getElementById('leaderboardList');
+    const empty = document.getElementById('leaderboardEmpty');
+    if(!list || !empty) return;
+
+    if(logs.length === 0){
+      list.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+
+    const userTotals = {};
+    logs.forEach(log=>{
+      const key = log.nickname || log.username || 'User';
+      if(!userTotals[key]){
+        userTotals[key] = {
+          nickname: log.nickname || 'User',
+          username: log.username || '-',
+          totalRobux: 0,
+          totalOrders: 0
+        };
+      }
+      userTotals[key].totalRobux += (log.jumlah || 0);
+      userTotals[key].totalOrders += 1;
+    });
+
+    const leaderboard = Object.values(userTotals)
+      .sort((a,b)=>b.totalRobux - a.totalRobux)
+      .slice(0, 10);
+
+    empty.style.display = 'none';
+    list.innerHTML = '';
+
+    leaderboard.forEach((user, idx)=>{
+      const rank = idx + 1;
+      const sensorRbx = sensorUsernameRbx(user.username);
+      let medal = '';
+      let rankColor = '#5a5a5a';
+      let bgGradient = 'transparent';
+      if(rank === 1){ medal = '🥇'; rankColor = '#fbbf24'; bgGradient = 'linear-gradient(90deg, rgba(251,191,36,0.15), transparent)'; }
+      else if(rank === 2){ medal = '🥈'; rankColor = '#c0c0c0'; bgGradient = 'linear-gradient(90deg, rgba(192,192,192,0.12), transparent)'; }
+      else if(rank === 3){ medal = '🥉'; rankColor = '#cd7f32'; bgGradient = 'linear-gradient(90deg, rgba(205,127,50,0.12), transparent)'; }
+
+      const div = document.createElement('div');
+      div.className = 'leaderboard-item';
+      div.style.background = `${bgGradient}, #141414`;
+      if(rank <= 3) div.style.borderColor = rankColor + '60';
+      div.innerHTML = `
+        <div class="leaderboard-rank" style="${rank <= 3 ? `background:${rankColor}20;border-color:${rankColor}60;color:${rankColor}` : ''}">${medal || rank}</div>
+        <div class="leaderboard-info">
+          <b>${user.nickname}</b>
+          <span>@${sensorRbx} • ${user.totalOrders}x order</span>
+        </div>
+        <div class="leaderboard-right">
+          <b>${user.totalRobux.toLocaleString('id-ID')}</b>
+          <small>Robux</small>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  });
 }
 
 function switchMethod(m,el){currentMethod=m;document.querySelectorAll('.method-tabs .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('m-username').style.display=m=='username'?'block':'none';document.getElementById('m-gamepass').style.display=m=='gamepass'?'block':'none';document.getElementById('m-gift').style.display=m=='gift'?'block':'none';}
@@ -744,7 +885,6 @@ function sendDiscordWithBukti(o, dataUrl, judul){
       fetch(window.DISCORD_URL+"?with_components=true", { method:'POST', body: form })
         .then(r=>r.json())
         .then(data=>{
-          console.log('Discord pesan 2 terkirim:', data);
           if(data && data.id && window.wafaDB){
             window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+o.id), {
               discordMessageId: data.id,
@@ -1256,6 +1396,120 @@ function addBotMsg(txt){
   const d=document.createElement('div');d.className='msg bot';d.innerText=txt;c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
 
+// ===== POPUP PROMO =====
+function checkPopupPromo(){
+  if(!window.wafaDB || !window.wafaOnValue){ setTimeout(checkPopupPromo, 500); return; }
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/popup'), (snap)=>{
+    const d = snap.val();
+    if(!d || d.active === false) return;
+    if(!d.title || !d.buttons || d.buttons.length === 0) return;
+    
+    const showPerDay = d.showPerDay || 1;
+    const today = new Date().toISOString().slice(0,10);
+    const storageKey = 'wafa_popup_' + today;
+    const shown = parseInt(localStorage.getItem(storageKey) || '0');
+    if(shown >= showPerDay) return;
+    
+    setTimeout(()=>{
+      showPopupPromo(d);
+      localStorage.setItem(storageKey, shown + 1);
+    }, 2000);
+  });
+}
+
+function showPopupPromo(d){
+  const overlay = document.getElementById('popupPromo');
+  const img = document.getElementById('popupImg');
+  document.getElementById('popupTitleEl').innerText = d.title || '🎉 Promo Spesial!';
+  document.getElementById('popupDescEl').innerText = d.desc || '';
+  
+  if(d.image){
+    img.src = d.image;
+    img.style.display = 'block';
+  } else {
+    img.style.display = 'none';
+  }
+  
+  const btnContainer = document.getElementById('popupButtonsContainer');
+  btnContainer.innerHTML = '';
+  (d.buttons || []).forEach(btn=>{
+    if(!btn.label || !btn.url) return;
+    const a = document.createElement('a');
+    a.href = btn.url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.className = 'popup-btn';
+    a.innerHTML = `${btn.icon || '🔗'} ${btn.label}`;
+    btnContainer.appendChild(a);
+  });
+  
+  overlay.classList.add('show');
+}
+
+function closePopupPromo(){
+  document.getElementById('popupPromo').classList.remove('show');
+}
+
+document.getElementById('popupPromo')?.addEventListener('click', (e)=>{
+  if(e.target.id === 'popupPromo') closePopupPromo();
+});
+
+// ===== LOAD KETERANGAN DINAMIS =====
+function loadKeteranganDinamis(){
+  if(!window.wafaDB || !window.wafaOnValue){ setTimeout(loadKeteranganDinamis, 500); return; }
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/keterangan'), (snap)=>{
+    const d = snap.val();
+    const section = document.getElementById('keteranganSection');
+    if(!section) return;
+    
+    if(!d || d.active === false){
+      section.style.display = 'none';
+      return;
+    }
+    
+    section.style.display = 'block';
+    
+    if(d.headerTitle) document.getElementById('ketHeaderTitle').innerText = d.headerTitle;
+    if(d.flag) document.getElementById('ketFlag').innerText = d.flag;
+    
+    if(d.welcome){
+      const lines = d.welcome.split('\n').filter(l=>l.trim());
+      let html = '';
+      lines.forEach(line=>{
+        let formatted = line.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+        html += `<p class="keterangan-text">${formatted}</p>`;
+      });
+      document.getElementById('ketWelcomeBox').innerHTML = html;
+    }
+    
+    if(d.whyTitle) document.getElementById('ketWhyTitle').innerText = d.whyTitle;
+    if(d.whyList){
+      const items = d.whyList.split('\n').filter(l=>l.trim());
+      let html = '';
+      items.forEach(item=>{
+        html += `<div class="keterangan-item"><span class="check">✔</span> ${item}</div>`;
+      });
+      document.getElementById('ketWhyList').innerHTML = html;
+    }
+    
+    if(d.col1Title) document.getElementById('ketCol1Title').innerText = d.col1Title;
+    if(d.col1List){
+      const items = d.col1List.split('\n').filter(l=>l.trim());
+      document.getElementById('ketCol1List').innerHTML = items.map(i=>`<li>${i}</li>`).join('');
+    }
+    if(d.col2Title) document.getElementById('ketCol2Title').innerText = d.col2Title;
+    if(d.col2List){
+      const items = d.col2List.split('\n').filter(l=>l.trim());
+      document.getElementById('ketCol2List').innerHTML = items.map(i=>`<li>${i}</li>`).join('');
+    }
+    if(d.col3Title) document.getElementById('ketCol3Title').innerText = d.col3Title;
+    if(d.col3List){
+      const items = d.col3List.split('\n').filter(l=>l.trim());
+      document.getElementById('ketCol3List').innerHTML = items.map(i=>`<li>${i}</li>`).join('');
+    }
+  });
+}
+
 // ===== INIT =====
 if(typeof loadHargaConfig === 'function'){
   loadHargaConfig().then(()=>{ renderUsername(); renderGamepass(); });
@@ -1263,9 +1517,10 @@ if(typeof loadHargaConfig === 'function'){
   renderUsername(); renderGamepass();
 }
 checkExpired();
+checkPopupPromo();
+loadKeteranganDinamis();
 (function initListeners(){ let orders=JSON.parse(localStorage.getItem('wafa_orders')||'[]'); orders.forEach(o=>attachFirebaseListener(o.id)); })();
 
-// AUTO REDIRECT SETELAH LOGIN
 setTimeout(()=>{
   const redirect = sessionStorage.getItem('wafa_redirect_after_login');
   if(redirect && isLoggedIn()){
@@ -1275,8 +1530,13 @@ setTimeout(()=>{
     else if(redirect === 'dompet') window.location.href = 'dompet.html';
     else if(redirect === 'profil') window.location.href = 'profil.html';
     else if(redirect === 'admin') window.location.href = 'admin.html';
+    else if(redirect === 'leaderboard') openLeaderboard();
   }
 }, 800);
+
+if(window.location.hash === '#leaderboard'){
+  setTimeout(()=>openLeaderboard(), 500);
+}
 
 function loadSettingsFirebase(){
   if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){ setTimeout(loadSettingsFirebase, 500); return; }
@@ -1339,46 +1599,10 @@ function loadSettingsFirebase(){
   });
 }
 
-function getTimeAgo(ts){
-  if(!ts) return '-';
-  const diff = Date.now() - ts;
-  const mins = Math.floor(diff / 60000);
-  if(mins < 1) return 'Baru aja';
-  if(mins < 60) return mins + ' menit lalu';
-  const hours = Math.floor(mins / 60);
-  if(hours < 24) return hours + ' jam lalu';
-  const days = Math.floor(hours / 24);
-  return days + ' hari lalu';
-}
-
-function loadRecentLogs(){
-  if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){ setTimeout(loadRecentLogs, 500); return; }
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'logs'), (snap)=>{
-    const data = snap.val() || {};
-    const logs = Object.values(data).sort((a,b)=>(b.selesaiAt||0)-(a.selesaiAt||0)).slice(0,10);
-    const el = document.getElementById('recentLogs');
-    if(!el) return;
-    if(logs.length === 0){
-      el.innerHTML = '<div style="text-align:center;color:#5a5a5a;font-size:12px;padding:20px">Belum ada order selesai</div>';
-      return;
-    }
-    el.innerHTML = '';
-    logs.forEach(log=>{
-      const timeAgo = getTimeAgo(log.selesaiAt);
-      const sensorRbx = sensorUsernameRbx(log.username);
-      const div = document.createElement('div');
-      div.className = 'log-item';
-      div.innerHTML = `<div class="check">✅</div><div class="info"><b>${log.nickname || 'User'}</b><span>@${sensorRbx}</span></div><div class="right"><b>${log.jumlah} Robux</b><small>${timeAgo}</small></div>`;
-      el.appendChild(div);
-    });
-  });
-}
-
 if(document.readyState === 'complete'){
   loadSettingsFirebase();
-  loadRecentLogs();
 } else {
-  window.addEventListener('load', ()=>{ loadSettingsFirebase(); loadRecentLogs(); });
+  window.addEventListener('load', ()=>{ loadSettingsFirebase(); });
 }
 </script>
 </body>
