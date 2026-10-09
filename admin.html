@@ -122,6 +122,19 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 #adminLock h1{font-size:22px;font-weight:800;color:var(--danger);margin:12px 0}
 #adminLock p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px}
 #sbOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:99;backdrop-filter:blur(4px)}
+.popup-btn-row{display:grid;grid-template-columns:60px 1fr 1fr 40px;gap:8px;margin-bottom:8px;align-items:center}
+.popup-btn-row input{padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:13px;font-family:inherit;outline:none}
+.popup-btn-row input:focus{border-color:var(--primary)}
+.popup-btn-row .btn-del{background:var(--danger);color:#fff;border:none;border-radius:8px;padding:10px;cursor:pointer;font-size:14px;font-weight:700}
+.popup-btn-preview{display:flex;align-items:center;justify-content:center;gap:8px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-top:8px;font-weight:700;font-size:13px;color:#e8e8e8;transition:0.15s}
+.popup-btn-preview.discord{border-color:#5865F2;background:rgba(88,101,242,0.1)}
+.popup-btn-preview.instagram{border-color:#E4405F;background:rgba(228,64,95,0.1)}
+.popup-btn-preview.tiktok{border-color:#00f2ea;background:rgba(0,242,234,0.1)}
+.popup-btn-preview.facebook{border-color:#1877F2;background:rgba(24,119,242,0.1)}
+.popup-btn-preview.whatsapp{border-color:#25D366;background:rgba(37,211,102,0.1)}
+.popup-btn-preview.twitter{border-color:#1DA1F2;background:rgba(29,161,242,0.1)}
+.popup-btn-preview.youtube{border-color:#FF0000;background:rgba(255,0,0,0.1)}
+.popup-btn-preview.telegram{border-color:#0088cc;background:rgba(0,136,204,0.1)}
 @media (max-width:900px){
   #adminSidebar{transform:translateX(-100%)}
   #adminSidebar.open{transform:translateX(0)}
@@ -131,6 +144,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
   .stats-grid{grid-template-columns:1fr 1fr}
   .game-grid{grid-template-columns:1fr 1fr}
   .admin-content{padding:16px}
+  .popup-btn-row{grid-template-columns:50px 1fr 40px}
+  .popup-btn-row input:nth-child(3){display:none}
 }
 @media (max-width:500px){
   .stats-grid{grid-template-columns:1fr 1fr}
@@ -189,6 +204,8 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
   <div class="sb-section">
     <div class="sb-section-title">Kustomisasi</div>
     <div class="sb-menu-item" data-menu="branding" onclick="switchPage('branding')"><span class="icon">🎨</span> Branding</div>
+    <div class="sb-menu-item" data-menu="popup" onclick="switchPage('popup')"><span class="icon">📢</span> Pop-up Promo</div>
+    <div class="sb-menu-item" data-menu="keterangan" onclick="switchPage('keterangan')"><span class="icon">📋</span> Keterangan</div>
     <div class="sb-menu-item" data-menu="harga" onclick="switchPage('harga')"><span class="icon">💵</span> Harga Roblox</div>
     <div class="sb-menu-item" data-menu="voucher" onclick="switchPage('voucher')"><span class="icon">🎟️</span> Voucher</div>
     <div class="sb-menu-item" data-menu="games" onclick="switchPage('games')"><span class="icon">🎮</span> Game Icons</div>
@@ -307,6 +324,135 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         </div>
         <button class="btn btn-success" onclick="saveBanner()">💾 Simpan Banner</button>
       </div>
+    </div>
+
+    <div class="page" id="page-popup" style="display:none">
+      <div class="page-title">📢 Pop-up Promo</div>
+      <div class="page-sub">Atur pop-up yang muncul pas user buka web</div>
+      
+      <div class="card">
+        <div class="card-title">Pengaturan Umum</div>
+        <div class="input-group">
+          <label>Status Pop-up</label>
+          <select id="popupActive">
+            <option value="true">Aktif</option>
+            <option value="false">Nonaktif</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Judul Pop-up</label>
+          <input id="popupTitle" placeholder="Contoh: 🎉 Promo Spesial Hari Ini!">
+        </div>
+        <div class="input-group">
+          <label>Deskripsi</label>
+          <textarea id="popupDesc" placeholder="Contoh: Gabung server Discord & follow sosmed kami buat dapet promo!" style="min-height:80px"></textarea>
+        </div>
+        <div class="input-group">
+          <label>Gambar (opsional, max 500KB)</label>
+          <input type="file" id="popupImgFile" accept="image/*" style="display:none" onchange="uploadPopupImg(this)">
+          <label for="popupImgFile" class="upload-btn">🖼️ Upload Gambar</label>
+          <span style="font-size:11px;color:#5a5a5a;margin-left:10px" id="popupImgName">Belum ada gambar</span>
+        </div>
+        <div class="input-group">
+          <label>Tampilkan Berapa Kali Per Hari</label>
+          <input id="popupShowPerDay" type="number" value="1" min="1" max="10">
+          <small>Default: 1x per hari per user</small>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Tombol Sosial Media</div>
+        <div style="font-size:12px;color:#8a8a8a;margin-bottom:14px">Tambahin tombol link. Bisa Discord, Instagram, Facebook, TikTok, WhatsApp, dll. Klik otomatis ke app-nya.</div>
+        <div id="popupButtonsList" style="margin-bottom:14px"></div>
+        <button class="btn btn-primary" onclick="addPopupButton()" style="margin-bottom:14px">➕ Tambah Tombol</button>
+        <div style="background:#0f0f0f;border:1px solid #2a2a2a;border-radius:10px;padding:12px;font-size:11px;color:#8a8a8a;line-height:1.7">
+          💡 <b style="color:#e8e8e8">Tips Icon:</b> Pakai emoji buat icon. Contoh: 🎮 (Discord), 📷 (IG), 🎵 (TikTok), 👍 (FB), 💬 (WA)<br>
+          🔗 <b style="color:#e8e8e8">Tips URL:</b> Link https langsung kebuka ke app kalau user install app-nya. Contoh: <code style="color:#4a90e2">https://discord.gg/xxx</code>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Preview</div>
+        <div id="popupPreview" style="background:#0a0a0a;border:1px solid #2a2a2a;border-radius:14px;padding:20px;text-align:center">
+          <div style="color:#5a5a5a;font-size:12px">Preview muncul di sini...</div>
+        </div>
+      </div>
+
+      <button class="btn btn-success" onclick="savePopup()" style="width:100%;justify-content:center;padding:14px">💾 Simpan Pop-up</button>
+    </div>
+
+    <div class="page" id="page-keterangan" style="display:none">
+      <div class="page-title">📋 Keterangan</div>
+      <div class="page-sub">Atur section keterangan di beranda</div>
+      
+      <div class="card">
+        <div class="card-title">Header Keterangan</div>
+        <div class="input-group">
+          <label>Status</label>
+          <select id="ketActive">
+            <option value="true">Aktif</option>
+            <option value="false">Nonaktif</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Judul Header (baris atas)</label>
+          <input id="ketHeaderTitle" placeholder="⭐ WAFASTOREONLY — TOP UP ROBUX TERMURAH, TERCEPAT & TERPERCAYA ⭐">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Welcome Card</div>
+        <div class="input-group">
+          <label>Flag/Badge</label>
+          <input id="ketFlag" placeholder="🇮🇩 INDONESIA">
+        </div>
+        <div class="input-group">
+          <label>Teks Sambutan (pisah per baris)</label>
+          <textarea id="ketWelcome" style="min-height:100px" placeholder="Halo semuanya! Selamat datang di Website Resmi **WafaStoreOnly**! 👋
+Terima kasih banyak buat kalian..."></textarea>
+          <small>Bisa pakai **text** buat bold</small>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Keunggulan (Why Choose Us)</div>
+        <div class="input-group">
+          <label>Judul Section</label>
+          <input id="ketWhyTitle" placeholder="💎 KENAPA TOP UP DI WAFASTOREONLY?">
+        </div>
+        <div class="input-group">
+          <label>List Keunggulan (1 baris = 1 poin)</label>
+          <textarea id="ketWhyList" style="min-height:150px" placeholder="Harga Termurah & Bersaing — Dijamin paling murah!
+Proses Super Cepat 1-15 Menit"></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">3 Kolom Info</div>
+        <div class="input-group">
+          <label>Kolom 1 - Judul</label>
+          <input id="ketCol1Title" placeholder="⚡ Via Username">
+          <label style="margin-top:10px">Kolom 1 - List</label>
+          <textarea id="ketCol1List" style="min-height:100px" placeholder="Fast Proses 5-10 Menit
+Pastikan Username Benar"></textarea>
+        </div>
+        <div class="input-group">
+          <label>Kolom 2 - Judul</label>
+          <input id="ketCol2Title" placeholder="🎫 Via Gamepass">
+          <label style="margin-top:10px">Kolom 2 - List</label>
+          <textarea id="ketCol2List" style="min-height:100px" placeholder="Proses ± 5-7 Hari
+Pastikan Username Benar"></textarea>
+        </div>
+        <div class="input-group">
+          <label>Kolom 3 - Judul</label>
+          <input id="ketCol3Title" placeholder="🎁 Via Gift In Game">
+          <label style="margin-top:10px">Kolom 3 - List</label>
+          <textarea id="ketCol3List" style="min-height:100px" placeholder="Wajib Stand By di Server Map
+Pastikan Username Benar"></textarea>
+        </div>
+      </div>
+
+      <button class="btn btn-success" onclick="saveKeterangan()" style="width:100%;justify-content:center;padding:14px">💾 Simpan Keterangan</button>
     </div>
 
     <div class="page" id="page-harga" style="display:none">
@@ -436,16 +582,6 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         </div>
         <button class="btn btn-success" onclick="saveWelcome()">💾 Simpan Welcome Box</button>
       </div>
-      <div class="card">
-        <div class="card-title">Preview</div>
-        <div style="background:#141414;border:1px solid #2a2a2a;border-radius:14px;padding:24px 20px;text-align:center;position:relative">
-          <div style="position:absolute;top:10px;left:10px;width:14px;height:14px;border:1.5px solid #4a90e2;border-right:none;border-bottom:none"></div>
-          <div style="position:absolute;top:10px;right:10px;width:14px;height:14px;border:1.5px solid #4a90e2;border-left:none;border-bottom:none"></div>
-          <div id="previewWelcomeTitle" style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:#fff;margin-bottom:10px">WELCOME TO WAFASTOREONLY</div>
-          <div id="previewWelcomeTagline" style="font-size:11px;color:#8a8a8a;letter-spacing:2px;text-transform:uppercase">WHERE LEGENDS CREATE & EMPIRES RISE</div>
-          <div id="previewWelcomeMsg" style="margin-top:14px;font-size:11px;color:#a8a8a8;line-height:1.7;font-family:monospace">Halo Survivors! 👋</div>
-        </div>
-      </div>
     </div>
 
     <div class="page" id="page-syarat" style="display:none">
@@ -516,7 +652,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div style="font-size:13px;color:#a8a8a8;line-height:1.9">
           <b style="color:#e8e8e8">Web URL:</b> <a href="https://wafastoreonly-official.vercel.app" style="color:#4a90e2" target="_blank">wafastoreonly-official.vercel.app</a><br>
           <b style="color:#e8e8e8">Firebase:</b> wafastoreonly<br>
-          <b style="color:#e8e8e8">Version:</b> Admin Panel v3.4
+          <b style="color:#e8e8e8">Version:</b> Admin Panel v3.6
         </div>
       </div>
     </div>
@@ -555,19 +691,14 @@ function closeSidebar(){
 
 function checkAuthReady(){
   if(window.wafaAuth && window.wafaDB && window.wafaOnValue && window.wafaGet){
-    console.log('✅ Firebase ready, checking auth...');
     window.wafaAuth.onAuthStateChanged((user)=>{
-      console.log('🔐 User:', user ? user.uid : 'not logged in');
       if(user && window.ADMIN_UIDS.includes(user.uid)){
-        console.log('✅ Admin confirmed, loading data...');
         initAdmin(user);
       } else if(user){
-        console.log('❌ Bukan admin. UID:', user.uid);
         document.getElementById('adminLock').style.display='flex';
         document.getElementById('adminSidebar').style.display='none';
         document.getElementById('adminMain').style.display='none';
       } else {
-        console.log('❌ Belum login');
         document.getElementById('adminLock').style.display='flex';
         document.getElementById('adminSidebar').style.display='none';
         document.getElementById('adminMain').style.display='none';
@@ -600,6 +731,8 @@ function initAdmin(user){
   loadTheme();
   loadHarga();
   loadVouchers();
+  loadPopup();
+  loadKeterangan();
 
   setTimeout(handleUrlAction, 1000);
 }
@@ -645,7 +778,6 @@ async function handleUrlAction(){
   window.history.replaceState({}, '', 'admin.html');
 }
 
-// ===== DASHBOARD =====
 function loadDashboard(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'orders'), (snap)=>{
     const data = snap.val() || {};
@@ -699,7 +831,6 @@ function loadDashboard(){
   });
 }
 
-// ===== ORDERS =====
 function loadOrders(){
   const list = document.getElementById('listOrders');
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'orders'), (snap)=>{
@@ -764,10 +895,8 @@ async function deleteDiscordMessage(messageId){
     const webhookToken = match[2];
     const url = `https://discord.com/api/webhooks/${webhookId}/${webhookToken}/messages/${messageId}`;
     const res = await fetch(url, { method: 'DELETE' });
-    if(res.ok){ console.log('✅ Pesan Discord dihapus:', messageId); return true; }
-    console.log('⚠️ Gagal hapus pesan:', res.status);
-    return false;
-  }catch(e){ console.log('Delete Discord error:', e); return false; }
+    return res.ok;
+  }catch(e){ return false; }
 }
 
 window.prosesSelesai = async (id)=>{
@@ -878,7 +1007,6 @@ window.hapusOrder = async (id)=>{
   try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'orders/'+id)); toast('🗑️ Order dihapus'); }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== TOPUP DOMPET =====
 function loadTopups(){
   const list = document.getElementById('listTopup');
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'topup_saldo'), (snap)=>{
@@ -954,7 +1082,6 @@ window.hapusTopup = async (id)=>{
   try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'topup_saldo/'+id)); toast('🗑️ Dihapus'); }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== CHAT =====
 let currentChatUid = null;
 let chatUnsubscribe = null;
 
@@ -1049,7 +1176,6 @@ window.sendReply = async ()=>{
   }catch(e){ alert('Gagal kirim: '+e.message); }
 };
 
-// ===== CUSTOMERS =====
 function loadCustomers(){
   const list = document.getElementById('listCustomers');
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'users'), (snap)=>{
@@ -1086,7 +1212,6 @@ window.editSaldo = async (uid, saldoLama)=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== BRANDING =====
 let logoBase64 = null;
 let bannerBase64 = null;
 
@@ -1164,7 +1289,6 @@ window.saveBanner = async ()=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== GAME ICONS =====
 const GAME_LIST = [
   { key: 'roblox', name: 'Roblox', defaultLogo: './roblox.png', active: true },
   { key: 'mlbb', name: 'Mobile Legends', defaultLogo: './mlbb.png', active: false },
@@ -1247,28 +1371,15 @@ window.resetGameLogo = async (key)=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== WELCOME BOX =====
 function loadWelcome(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/welcome'), (snap)=>{
     const d = snap.val();
     if(!d) return;
     document.getElementById('welcomeActive').value = d.active === false ? 'false' : 'true';
-    if(d.title){ document.getElementById('welcomeTitle').value = d.title; updateWelcomePreview(); }
-    if(d.tagline){ document.getElementById('welcomeTagline').value = d.tagline; updateWelcomePreview(); }
-    if(d.message){ document.getElementById('welcomeMessage').value = d.message; updateWelcomePreview(); }
+    if(d.title) document.getElementById('welcomeTitle').value = d.title;
+    if(d.tagline) document.getElementById('welcomeTagline').value = d.tagline;
+    if(d.message) document.getElementById('welcomeMessage').value = d.message;
   });
-  ['welcomeTitle','welcomeTagline','welcomeMessage'].forEach(id=>{
-    document.getElementById(id)?.addEventListener('input', updateWelcomePreview);
-  });
-}
-
-function updateWelcomePreview(){
-  const t = document.getElementById('welcomeTitle').value || 'WELCOME TO WAFASTOREONLY';
-  const g = document.getElementById('welcomeTagline').value || 'WHERE LEGENDS CREATE & EMPIRES RISE';
-  const m = document.getElementById('welcomeMessage').value || 'Halo Survivors! 👋';
-  document.getElementById('previewWelcomeTitle').innerHTML = t;
-  document.getElementById('previewWelcomeTagline').innerHTML = g;
-  document.getElementById('previewWelcomeMsg').innerHTML = m.replace(/\n/g, '<br>');
 }
 
 window.saveWelcome = async ()=>{
@@ -1284,7 +1395,6 @@ window.saveWelcome = async ()=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== SYARAT =====
 function loadSyarat(){
   ['username','gamepass','gift'].forEach(key=>{
     window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/syarat/' + key), (snap)=>{
@@ -1316,7 +1426,6 @@ window.saveSyarat = async (key)=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== ANNOUNCEMENT =====
 function loadAnnouncement(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/announcement'), (snap)=>{
     const d = snap.val();
@@ -1333,7 +1442,6 @@ window.saveAnnouncement = async ()=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== THEME =====
 function loadTheme(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/theme'), (snap)=>{
     const d = snap.val();
@@ -1374,7 +1482,6 @@ window.resetTheme = async ()=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== HARGA ROBLOX =====
 function loadHarga(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/harga/roblox'), (snap)=>{
     const d = snap.val() || {};
@@ -1428,7 +1535,6 @@ window.saveHarga = async ()=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== VOUCHER =====
 function loadVouchers(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'vouchers'), (snap)=>{
     const d = snap.val() || {};
@@ -1557,7 +1663,174 @@ window.deleteVoucher = async (code)=>{
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== GLOBAL SEARCH =====
+// ==========================================
+// POP-UP PROMO
+// ==========================================
+let popupButtons = [];
+let popupImgBase64 = null;
+
+function loadPopup(){
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/popup'), (snap)=>{
+    const d = snap.val() || {};
+    document.getElementById('popupActive').value = d.active === false ? 'false' : 'true';
+    if(d.title) document.getElementById('popupTitle').value = d.title;
+    if(d.desc) document.getElementById('popupDesc').value = d.desc;
+    if(d.showPerDay) document.getElementById('popupShowPerDay').value = d.showPerDay;
+    if(d.image){
+      popupImgBase64 = d.image;
+      document.getElementById('popupImgName').innerText = '✅ Gambar sudah ada';
+    }
+    popupButtons = d.buttons || [];
+    renderPopupButtons();
+    renderPopupPreview();
+  });
+  ['popupTitle','popupDesc'].forEach(id=>{
+    document.getElementById(id)?.addEventListener('input', renderPopupPreview);
+  });
+}
+
+function renderPopupButtons(){
+  const list = document.getElementById('popupButtonsList');
+  if(!list) return;
+  list.innerHTML = '';
+  popupButtons.forEach((btn, idx)=>{
+    const row = document.createElement('div');
+    row.className = 'popup-btn-row';
+    row.innerHTML = `
+      <input type="text" placeholder="🎮" value="${btn.icon || ''}" onchange="updatePopupBtn(${idx},'icon',this.value)" maxlength="3">
+      <input type="text" placeholder="Discord" value="${btn.label || ''}" onchange="updatePopupBtn(${idx},'label',this.value)">
+      <input type="text" placeholder="https://discord.gg/..." value="${btn.url || ''}" onchange="updatePopupBtn(${idx},'url',this.value)">
+      <button class="btn-del" onclick="removePopupButton(${idx})">✕</button>
+    `;
+    list.appendChild(row);
+  });
+}
+
+window.addPopupButton = ()=>{
+  popupButtons.push({ icon: '🔗', label: '', url: '' });
+  renderPopupButtons();
+  renderPopupPreview();
+};
+
+window.removePopupButton = (idx)=>{
+  popupButtons.splice(idx, 1);
+  renderPopupButtons();
+  renderPopupPreview();
+};
+
+window.updatePopupBtn = (idx, key, value)=>{
+  popupButtons[idx][key] = value;
+  renderPopupPreview();
+};
+
+window.uploadPopupImg = (input)=>{
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 500*1024){ alert('❌ Gambar max 500KB'); input.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    popupImgBase64 = e.target.result;
+    document.getElementById('popupImgName').innerText = '✅ ' + file.name;
+    renderPopupPreview();
+  };
+  reader.readAsDataURL(file);
+};
+
+function detectPlatformClass(url){
+  if(!url) return '';
+  const u = url.toLowerCase();
+  if(u.includes('discord')) return 'discord';
+  if(u.includes('instagram')) return 'instagram';
+  if(u.includes('tiktok')) return 'tiktok';
+  if(u.includes('facebook') || u.includes('fb.com')) return 'facebook';
+  if(u.includes('wa.me') || u.includes('whatsapp')) return 'whatsapp';
+  if(u.includes('twitter') || u.includes('x.com')) return 'twitter';
+  if(u.includes('youtube')) return 'youtube';
+  if(u.includes('telegram') || u.includes('t.me')) return 'telegram';
+  return '';
+}
+
+function renderPopupPreview(){
+  const el = document.getElementById('popupPreview');
+  if(!el) return;
+  const title = document.getElementById('popupTitle')?.value || '🎉 Promo Spesial!';
+  const desc = document.getElementById('popupDesc')?.value || 'Gabung sosmed kami!';
+  let buttonsHtml = '';
+  popupButtons.forEach(btn=>{
+    if(btn.label && btn.url){
+      const cls = detectPlatformClass(btn.url);
+      buttonsHtml += `<div class="popup-btn-preview ${cls}">${btn.icon || '🔗'} ${btn.label}</div>`;
+    }
+  });
+  el.innerHTML = `
+    <div style="background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:24px;max-width:340px;margin:0 auto">
+      ${popupImgBase64 ? `<img src="${popupImgBase64}" style="width:100%;border-radius:12px;margin-bottom:14px">` : ''}
+      <div style="font-size:18px;font-weight:800;color:#e8e8e8;margin-bottom:8px">${title}</div>
+      <div style="font-size:12px;color:#a8a8a8;line-height:1.6;margin-bottom:14px">${desc}</div>
+      ${buttonsHtml}
+    </div>
+  `;
+}
+
+window.savePopup = async ()=>{
+  const data = {
+    active: document.getElementById('popupActive').value === 'true',
+    title: document.getElementById('popupTitle').value.trim(),
+    desc: document.getElementById('popupDesc').value.trim(),
+    showPerDay: parseInt(document.getElementById('popupShowPerDay').value) || 1,
+    buttons: popupButtons.filter(b=>b.label && b.url),
+    updatedAt: Date.now()
+  };
+  if(popupImgBase64) data.image = popupImgBase64;
+  try{
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/popup'), data);
+    toast('✅ Pop-up disimpan!');
+  }catch(e){ alert('Gagal: '+e.message); }
+};
+
+// ==========================================
+// KETERANGAN
+// ==========================================
+function loadKeterangan(){
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/keterangan'), (snap)=>{
+    const d = snap.val() || {};
+    document.getElementById('ketActive').value = d.active === false ? 'false' : 'true';
+    if(d.headerTitle) document.getElementById('ketHeaderTitle').value = d.headerTitle;
+    if(d.flag) document.getElementById('ketFlag').value = d.flag;
+    if(d.welcome) document.getElementById('ketWelcome').value = d.welcome;
+    if(d.whyTitle) document.getElementById('ketWhyTitle').value = d.whyTitle;
+    if(d.whyList) document.getElementById('ketWhyList').value = d.whyList;
+    if(d.col1Title) document.getElementById('ketCol1Title').value = d.col1Title;
+    if(d.col1List) document.getElementById('ketCol1List').value = d.col1List;
+    if(d.col2Title) document.getElementById('ketCol2Title').value = d.col2Title;
+    if(d.col2List) document.getElementById('ketCol2List').value = d.col2List;
+    if(d.col3Title) document.getElementById('ketCol3Title').value = d.col3Title;
+    if(d.col3List) document.getElementById('ketCol3List').value = d.col3List;
+  });
+}
+
+window.saveKeterangan = async ()=>{
+  const data = {
+    active: document.getElementById('ketActive').value === 'true',
+    headerTitle: document.getElementById('ketHeaderTitle').value.trim(),
+    flag: document.getElementById('ketFlag').value.trim(),
+    welcome: document.getElementById('ketWelcome').value,
+    whyTitle: document.getElementById('ketWhyTitle').value.trim(),
+    whyList: document.getElementById('ketWhyList').value,
+    col1Title: document.getElementById('ketCol1Title').value.trim(),
+    col1List: document.getElementById('ketCol1List').value,
+    col2Title: document.getElementById('ketCol2Title').value.trim(),
+    col2List: document.getElementById('ketCol2List').value,
+    col3Title: document.getElementById('ketCol3Title').value.trim(),
+    col3List: document.getElementById('ketCol3List').value,
+    updatedAt: Date.now()
+  };
+  try{
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/keterangan'), data);
+    toast('✅ Keterangan disimpan!');
+  }catch(e){ alert('Gagal: '+e.message); }
+};
+
 document.getElementById('globalSearch')?.addEventListener('input', (e)=>{
   const q = e.target.value.toLowerCase().trim();
   if(!q){ return; }
