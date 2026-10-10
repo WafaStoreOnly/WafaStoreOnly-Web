@@ -135,7 +135,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .popup-btn-preview.facebook{border-color:#1877F2;background:rgba(24,119,242,0.1)}
 .popup-btn-preview.whatsapp{border-color:#25D366;background:rgba(37,211,102,0.1)}
 .popup-btn-preview.sociabuzz{border-color:#FF6B35;background:rgba(255,107,53,0.1)}
-/* Bot AI specific */
 .bot-status-banner{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:linear-gradient(135deg,rgba(107,92,231,0.15),rgba(74,144,226,0.15));border:1px solid rgba(107,92,231,0.4);border-radius:14px;margin-bottom:14px}
 .bot-status-banner .left{display:flex;align-items:center;gap:14px}
 .bot-status-banner .emoji{font-size:36px}
@@ -188,7 +187,7 @@ window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onV
 window.wafaAuth=auth; window.wafaSignOut=signOut;
 window.WEBHOOK_ORDER_PROSES = "https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
 window.WEBHOOK_ORDER_DONE = "https://discord.com/api/webhooks/1553277385795829770/CZA2wz3K99vCfKa5m0xBATsS4KKL-uJfAhKEN5X0pOwhUvGnWB-q6EV3bCzOzITQ3t5X";
-window.WEBHOOK_DOMPET_DONE = "https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB";
+window.WEBHOOK_TOPUP_LOGS = "https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB";
 window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 </script>
 </head>
@@ -308,7 +307,6 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       </div>
     </div>
 
-    <!-- ===== PAGE BOT AI (BARU) ===== -->
     <div class="page" id="page-botai" style="display:none">
       <div class="page-title">🤖 Bot AI</div>
       <div class="page-sub">Atur bot auto-reply untuk chat floating di kanan bawah web</div>
@@ -371,10 +369,10 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       <div class="card">
         <div class="card-title">Contoh FAQ Siap Pakai</div>
         <div style="font-size:12px;color:var(--muted);line-height:1.8">
-          Kalo lo males ngetik dari nol, tinggal klik tombol di bawah, nanti auto-isi 6 FAQ paling umum:
+          Kalo lo males ngetik dari nol, tinggal klik tombol di bawah, nanti auto-isi 7 FAQ paling umum:
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-          <button class="btn btn-purple btn-sm" onclick="loadSampleFaq()">📋 Load 6 FAQ Default</button>
+          <button class="btn btn-purple btn-sm" onclick="loadSampleFaq()">📋 Load 7 FAQ Default</button>
         </div>
       </div>
 
@@ -735,9 +733,7 @@ function updateBotStatusUI(){
   }
 }
 
-function toggleBotMain(){
-  updateBotStatusUI();
-}
+function toggleBotMain(){ updateBotStatusUI(); }
 
 function renderFaqList(){
   const list = document.getElementById('faqList');
@@ -773,26 +769,17 @@ function escapeHtml(str){
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function addFaqItem(){
-  botFaqArray.push({ keywords: '', answer: '' });
-  renderFaqList();
-}
+function addFaqItem(){ botFaqArray.push({ keywords: '', answer: '' }); renderFaqList(); }
 window.addFaqItem = addFaqItem;
 
-function deleteFaqItem(idx){
-  if(!confirm('Hapus FAQ ini?')) return;
-  botFaqArray.splice(idx, 1);
-  renderFaqList();
-}
+function deleteFaqItem(idx){ if(!confirm('Hapus FAQ ini?')) return; botFaqArray.splice(idx, 1); renderFaqList(); }
 window.deleteFaqItem = deleteFaqItem;
 
-function updateFaqField(idx, field, value){
-  if(botFaqArray[idx]) botFaqArray[idx][field] = value;
-}
+function updateFaqField(idx, field, value){ if(botFaqArray[idx]) botFaqArray[idx][field] = value; }
 window.updateFaqField = updateFaqField;
 
 function loadSampleFaq(){
-  if(!confirm('Load 6 FAQ default? Ini bakal ngeganti FAQ yang ada sekarang.')) return;
+  if(!confirm('Load 7 FAQ default? Ini bakal ngeganti FAQ yang ada sekarang.')) return;
   botFaqArray = [
     { keywords: 'cara order, gimana order, order gimana, cara beli, cara top up', answer: 'Cara order gampang banget kak:\n1. Login/Daftar akun dulu\n2. Buka menu "Top Up Game" di sidebar\n3. Pilih metode & masukkan username Roblox\n4. Pilih paket, lanjut bayar, upload bukti TF\n5. Tunggu admin proses (5-10 menit)\n\nKalau ada kendala, chat Admin langsung ya 🙏' },
     { keywords: 'metode pembayaran, bayar pake apa, cara bayar, payment', answer: 'Pembayaran bisa pake:\n• QRIS (semua bank & e-wallet)\n• DANA\n• GoPay\n• Seabank\n• Saldo Dompet Web\n\nPilih di halaman pembayaran ya kak 😊' },
@@ -803,7 +790,7 @@ function loadSampleFaq(){
     { keywords: 'admin, chat admin, hubungi admin, contact', answer: 'Buat chat Admin langsung, klik menu "💬 Chat Admin" di sidebar ya kak. Admin bakal bales secepatnya 😊' }
   ];
   renderFaqList();
-  toast('✅ 6 FAQ default berhasil di-load');
+  toast('✅ 7 FAQ default berhasil di-load');
 }
 window.loadSampleFaq = loadSampleFaq;
 
@@ -818,18 +805,8 @@ async function saveBotConfig(){
   const enabled = document.getElementById('botEnabledToggle').checked;
   const aiEnabled = document.getElementById('botAiToggle').checked;
   const systemPrompt = document.getElementById('botSystemPrompt').value.trim();
-  
-  // Filter FAQ yang keisi lengkap
   const cleanFaq = botFaqArray.filter(f => f.keywords && f.keywords.trim() && f.answer && f.answer.trim());
-  
-  const data = {
-    enabled: enabled,
-    aiEnabled: aiEnabled,
-    systemPrompt: systemPrompt,
-    faq: cleanFaq,
-    updatedAt: Date.now()
-  };
-  
+  const data = { enabled, aiEnabled, systemPrompt, faq: cleanFaq, updatedAt: Date.now() };
   try{
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/bot_ai'), data);
     toast('✅ Pengaturan Bot AI disimpan!');
@@ -1009,7 +986,8 @@ window.approveTopup = async (id)=>{
     const saldoLama = userSnap.val() || 0; const saldoBaru = saldoLama + nominal;
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'users/'+t.uid), { saldo: saldoBaru });
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'topup_saldo/'+id), { status:'selesai', approvedAt:Date.now() });
-    if(window.WEBHOOK_DOMPET_DONE){ fetch(window.WEBHOOK_DOMPET_DONE, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content:`✅ **TOP UP BERHASIL**\nID: #${id.toString().slice(-6)}\nUser: ${sensorEmail(t.email||'-')}\nNominal: Rp${nominal.toLocaleString('id-ID')}\nSaldo sekarang: Rp${saldoBaru.toLocaleString('id-ID')}` }) }).catch(()=>{}); }
+    // Kirim log sukses ke channel #logs-topup-dompet
+    fetch("https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB", { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content:`✅ **TOP UP BERHASIL**\nID: #${id.toString().slice(-6)}\nUser: ${sensorEmail(t.email||'-')}\nNominal: Rp${nominal.toLocaleString('id-ID')}\nSaldo sekarang: Rp${saldoBaru.toLocaleString('id-ID')}` }) }).catch(()=>{});
     toast(`✅ Saldo Rp${nominal.toLocaleString('id-ID')} ditambah!`);
   }catch(e){ alert('Gagal: '+e.message); }
 };
@@ -1258,7 +1236,6 @@ window.saveVoucher = async ()=>{
 window.toggleVoucherActive = async (code, currentActive)=>{ try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'vouchers/' + code), { active: !currentActive, updatedAt: Date.now() }); toast('✅ Diubah'); }catch(e){ alert('Gagal: '+e.message); } };
 window.deleteVoucher = async (code)=>{ if(!confirm(`Hapus voucher ${code}?`)) return; try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'vouchers/' + code)); toast('🗑️ Dihapus'); }catch(e){ alert('Gagal: '+e.message); } };
 
-// POP-UP PROMO
 let popupButtons = [];
 let popupImgBase64 = null;
 function loadPopup(){
@@ -1309,7 +1286,6 @@ window.savePopup = async ()=>{
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/popup'), data); toast('✅ Pop-up disimpan!'); }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// KETERANGAN
 function loadKeterangan(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/keterangan'), (snap)=>{
     const d = snap.val() || {};
