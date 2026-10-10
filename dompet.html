@@ -34,13 +34,17 @@ const db = getDatabase(app);
 const auth = getAuth(app);
 window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onValue; window.wafaGet=get; window.wafaUpdate=update;
 window.wafaAuth=auth;
-window.DISCORD_URL="https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
 
-// ===== CEK LOGIN (REDIRECT DENGAN TARGET) =====
+// ===== WEBHOOK TERPISAH =====
+// #proses-topup-dompet = antrian bukti TF top up dompet masuk
+window.WEBHOOK_TOPUP_PROSES = "https://discord.com/api/webhooks/1553275076332359782/Ndn9EePBTCJe7EWV4esTErBZZwrLGbBMj9kybncr8urHVnq4-ydeCWxl4Dp7kQgC9O64";
+// #logs-topup-dompet = log sukses approve (dari admin.html)
+window.WEBHOOK_TOPUP_LOGS = "https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB";
+
 let uid = localStorage.getItem('wafa_uid');
-if(!uid){ 
+if(!uid){
   sessionStorage.setItem('wafa_redirect_after_login', 'dompet');
-  window.location.href='login.html'; 
+  window.location.href='login.html';
 }
 onAuthStateChanged(auth, (user)=>{ if(user && !localStorage.getItem('wafa_uid')){ localStorage.setItem('wafa_uid', user.uid); } });
 </script>
@@ -122,9 +126,6 @@ async function cekBuktiValid(file){
     let {data:{text}}=await Tesseract.recognize(file,'ind+eng');
     let lower=text.toLowerCase();
     let lowerNoSpace=lower.replace(/\s/g,'');
-    console.log('=== OCR DEBUG DOMPET ===');
-    console.log('TEXT:', text);
-
     document.getElementById('cek-status').innerText='2/2 Cek penerima...';
     let angkaSaja = lowerNoSpace.replace(/o/g,'0').replace(/[^0-9]/g,'');
     let teksSaja = lower.replace(/[^a-z]/g,'');
@@ -133,9 +134,7 @@ async function cekBuktiValid(file){
     let isAngka = ciriAngka.some(x => angkaSaja.includes(x));
     let isNama = ciriNama.some(x => teksSaja.includes(x));
     let isQris = lower.includes('qris') || lower.includes('qr ');
-    console.log('isAngka:', isAngka, '| isNama:', isNama, '| isQris:', isQris);
     if(!isAngka && !isNama && !isQris){ document.getElementById('loadingDetect').remove(); return {valid:false,reason:`❌ SALAH TUJUAN!\n\nSistem ga nemu nomor/nama WafaStoreOnly di bukti TF.`}; }
-
     document.getElementById('loadingDetect').remove();
     return {valid:true};
   }catch(e){ let l=document.getElementById('loadingDetect');if(l)l.remove(); return {valid:false,reason:`❌ Gagal baca: ${e.message}`}; }
@@ -155,7 +154,6 @@ function renderDompet(){
 function calcDompet(){
   let j = parseInt(document.getElementById('nominalDompet').value) || 0;
   document.getElementById('totalDompet').innerText = `Total bayar: Rp${j.toLocaleString('id-ID')}`;
-
   if (j >= 10000 && typeof convertQRISDinamis === 'function') {
     try {
       const qrisString = convertQRISDinamis(j);
@@ -197,7 +195,6 @@ async function downloadQRIS(){
     else alert('❌ Isi nominal dulu minimal Rp10.000');
     return;
   }
-
   try {
     const qrImg = await getQRImage('qrisCanvas');
     const canvas = document.createElement('canvas');
@@ -207,7 +204,6 @@ async function downloadQRIS(){
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, 400, 400);
     ctx.drawImage(qrImg, 40, 40, 320, 320);
-
     canvas.toBlob(function(blob){
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -219,9 +215,7 @@ async function downloadQRIS(){
       URL.revokeObjectURL(url);
       if(typeof wsToast === 'function') wsToast('✅ QRIS berhasil di-download!');
     }, 'image/png');
-  } catch(e) {
-    alert('❌ Gagal download: ' + e.message);
-  }
+  } catch(e) { alert('❌ Gagal download: ' + e.message); }
 }
 
 async function uploadBuktiDompet(){
@@ -247,20 +241,18 @@ async function uploadBuktiDompet(){
         if(window.wafaDB){ await window.wafaSet(window.wafaRef(window.wafaDB, 'topup_saldo/'+dataId), data); }
       }catch(err){ console.log('Firebase error:', err); alert('❌ Gagal simpan ke server: '+err.message); return; }
 
-      let riwayat=JSON.parse(localStorage.getItem('wafa_dompet')||'[]');
-      riwayat.unshift(data);
-      localStorage.setItem('wafa_dompet',JSON.stringify(riwayat));
-      renderRiwayat();
+      // Riwayat otomatis ke-render dari attachDompetListener (Firebase onValue)
 
       let emailSensor=sensorEmail(userData.email||'-');
       const text=`💰 **TOP UP DOMPET BARU**\nID: #${dataId.toString().slice(-6)}\nNominal: Rp${nominal.toLocaleString('id-ID')}\nBuyer: ${emailSensor} (${userData.nickname||'-'})\nUID: ${uid}\nTanggal: ${data.date}\n\n⏳ Menunggu approve admin`;
 
+      // Kirim ke channel #proses-topup-dompet (BUKAN channel order Robux)
       try{
         fetch(r.result).then(r=>r.blob()).then(blob=>{
           let form=new FormData();
           form.append('payload_json', JSON.stringify({content: text}));
           form.append('files[0]', blob, `bukti-dompet-${dataId}.jpg`);
-          fetch(window.DISCORD_URL+"?with_components=true", {method:'POST', body:form});
+          fetch(window.WEBHOOK_TOPUP_PROSES + "?with_components=true", {method:'POST', body:form});
         });
       }catch(e){}
 
@@ -269,19 +261,8 @@ async function uploadBuktiDompet(){
   }; input.click();
 }
 
-function renderRiwayat(){
-  let riwayat=JSON.parse(localStorage.getItem('wafa_dompet')||'[]');
-  let el=document.getElementById('riwayatDompet');
-  if(riwayat.length==0){el.innerHTML='Belum ada riwayat';return;}
-  el.innerHTML='';
-  riwayat.forEach(d=>{
-    let div=document.createElement('div');
-    div.className='riwayat-item';
-    let color = d.status=='selesai' ? '#4ade80' : d.status=='batal' ? '#ef4444' : '#fbbf24';
-    div.innerHTML=`<div><b>Rp${d.nominal.toLocaleString('id-ID')}</b><div style="font-size:10px;color:#5a5a5a;margin-top:2px">${d.date}</div></div><div class="riwayat-badge" style="background:${color}20;color:${color};border:1px solid ${color}60">${d.status.toUpperCase()}</div>`;
-    el.appendChild(div);
-  });
-}
+// Fungsi ini dikosongin — render riwayat sepenuhnya dari Firebase (attachDompetListener)
+function renderRiwayat(){ /* intentionally empty */ }
 
 async function loadUser(){
   try{
@@ -330,22 +311,14 @@ function attachDompetListener(){
 if(typeof wsSetActive==='function') wsSetActive('dompet');
 if(typeof wsSetTitle==='function') wsSetTitle('👛 Dompet Saya');
 renderDompet();
-renderRiwayat();
 loadUser();
 attachDompetListener();
 
 function loadBrandingDompet(){
-  if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){
-    setTimeout(loadBrandingDompet, 500);
-    return;
-  }
+  if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){ setTimeout(loadBrandingDompet, 500); return; }
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/branding'), (snap)=>{
-    const d = snap.val();
-    if(!d) return;
-    if(d.logo){
-      const sbLogo = document.querySelector('.ws-logo img');
-      if(sbLogo) sbLogo.src = d.logo;
-    }
+    const d = snap.val(); if(!d) return;
+    if(d.logo){ const sbLogo = document.querySelector('.ws-logo img'); if(sbLogo) sbLogo.src = d.logo; }
     if(d.brandName){
       const brandEl = document.querySelector('.ws-logo span');
       if(brandEl) brandEl.innerText = d.brandName;
