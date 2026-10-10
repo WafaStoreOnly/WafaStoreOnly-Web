@@ -155,7 +155,7 @@ window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onV
 window.wafaAuth=auth;
 window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 window.DISCORD_URL="https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
-onAuthStateChanged(auth, (user)=>{ 
+onAuthStateChanged(auth, (user)=>{
   if(user && !localStorage.getItem('wafa_uid')) localStorage.setItem('wafa_uid', user.uid);
   if(typeof wsLoadUser === 'function') wsLoadUser();
 });
@@ -371,8 +371,6 @@ Selamat datang di rumah baru kalian.</div>
 <script src="./harga-voucher.js"></script>
 <script src="./sidebar.js"></script>
 <script>
-// NOTE: Chat Admin & Bot sekarang ada di sidebar.js
-// Fungsi addBotMsg dipanggil dari sidebar.js via wsAddBotMsg
 function addBotMsg(txt){
   if(typeof wsAddBotMsg === 'function') wsAddBotMsg(txt);
 }
@@ -562,10 +560,10 @@ async function sendDiscordWithBukti(o, dataUrl, judul){
   ], footer: { text: `UID: ${o.uid || '-'} • Status: OTOMATIS DIPROSES ⚡` } };
   if(extra) embedData.description = extra;
   const allMessageIds = []; let lastChannelId = '';
-  
-  // Pesan 1: Embed + Tombol
+
+  // ====== FIX: with_components=true biar tombol muncul ======
   try{
-    const res1 = await fetch(window.DISCORD_URL + "?wait=true", {
+    const res1 = await fetch(window.DISCORD_URL + "?wait=true&with_components=true", {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: `💸 **BUKTI TF MASUK! [VALID ✅]**`, embeds: [embedData], components: [{ type: 1, components: [
         { type: 2, style: 5, label: "✅ KONFIRMASI SELESAI", url: selesaiUrl },
@@ -575,8 +573,7 @@ async function sendDiscordWithBukti(o, dataUrl, judul){
     const data1 = await res1.json();
     if(data1 && data1.id){ allMessageIds.push(data1.id); if(data1.channel_id) lastChannelId = data1.channel_id; console.log('✅ Pesan 1 (embed + tombol):', data1.id); }
   }catch(e){ console.log('Err 1:', e); }
-  
-  // Pesan 2: Gambar
+
   try{
     const parts = dataUrl.split(','); const mimeMatch = parts[0].match(/:(.*?);/);
     const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
@@ -590,7 +587,7 @@ async function sendDiscordWithBukti(o, dataUrl, judul){
     const data2 = await res2.json();
     if(data2 && data2.id){ allMessageIds.push(data2.id); if(data2.channel_id) lastChannelId = data2.channel_id; console.log('✅ Pesan 2 (gambar):', data2.id); }
   }catch(e){ console.log('Err 2:', e); }
-  
+
   if(allMessageIds.length > 0 && window.wafaDB){
     try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+o.id), { discordMessageIds: allMessageIds, discordMessageId: allMessageIds[allMessageIds.length - 1], discordChannelId: lastChannelId }); }catch(e){}
   }
@@ -859,11 +856,10 @@ function buatPesananDanUpload(){
   let newId = saveOrder(lastOrderData);
   if(typeof saveVoucherUsage === 'function' && window.voucherApplied) saveVoucherUsage(newId);
   if(typeof wsToast==='function') wsToast(`✅ Pesanan #${newId.toString().slice(-6)} dibuat!`);
-  openPesanan(); addBotMsg(`Yosh pesanan #${newId.toString().slice(-6)} masuk! 📤 Upload bukti TF ya! ⏰ Sisa 10 menit`); 
-  if(typeof wsToggleBotChat === 'function') { const b = document.getElementById('botChatBox'); if(!b.classList.contains('open')) wsToggleBotChat(); }
+  openPesanan(); addBotMsg(`Yosh pesanan #${newId.toString().slice(-6)} masuk! 📤 Upload bukti TF ya! ⏰ Sisa 10 menit`);
+  if(typeof wsToggleBotChat === 'function') { const b = document.getElementById('wsChatPanel'); if(b && !b.classList.contains('open')) wsToggleBotChat(); }
 }
 
-// POPUP PROMO
 function checkPopupPromo(){
   if(!window.wafaDB || !window.wafaOnValue){ setTimeout(checkPopupPromo, 500); return; }
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/popup'), (snap)=>{
@@ -920,7 +916,6 @@ function showPopupPromo(d){
 function closePopupPromo(){ document.getElementById('popupPromo').classList.remove('show'); }
 document.getElementById('popupPromo')?.addEventListener('click', (e)=>{ if(e.target.id === 'popupPromo') closePopupPromo(); });
 
-// LOAD KETERANGAN
 function loadKeteranganDinamis(){
   if(!window.wafaDB || !window.wafaOnValue){ setTimeout(loadKeteranganDinamis, 500); return; }
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/keterangan'), (snap)=>{
