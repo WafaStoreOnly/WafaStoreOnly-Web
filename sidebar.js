@@ -1,4 +1,4 @@
-// SIDEBAR WAFASTORE - AUTO INJECT WITH FIREBASE GAME ICONS
+// SIDEBAR WAFASTORE - AUTO INJECT WITH FIREBASE GAME ICONS + CHAT WIDGET
 (function(){
   const sidebarHTML = `
     <div id="wsOverlay" onclick="wsCloseSidebar()"></div>
@@ -62,6 +62,10 @@
 
         <div class="ws-item" id="wsMenuLeaderboard" onclick="wsOpen('leaderboard')">
           🏆 <span>Leaderboard</span>
+        </div>
+
+        <div class="ws-item" id="wsMenuChat" onclick="wsOpenChatAdmin()">
+          💬 <span>Chat Admin</span>
         </div>
 
         <div class="ws-item" id="wsMenuAdmin" style="display:none" onclick="wsOpen('admin')">
@@ -135,48 +139,41 @@ function wsToggleTopup(e){
   sub.classList.toggle('open');
 }
 
-// ===== NAVIGASI GAME (butuh login) =====
+// ===== NAVIGASI GAME =====
 function wsGo(page){
   wsCloseSidebar();
-  
   if(!wsRequireLogin('Top Up Game', 'roblox')) return;
-  
   if(page === 'roblox'){
     if(typeof openRoblox === 'function') openRoblox();
     else window.location.href = 'index.html#roblox';
   } else {
-    const statusEl = document.querySelector(`[data-game-status="${page}"]`);
     const gameName = document.querySelector(`[data-game-name="${page}"]`);
     const nameText = gameName ? gameName.innerText : page;
-    if(statusEl && statusEl.innerText.trim() === 'SOON'){
-      alert(`⚡ Layanan ${nameText} sedang diproses.\n\nTunggu update dari admin ya! 🙏`);
-    } else {
-      alert(`⚡ Layanan ${nameText} sedang diproses.\n\nTunggu update dari admin ya! 🙏`);
-    }
+    alert(`⚡ Layanan ${nameText} sedang diproses.\n\nTunggu update dari admin ya! 🙏`);
   }
 }
 
 // ===== NAVIGASI MENU =====
 function wsOpen(page){
   wsCloseSidebar();
-  
+
   if(page === 'beranda'){
     if(typeof goHome === 'function') goHome();
     else window.location.href = 'index.html';
     return;
   }
-  
+
   const protectedPages = {
     'pesanan': { name: 'Pesanan Saya', target: 'pesanan' },
     'dompet':  { name: 'Dompet',       target: 'dompet' },
     'profil':  { name: 'Profil',       target: 'profil' },
     'admin':   { name: 'Admin Panel',  target: 'admin' }
   };
-  
+
   if(protectedPages[page]){
     if(!wsRequireLogin(protectedPages[page].name, protectedPages[page].target)) return;
   }
-  
+
   if(page === 'pesanan'){
     if(typeof openPesanan === 'function') openPesanan();
     else window.location.href = 'index.html#pesanan';
@@ -192,9 +189,32 @@ function wsOpen(page){
   }
 }
 
+// ===== CHAT ADMIN (buka panel chat dari menu sidebar) =====
+function wsOpenChatAdmin(){
+  wsCloseSidebar();
+  if(!wsIsLoggedIn()){
+    if(confirm('🔒 Chat butuh login dulu.\n\nMau login sekarang?')){
+      sessionStorage.setItem('wafa_redirect_after_login', 'index');
+      window.location.href = 'login.html';
+    }
+    return;
+  }
+  const panel = document.getElementById('wsChatPanel');
+  if(!panel){
+    wsToast('❌ Panel chat belum siap, refresh dulu');
+    return;
+  }
+  if(!panel.classList.contains('open')){
+    wsToggleBotChat();
+  } else {
+    const inp = document.getElementById('wsChatTextInput');
+    if(inp) inp.focus();
+  }
+}
+
 function wsSetActive(menu){
   document.querySelectorAll('.ws-item').forEach(i=>i.classList.remove('active'));
-  const map = { 'beranda': 'wsMenuBeranda', 'pesanan': 'wsMenuPesanan', 'dompet': 'wsMenuDompet', 'profil': 'wsMenuProfil', 'leaderboard': 'wsMenuLeaderboard', 'admin': 'wsMenuAdmin' };
+  const map = { 'beranda': 'wsMenuBeranda', 'pesanan': 'wsMenuPesanan', 'dompet': 'wsMenuDompet', 'profil': 'wsMenuProfil', 'leaderboard': 'wsMenuLeaderboard', 'chat': 'wsMenuChat', 'admin': 'wsMenuAdmin' };
   const id = map[menu];
   if(id){ const el = document.getElementById(id); if(el) el.classList.add('active'); }
 }
@@ -345,12 +365,417 @@ function wsLoadTheme(){
   }catch(e){ console.log('wsLoadTheme error:', e); }
 }
 
+// ============================================================
+// ===== CHAT WIDGET (CHAT ADMIN MANUAL) =====
+// ============================================================
+let wsBotConfig = { enabled: false, aiEnabled: false, systemPrompt: '', faq: [] };
+let wsChatUnsub = null;
+let wsChatOpened = false;
+let wsLastMsgCount = 0;
+
+// --- Inject CSS ---
+(function wsInjectChatCSS(){
+  if(document.getElementById('wsChatCSS')) return;
+  const style = document.createElement('style');
+  style.id = 'wsChatCSS';
+  style.textContent = `
+    #wsChatFab{position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#4a90e2,#6b5ce7);border:none;color:#fff;font-size:24px;cursor:pointer;z-index:9000;box-shadow:0 8px 24px rgba(74,144,226,0.45);display:none;align-items:center;justify-content:center;transition:transform 0.2s,box-shadow 0.2s;padding:0}
+    #wsChatFab.show{display:flex}
+    #wsChatFab:hover{transform:scale(1.08);box-shadow:0 10px 30px rgba(74,144,226,0.6)}
+    #wsChatFab .ws-chat-badge{position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;font-size:10px;font-weight:800;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center;display:none;line-height:1.4}
+    #wsChatFab .ws-chat-badge.show{display:block}
+    #wsChatPanel{position:fixed;right:20px;bottom:88px;width:360px;max-width:calc(100vw - 40px);height:520px;max-height:calc(100vh - 120px);background:#141414;border:1px solid #2a2a2a;border-radius:16px;display:none;flex-direction:column;overflow:hidden;z-index:9001;box-shadow:0 20px 60px rgba(0,0,0,0.7)}
+    #wsChatPanel.open{display:flex}
+    #wsChatHeader{padding:12px 14px;background:#1a1a1a;border-bottom:1px solid #2a2a2a;display:flex;align-items:center;gap:10px;flex-shrink:0}
+    #wsChatHeader .ws-chat-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+    #wsChatHeader .ws-chat-headinfo{flex:1;min-width:0}
+    #wsChatHeader .ws-chat-title{font-weight:800;font-size:13px;color:#e8e8e8;display:block;line-height:1.2}
+    #wsChatHeader .ws-chat-status{font-size:10px;color:#4ade80;display:block;margin-top:2px;font-weight:600}
+    #wsChatHeader .ws-chat-status.off{color:#8a8a8a}
+    #wsChatHeader .ws-chat-close{background:transparent;border:none;color:#8a8a8a;font-size:18px;cursor:pointer;padding:4px 8px;line-height:1}
+    #wsChatHeader .ws-chat-close:hover{color:#e8e8e8}
+    #wsChatMessages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:#0f0f0f}
+    #wsChatMessages::-webkit-scrollbar{width:4px}
+    #wsChatMessages::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:4px}
+    .ws-msg{max-width:82%;padding:9px 13px;border-radius:14px;font-size:12.5px;line-height:1.5;word-wrap:break-word;white-space:pre-wrap;font-family:inherit}
+    .ws-msg.user{background:#4a90e2;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+    .ws-msg.bot{background:linear-gradient(135deg,#6b5ce7,#4a90e2);color:#fff;align-self:flex-start;border-bottom-left-radius:4px}
+    .ws-msg.admin{background:#1a1a1a;border:1px solid #2a2a2a;color:#e8e8e8;align-self:flex-start;border-bottom-left-radius:4px}
+    .ws-msg img{max-width:100%;border-radius:8px;margin-top:6px;display:block}
+    .ws-msg .ws-msg-time{font-size:9px;opacity:0.55;margin-top:4px;display:block;text-align:right}
+    .ws-typing{display:flex;gap:3px;padding:11px 14px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;border-bottom-left-radius:4px;align-self:flex-start;width:fit-content}
+    .ws-typing span{width:6px;height:6px;background:#8a8a8a;border-radius:50%;animation:wsDot 1.4s infinite}
+    .ws-typing span:nth-child(2){animation-delay:0.2s}
+    .ws-typing span:nth-child(3){animation-delay:0.4s}
+    @keyframes wsDot{0%,60%,100%{opacity:0.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+    .ws-chat-quick{display:flex;gap:6px;padding:0 10px 8px 10px;flex-wrap:wrap;background:#1a1a1a}
+    .ws-chat-quick button{padding:6px 11px;border-radius:16px;border:1px solid #2a2a2a;background:#0f0f0f;color:#a8a8a8;font-size:11px;cursor:pointer;font-family:inherit;transition:0.15s}
+    .ws-chat-quick button:hover{border-color:#4a90e2;color:#4a90e2}
+    #wsChatInput{display:flex;gap:6px;padding:10px;border-top:1px solid #2a2a2a;background:#1a1a1a;align-items:center;flex-shrink:0}
+    #wsChatInput input[type=text]{flex:1;padding:10px 14px;border-radius:20px;border:1px solid #2a2a2a;background:#0f0f0f;color:#e8e8e8;outline:none;font-size:12.5px;font-family:inherit;min-width:0}
+    #wsChatInput input[type=text]:focus{border-color:#4a90e2}
+    #wsChatInput .ws-attach,#wsChatInput .ws-send{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;padding:0;font-family:inherit}
+    #wsChatInput .ws-attach{background:#2a2a2a;color:#e8e8e8}
+    #wsChatInput .ws-attach:hover{background:#3a3a3a}
+    #wsChatInput .ws-send{background:#4a90e2;color:#fff}
+    #wsChatInput .ws-send:hover{background:#3a7bc8}
+    #wsChatEmpty{text-align:center;color:#5a5a5a;font-size:12px;padding:24px 16px;line-height:1.7}
+    #wsChatEmpty .big{font-size:40px;margin-bottom:8px;line-height:1}
+    @media (max-width:500px){
+      #wsChatPanel{right:10px;left:10px;bottom:80px;width:auto;height:calc(100vh - 100px);max-height:calc(100vh - 100px)}
+      #wsChatFab{right:14px;bottom:14px;width:52px;height:52px}
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+// --- Inject HTML ---
+(function wsInjectChatHTML(){
+  if(document.getElementById('wsChatFab')) return;
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `
+    <button id="wsChatFab" onclick="wsToggleBotChat()" aria-label="Chat">
+      💬<span class="ws-chat-badge" id="wsChatBadge">0</span>
+    </button>
+    <div id="wsChatPanel">
+      <div id="wsChatHeader">
+        <div class="ws-chat-avatar">💬</div>
+        <div class="ws-chat-headinfo">
+          <span class="ws-chat-title" id="wsChatTitle">Chat Admin</span>
+          <span class="ws-chat-status" id="wsChatStatus">Online • Bales cepet</span>
+        </div>
+        <button class="ws-chat-close" onclick="wsToggleBotChat()" aria-label="Close">✕</button>
+      </div>
+      <div id="wsChatMessages">
+        <div id="wsChatEmpty">
+          <div class="big">💬</div>
+          Halo kak! Ada yang bisa dibantu?<br>Chat langsung ke Admin ya.
+        </div>
+      </div>
+      <div class="ws-chat-quick" id="wsChatQuick">
+        <button onclick="wsQuickAsk('Cara order gimana?')">Cara order</button>
+        <button onclick="wsQuickAsk('Metode pembayaran apa aja?')">Pembayaran</button>
+        <button onclick="wsQuickAsk('Berapa lama prosesnya?')">Lama proses</button>
+        <button onclick="wsQuickAsk('Minimal top up berapa?')">Min top up</button>
+      </div>
+      <div id="wsChatInput">
+        <input type="file" id="wsChatFileInput" accept="image/*" style="display:none" onchange="wsUploadChatImage(this)">
+        <button class="ws-attach" onclick="document.getElementById('wsChatFileInput').click()" title="Kirim gambar">📎</button>
+        <input type="text" id="wsChatTextInput" placeholder="Ketik pesan..." onkeypress="if(event.key==='Enter')wsSendChatMsg()">
+        <button class="ws-send" onclick="wsSendChatMsg()" title="Kirim">➤</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+})();
+
+// --- Load bot config dari Firebase (dipake nanti kalau bot udah aktif) ---
+function wsLoadBotConfig(){
+  if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){
+    setTimeout(wsLoadBotConfig, 500);
+    return;
+  }
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/bot_ai'), (snap)=>{
+    const d = snap.val() || {};
+    wsBotConfig = {
+      enabled: d.enabled === true,
+      aiEnabled: d.aiEnabled === true,
+      systemPrompt: d.systemPrompt || '',
+      faq: Array.isArray(d.faq) ? d.faq : []
+    };
+    const statusEl = document.getElementById('wsChatStatus');
+    if(statusEl){
+      if(wsBotConfig.enabled){
+        statusEl.innerText = 'Bot Aktif • Siap bantu 24/7';
+        statusEl.classList.remove('off');
+      } else {
+        statusEl.innerText = 'Online • Bales manual';
+        statusEl.classList.remove('off');
+      }
+    }
+  });
+}
+
+// --- Show / hide FAB ---
+function wsSyncChatFab(){
+  const fab = document.getElementById('wsChatFab');
+  if(!fab) return;
+  if(wsIsLoggedIn()){
+    fab.classList.add('show');
+  } else {
+    fab.classList.remove('show');
+  }
+}
+
+// --- Toggle chat panel ---
+function wsToggleBotChat(){
+  if(!wsIsLoggedIn()){
+    if(confirm('🔒 Chat butuh login dulu.\n\nMau login sekarang?')){
+      sessionStorage.setItem('wafa_redirect_after_login', 'index');
+      window.location.href = 'login.html';
+    }
+    return;
+  }
+  const panel = document.getElementById('wsChatPanel');
+  if(!panel) return;
+  const willOpen = !panel.classList.contains('open');
+  panel.classList.toggle('open');
+  wsChatOpened = willOpen;
+  if(willOpen){
+    wsChatOpenSession();
+    setTimeout(()=>{ const inp = document.getElementById('wsChatTextInput'); if(inp) inp.focus(); }, 200);
+  } else {
+    wsChatCloseSession();
+  }
+}
+
+// --- Open chat session ---
+function wsChatOpenSession(){
+  const uid = localStorage.getItem('wafa_uid');
+  if(!uid || !window.wafaDB) return;
+  if(wsChatUnsub) wsChatUnsub();
+  wsChatUnsub = window.wafaOnValue(window.wafaRef(window.wafaDB, 'chats/' + uid), (snap)=>{
+    const data = snap.val() || {};
+    wsRenderChatMessages(data);
+    wsMarkRead(data);
+  });
+}
+
+function wsChatCloseSession(){
+  if(wsChatUnsub){ wsChatUnsub(); wsChatUnsub = null; }
+}
+
+// --- Render messages ---
+function wsRenderChatMessages(data){
+  const box = document.getElementById('wsChatMessages');
+  if(!box) return;
+  const msgs = Object.entries(data).map(([k,v])=>({...v,_id:k}))
+    .sort((a,b)=>(a.time||0)-(b.time||0));
+
+  wsLastMsgCount = msgs.length;
+
+  if(msgs.length === 0){
+    box.innerHTML = `<div id="wsChatEmpty"><div class="big">💬</div>Halo kak! Ada yang bisa dibantu?<br>Chat langsung ke Admin ya.</div>`;
+    return;
+  }
+
+  box.innerHTML = '';
+  msgs.forEach(m=>{
+    const div = document.createElement('div');
+    const from = m.from === 'admin' ? 'admin' : (m.from === 'bot' || m.from === 'system') ? 'bot' : 'user';
+    div.className = 'ws-msg ' + from;
+    if(m.image){
+      div.innerHTML = `<img src="${m.image}" alt="gambar">` + (m.text ? `<div>${wsEscape(m.text)}</div>` : '');
+    } else {
+      div.textContent = m.text || '';
+    }
+    if(m.time){
+      const t = document.createElement('span');
+      t.className = 'ws-msg-time';
+      t.textContent = new Date(m.time).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+      div.appendChild(t);
+    }
+    box.appendChild(div);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+
+// --- Mark read ---
+function wsMarkRead(data){
+  if(!window.wafaDB || !window.wafaUpdate) return;
+  const uid = localStorage.getItem('wafa_uid');
+  if(!uid) return;
+  Object.entries(data).forEach(([k,v])=>{
+    if(v.from === 'admin' && !v.read){
+      window.wafaUpdate(window.wafaRef(window.wafaDB, `chats/${uid}/${k}`), { read: true }).catch(()=>{});
+    }
+  });
+}
+
+// --- Escape HTML ---
+function wsEscape(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// --- Typing indicator ---
+function wsShowTyping(show){
+  const box = document.getElementById('wsChatMessages');
+  if(!box) return;
+  let el = document.getElementById('wsTypingIndicator');
+  if(show){
+    if(el) return;
+    el = document.createElement('div');
+    el.id = 'wsTypingIndicator';
+    el.className = 'ws-typing';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    box.appendChild(el);
+    box.scrollTop = box.scrollHeight;
+  } else if(el){
+    el.remove();
+  }
+}
+
+// --- Quick ask ---
+function wsQuickAsk(text){
+  const inp = document.getElementById('wsChatTextInput');
+  if(inp) inp.value = text;
+  wsSendChatMsg();
+}
+
+// --- Send message (user) ---
+async function wsSendChatMsg(){
+  const inp = document.getElementById('wsChatTextInput');
+  if(!inp) return;
+  const text = inp.value.trim();
+  if(!text) return;
+
+  const uid = localStorage.getItem('wafa_uid');
+  if(!uid){ wsToast('Login dulu ya'); return; }
+  if(!window.wafaDB || !window.wafaSet){ wsToast('Koneksi belum siap, coba lagi'); return; }
+
+  const msgId = Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  const msgData = { from: 'user', text: text, time: Date.now(), read: false };
+
+  inp.value = '';
+  try{
+    await window.wafaSet(window.wafaRef(window.wafaDB, `chats/${uid}/${msgId}`), msgData);
+  }catch(e){
+    console.error('Gagal kirim chat:', e);
+    wsToast('❌ Gagal kirim, cek koneksi');
+    return;
+  }
+
+  // Trigger bot reply (kalau bot aktif)
+  wsHandleBotReply(text);
+}
+
+// --- Bot auto reply (kalau nanti bot aktif) ---
+async function wsHandleBotReply(userText){
+  if(!wsBotConfig.enabled) return;
+
+  const lower = userText.toLowerCase();
+  const matched = (wsBotConfig.faq || []).find(f=>{
+    if(!f || !f.keywords) return false;
+    const kws = f.keywords.split(',').map(k=>k.trim().toLowerCase()).filter(Boolean);
+    return kws.some(k => k && lower.includes(k));
+  });
+
+  wsShowTyping(true);
+  await wsSleep(400 + Math.random()*400);
+
+  if(matched && matched.answer){
+    wsShowTyping(false);
+    await wsSaveBotMsg(matched.answer);
+    return;
+  }
+
+  if(wsBotConfig.aiEnabled){
+    try{
+      const res = await fetch('/api/bot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userText,
+          systemPrompt: wsBotConfig.systemPrompt
+        })
+      });
+      if(res.ok){
+        const data = await res.json();
+        const reply = (data && (data.reply || data.text || data.answer)) || '';
+        wsShowTyping(false);
+        if(reply){
+          await wsSaveBotMsg(reply);
+        } else {
+          await wsSaveBotMsg('Maaf kak, aku belum ngerti. Coba chat Admin langsung ya 🙏');
+        }
+        return;
+      }
+    }catch(e){
+      console.warn('AI fallback error:', e);
+    }
+  }
+
+  wsShowTyping(false);
+}
+
+// --- Save bot msg ---
+async function wsSaveBotMsg(text){
+  const uid = localStorage.getItem('wafa_uid');
+  if(!uid || !window.wafaDB || !window.wafaSet) return;
+  const msgId = 'bot_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  try{
+    await window.wafaSet(window.wafaRef(window.wafaDB, `chats/${uid}/${msgId}`), {
+      from: 'bot',
+      text: text,
+      time: Date.now(),
+      read: true
+    });
+  }catch(e){ console.error('Gagal simpan pesan bot:', e); }
+}
+
+// --- Sleep helper ---
+function wsSleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+// --- Upload gambar ---
+async function wsUploadChatImage(input){
+  const file = input.files && input.files[0];
+  input.value = '';
+  if(!file) return;
+  if(!wsIsLoggedIn()){ wsToast('Login dulu ya'); return; }
+  if(file.size > 2 * 1024 * 1024){ wsToast('❌ Gambar max 2MB'); return; }
+
+  const uid = localStorage.getItem('wafa_uid');
+  if(!window.wafaDB || !window.wafaSet){ wsToast('Koneksi belum siap'); return; }
+
+  const reader = new FileReader();
+  reader.onload = async ()=>{
+    const msgId = Date.now() + '_' + Math.random().toString(36).slice(2,7);
+    try{
+      await window.wafaSet(window.wafaRef(window.wafaDB, `chats/${uid}/${msgId}`), {
+        from: 'user',
+        text: '',
+        image: reader.result,
+        time: Date.now(),
+        read: false
+      });
+      wsToast('📤 Gambar terkirim');
+    }catch(e){ wsToast('❌ Gagal kirim gambar'); }
+  };
+  reader.readAsDataURL(file);
+}
+
+// --- Public: tambah pesan bot dari file lain ---
+function wsAddBotMsg(txt){
+  if(!txt) return;
+  const panel = document.getElementById('wsChatPanel');
+  if(panel && !panel.classList.contains('open')){
+    const badge = document.getElementById('wsChatBadge');
+    if(badge){
+      const n = parseInt(badge.textContent || '0') + 1;
+      badge.textContent = String(n);
+      badge.classList.add('show');
+    }
+  }
+  wsSaveBotMsg(String(txt));
+}
+
+// --- Public alias ---
+function wsToggleChatAdmin(){ wsToggleBotChat(); }
+
+// --- Sync FAB saat login/logout di tab lain ---
+window.addEventListener('storage', (e)=>{
+  if(e.key === 'wafa_uid') wsSyncChatFab();
+});
+
 // ===== INIT =====
 function wsInitAll(){
   wsLoadUser();
   wsLoadBranding();
   wsLoadGames();
   wsLoadTheme();
+  wsLoadBotConfig();
+  wsSyncChatFab();
+  setInterval(wsSyncChatFab, 2000);
 }
 
 if(document.readyState === 'complete'){
