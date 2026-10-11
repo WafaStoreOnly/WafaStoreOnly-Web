@@ -82,23 +82,117 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .badge.proses{background:rgba(74,144,226,0.15);color:#4a90e2;border:1px solid rgba(74,144,226,0.4)}
 .badge.done{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.4)}
 .badge.batal{background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.4)}
-.chat-list-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;transition:0.15s}
-.chat-list-item:hover{background:var(--card);border-color:var(--border-light)}
-.chat-list-item .name{font-weight:700;font-size:13px;color:var(--text);display:flex;justify-content:space-between;align-items:center}
-.chat-list-item .preview{font-size:11px;color:var(--muted);margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chat-list-item .time{font-size:10px;color:var(--muted2);margin-top:4px}
-.unread-badge{background:var(--danger);color:#fff;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
-#chatBox{background:var(--bg2);border:1px solid var(--border);border-radius:14px;display:none;flex-direction:column;height:520px;overflow:hidden}
-#chatBoxHeader{padding:14px 18px;background:var(--card);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-#chatMessages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px}
-#chatInput{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:var(--card)}
-#chatInput input{flex:1;padding:10px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--text);outline:none;font-size:13px;font-family:inherit}
-#chatInput button{padding:10px 18px;border-radius:20px;border:none;background:var(--primary);color:#fff;font-weight:700;cursor:pointer;font-family:inherit}
-.msg{max-width:80%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;word-wrap:break-word;white-space:pre-wrap}
-.msg.admin{background:var(--primary);align-self:flex-end;color:#fff}
-.msg.user{background:var(--card);border:1px solid var(--border);align-self:flex-start;color:var(--text)}
-.msg.bot{background:linear-gradient(135deg,#6b5ce7,#4a90e2);align-self:flex-end;color:#fff}
-.msg img{max-width:100%;border-radius:8px;margin-top:6px}
+
+/* ===== DM-STYLE CHAT ADMIN ===== */
+.chat-layout{display:grid;grid-template-columns:340px 1fr;gap:14px;height:calc(100vh - 180px);min-height:520px}
+.chat-sidebar{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.chat-sidebar-header{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.chat-sidebar-header .title{font-size:13px;font-weight:800;color:var(--text)}
+.chat-sidebar-header .sub{font-size:10px;color:var(--muted2);margin-top:2px}
+.chat-list{flex:1;overflow-y:auto}
+.chat-list::-webkit-scrollbar{width:4px}
+.chat-list::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:4px}
+.chat-list-item{padding:12px 16px;cursor:pointer;transition:0.15s;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--border)}
+.chat-list-item:hover{background:var(--bg2)}
+.chat-list-item.active{background:rgba(74,144,226,0.1);border-left:3px solid var(--primary)}
+.chat-list-item .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.chat-list-item .info{flex:1;min-width:0}
+.chat-list-item .name{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-list-item .preview{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.chat-list-item .meta{text-align:right;flex-shrink:0}
+.chat-list-item .time{font-size:10px;color:var(--muted2)}
+.chat-list-item .unread{background:var(--danger);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center;margin-top:4px;display:inline-block}
+
+.chat-main{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.chat-main-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--muted2);text-align:center;padding:32px;flex-direction:column;gap:12px;font-size:13px}
+.chat-main-empty .big{font-size:64px;opacity:0.3;line-height:1}
+
+.chat-main-header{padding:12px 16px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.chat-main-header .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;position:relative}
+.chat-main-header .av::after{content:'';position:absolute;bottom:1px;right:1px;width:10px;height:10px;background:#4ade80;border:2px solid var(--bg2);border-radius:50%}
+.chat-main-header .info{flex:1;min-width:0}
+.chat-main-header .name{font-size:14px;font-weight:800;color:var(--text)}
+.chat-main-header .status{font-size:11px;color:var(--success);font-weight:600;margin-top:2px}
+.chat-main-header .close-btn{background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:6px 10px;border-radius:8px;font-family:inherit}
+.chat-main-header .close-btn:hover{background:var(--card-hover);color:var(--text)}
+
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:2px;background:var(--bg)}
+.chat-messages::-webkit-scrollbar{width:5px}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:4px}
+
+.date-sep{text-align:center;margin:12px 0 6px}
+.date-sep span{display:inline-block;background:var(--bg2);border:1px solid var(--border);color:var(--muted);font-size:10px;font-weight:700;padding:4px 12px;border-radius:12px;letter-spacing:0.3px;text-transform:uppercase}
+
+.msg-row{display:flex;gap:6px;align-items:flex-end;padding:1px 0}
+.msg-row.mine{justify-content:flex-end}
+.msg-row.theirs{justify-content:flex-start}
+.msg-row.grouped-top{margin-top:6px}
+.msg-avatar{width:26px;height:26px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;align-self:flex-end;margin-bottom:2px;border:1px solid var(--border)}
+.msg-avatar.hidden{visibility:hidden}
+
+.bubble{max-width:70%;padding:7px 11px 6px 11px;border-radius:16px;font-size:13px;line-height:1.4;word-wrap:break-word;white-space:pre-wrap;position:relative;box-shadow:0 1px 1px rgba(0,0,0,0.2);cursor:default}
+.bubble.mine{background:#4a90e2;color:#fff;border-bottom-right-radius:4px}
+.bubble.theirs{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px}
+.bubble.bot{background:linear-gradient(135deg,#6b5ce7,#4a90e2);color:#fff;border-bottom-left-radius:4px}
+.bubble img{max-width:100%;max-height:280px;border-radius:10px;margin:-2px 0 4px 0;display:block;cursor:pointer}
+
+.reply-preview{background:rgba(0,0,0,0.25);border-left:3px solid rgba(255,255,255,0.6);border-radius:6px;padding:5px 8px;margin-bottom:5px;font-size:11px;line-height:1.3;overflow:hidden}
+.bubble.theirs .reply-preview{background:rgba(255,255,255,0.05);border-left-color:#4a90e2}
+.reply-preview .reply-name{font-weight:800;opacity:0.9;margin-bottom:1px}
+.reply-preview .reply-text{opacity:0.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+
+.bubble-footer{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:2px;font-size:10px;opacity:0.7}
+.bubble.mine .bubble-footer{color:rgba(255,255,255,0.85)}
+.bubble.theirs .bubble-footer{color:var(--muted)}
+.read-tick{font-size:11px;letter-spacing:-2px;font-weight:700}
+.read-tick.read{color:#6ee7f9}
+
+.msg-menu{position:fixed;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:6px;z-index:999999;box-shadow:0 12px 40px rgba(0,0,0,0.7);min-width:170px;animation:menuPop 0.15s ease}
+@keyframes menuPop{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+.msg-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:transparent;border:none;color:var(--text);font-size:13px;cursor:pointer;text-align:left;border-radius:8px;font-family:inherit}
+.msg-menu button:hover{background:var(--card-hover)}
+.msg-menu button.danger{color:var(--danger)}
+.msg-menu button.danger:hover{background:rgba(239,68,68,0.12)}
+
+.reply-bar{display:none;padding:8px 12px;background:var(--bg2);border-top:1px solid var(--border);gap:8px;align-items:center}
+.reply-bar.show{display:flex}
+.reply-bar .reply-bar-content{flex:1;background:var(--card);border-left:3px solid var(--primary);border-radius:6px;padding:6px 10px;font-size:11px;overflow:hidden;min-width:0}
+.reply-bar .reply-bar-name{font-weight:800;color:var(--primary);margin-bottom:1px}
+.reply-bar .reply-bar-text{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reply-bar .reply-close{background:transparent;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 6px;font-family:inherit}
+
+.chat-input{display:flex;gap:6px;padding:10px;border-top:1px solid var(--border);background:var(--bg2);align-items:flex-end;flex-shrink:0}
+.chat-input input[type=text]{flex:1;padding:9px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--text);outline:none;font-size:13px;font-family:inherit;min-width:0}
+.chat-input input[type=text]:focus{border-color:var(--primary)}
+.icon-btn{width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;padding:0;font-family:inherit}
+.icon-btn.attach{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.icon-btn.attach:hover{background:var(--card-hover)}
+.icon-btn.send{background:var(--primary);color:#fff}
+.icon-btn.send:hover{background:#3a7bc8}
+
+.scroll-bottom{position:absolute;right:20px;bottom:130px;width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:16px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
+.scroll-bottom.show{display:flex}
+
+.img-viewer{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9999999;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px)}
+.img-viewer.show{display:flex}
+.img-viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px}
+.img-viewer .close-btn{position:absolute;top:16px;right:16px;width:40px;height:40px;background:var(--card);border:1px solid var(--border);border-radius:50%;color:var(--text);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999998;display:flex;align-items:center;justify-content:center;padding:20px}
+.confirm-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;max-width:320px;width:100%;text-align:center}
+.confirm-box .title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px}
+.confirm-box .desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:18px}
+.confirm-box .btns{display:flex;gap:8px}
+.confirm-box button{flex:1;padding:12px;border-radius:10px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
+.confirm-box button.cancel{background:var(--card-hover);color:var(--text)}
+.confirm-box button.danger{background:var(--danger);color:#fff}
+
+@media (max-width:900px){
+  .chat-layout{grid-template-columns:1fr}
+  .chat-sidebar.mobile-hidden{display:none}
+  .chat-main.mobile-hidden{display:none}
+}
+
 .cust-row{display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:12px;gap:10px}
 .cust-row b{font-size:13px;color:var(--text);font-weight:700}
 .brand-preview{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;gap:16px;align-items:center;margin-bottom:16px}
@@ -166,6 +260,9 @@ input:checked + .slider:before{transform:translateX(24px);background:#fff}
   .admin-content{padding:16px}
   .popup-btn-row{grid-template-columns:50px 1fr 40px}
   .popup-btn-row input:nth-child(3){display:none}
+  .chat-layout{grid-template-columns:1fr;height:auto}
+  .chat-sidebar{max-height:70vh}
+  .chat-main{min-height:70vh}
 }
 @media (max-width:500px){
   .stats-grid{grid-template-columns:1fr 1fr}
@@ -185,9 +282,13 @@ const db = getDatabase(app);
 const auth = getAuth(app);
 window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onValue; window.wafaGet=get; window.wafaUpdate=update; window.wafaRemove=remove;
 window.wafaAuth=auth; window.wafaSignOut=signOut;
-window.WEBHOOK_ORDER_PROSES = "https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
-window.WEBHOOK_ORDER_DONE = "https://discord.com/api/webhooks/1553277385795829770/CZA2wz3K99vCfKa5m0xBATsS4KKL-uJfAhKEN5X0pOwhUvGnWB-q6EV3bCzOzITQ3t5X";
-window.WEBHOOK_TOPUP_LOGS = "https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB";
+
+// ===== WEBHOOKS =====
+window.WEBHOOK_ORDER_PROSES    = "https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
+window.WEBHOOK_ORDER_DONE      = "https://discord.com/api/webhooks/1553277385795829770/CZA2wz3K99vCfKa5m0xBATsS4KKL-uJfAhKEN5X0pOwhUvGnWB-q6EV3bCzOzITQ3t5X";
+window.WEBHOOK_ORDER_FAIL      = "https://discord.com/api/webhooks/1558876119137124493/82OYBsh9R34XudND9t909JEr71sbZPXGRwRjWemf4d6aS0UJxgvVsJf463la5p6n3gbS";
+window.WEBHOOK_TOPUP_LOGS      = "https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB";
+window.WEBHOOK_TOPUP_LOGS_FAIL = "https://discord.com/api/webhooks/1558876882982797362/qJTAe6XIOf3Xz290AI6O71YOdox3nb4AYMx3FWypuNlbDjHthV6EihvG7DdLaRhjyIn_";
 window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 </script>
 </head>
@@ -290,18 +391,44 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
     <div class="page" id="page-chat" style="display:none">
       <div class="page-title">Chat User</div>
       <div class="page-sub">Bales chat manual dari user</div>
-      <div class="card">
-        <div class="card-title">Chat Masuk</div>
-        <div id="listChat"></div>
-        <div id="chatBox">
-          <div id="chatBoxHeader">
-            <div style="font-weight:700;font-size:13px;color:#e8e8e8" id="chatBoxName">Chat</div>
-            <div style="cursor:pointer;font-size:18px;color:#8a8a8a" onclick="closeChat()">✕</div>
+      <div class="chat-layout">
+        <div class="chat-sidebar" id="chatSidebar">
+          <div class="chat-sidebar-header">
+            <div class="title">💬 Semua Chat</div>
+            <div class="sub" id="chatCount">0 percakapan</div>
           </div>
-          <div id="chatMessages"></div>
-          <div id="chatInput">
-            <input id="chatText" placeholder="Ketik balasan..." onkeypress="if(event.key==='Enter')sendReply()">
-            <button onclick="sendReply()">Kirim</button>
+          <div class="chat-list" id="listChat"></div>
+        </div>
+        <div class="chat-main" id="chatMain">
+          <div class="chat-main-empty" id="chatEmpty">
+            <div class="big">💬</div>
+            Pilih salah satu chat di kiri buat mulai bales
+          </div>
+          <div id="chatActiveBox" style="display:none;flex-direction:column;height:100%;position:relative">
+            <div class="chat-main-header">
+              <button class="close-btn" id="chatBackBtn" style="display:none" onclick="closeChatMobile()">←</button>
+              <div class="av">👤</div>
+              <div class="info">
+                <div class="name" id="chatBoxName">Chat</div>
+                <div class="status" id="chatBoxStatus">Online</div>
+              </div>
+              <button class="close-btn" onclick="closeChat()">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <button class="scroll-bottom" id="chatScrollBottom" onclick="chatScrollToBottom(true)">▼</button>
+            <div class="reply-bar" id="chatReplyBar">
+              <div class="reply-bar-content">
+                <div class="reply-bar-name" id="chatReplyName">@user</div>
+                <div class="reply-bar-text" id="chatReplyText">...</div>
+              </div>
+              <button class="reply-close" onclick="cancelReply()">✕</button>
+            </div>
+            <div class="chat-input">
+              <input type="file" id="chatImageInput" accept="image/*" style="display:none" onchange="sendChatImage(this)">
+              <button class="icon-btn attach" onclick="document.getElementById('chatImageInput').click()" title="Kirim gambar">📎</button>
+              <input type="text" id="chatText" placeholder="Ketik balasan..." onkeypress="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendReply()}">
+              <button class="icon-btn send" onclick="sendReply()" title="Kirim">➤</button>
+            </div>
           </div>
         </div>
       </div>
@@ -569,7 +696,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div style="font-size:13px;color:#a8a8a8;line-height:1.9">
           <b style="color:#e8e8e8">Web URL:</b> <a href="https://wafastoreonly-official.vercel.app" style="color:#4a90e2" target="_blank">wafastoreonly-official.vercel.app</a><br>
           <b style="color:#e8e8e8">Firebase:</b> wafastoreonly<br>
-          <b style="color:#e8e8e8">Version:</b> Admin Panel v4.0
+          <b style="color:#e8e8e8">Version:</b> Admin Panel v4.1
         </div>
       </div>
     </div>
@@ -578,6 +705,11 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 </main>
 
 <div id="admToast"></div>
+
+<div class="img-viewer" id="imgViewer" onclick="closeImageViewer(event)">
+  <button class="close-btn" onclick="closeImageViewer(event)">✕</button>
+  <img id="imgViewerImg" src="" alt="Gambar">
+</div>
 
 <script>
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
@@ -857,6 +989,7 @@ function loadOrders(){
       if(o.method == 'gift' && o.privateServer) extra += `<br>🔒 Private Server: <b style="word-break:break-all;font-size:11px">${sensorPrivateServer(o.privateServer)}</b>`;
       if(o.metodeBayar == 'saldo') extra += `<br>💳 <b style="color:#4ade80">Via Saldo Web</b>`;
       if(o.voucherCode) extra += `<br>🎟️ Voucher: <b style="color:#4ade80">${o.voucherCode} (-Rp${(o.voucherPotongan||0).toLocaleString('id-ID')})</b>`;
+      if(o.ocrSkipped) extra += `<br>⚠️ <b style="color:#fbbf24">OCR Skip - cek manual</b>`;
       let buktiBtn = o.bukti ? `<button class="btn btn-primary btn-sm" onclick="lihatBukti('${o.id}')">🖼️ Bukti</button>` : '';
       let actionBtns = '';
       if(o.status === 'verifikasi' || o.status === 'proses'){ actionBtns = `<button class="btn btn-success btn-sm" onclick="prosesSelesai(${o.id})">✅ Selesai</button><button class="btn btn-danger btn-sm" onclick="prosesBatal(${o.id}, 'Dibatalkan admin')">❌ Batal</button>`; }
@@ -933,8 +1066,9 @@ window.prosesBatal = async (id, alasan)=>{
     const method = (o.method || 'username').toLowerCase();
     const methodLabel = method === 'username' ? '🎮 Via Username' : method === 'gamepass' ? '🎫 Via Gamepass' : method === 'gift' ? '🎁 Gift In Game' : method;
     detailPesanan += `\n**📋 DETAIL PESANAN:**\n• Metode: **${methodLabel}**\n• Username Roblox: **${o.username || '-'}**\n• Jumlah Robux: **${o.jumlah || 0} Robux**\n• Total: **Rp${(o.total||0).toLocaleString('id-ID')}**\n`;
-    if(window.WEBHOOK_ORDER_DONE){
-      fetch(window.WEBHOOK_ORDER_DONE, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content: `❌ **TRANSAKSI DIBATALKAN**\n\n━━━━━━━━━━━━━━━━━━━━\n📦 **Order #${id.toString().slice(-6)}**\n━━━━━━━━━━━━━━━━━━━━\n👤 Buyer: **${o.nickname || 'User'}**\n📧 Email: ${sensorEmail(o.email||'-')}\n${detailPesanan}\n❌ **Alasan: ${alasan}**\n🕐 Dibatalkan: ${new Date().toLocaleString('id-ID')}\n━━━━━━━━━━━━━━━━━━━━\n\n🔒 Pesan orderan sudah dihapus dari channel proses.` }) }).catch(()=>{});
+    // Kirim ke channel FAIL (bukan DONE)
+    if(window.WEBHOOK_ORDER_FAIL){
+      fetch(window.WEBHOOK_ORDER_FAIL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content: `❌ **TRANSAKSI DIBATALKAN**\n\n━━━━━━━━━━━━━━━━━━━━\n📦 **Order #${id.toString().slice(-6)}**\n━━━━━━━━━━━━━━━━━━━━\n👤 Buyer: **${o.nickname || 'User'}**\n📧 Email: ${sensorEmail(o.email||'-')}\n${detailPesanan}\n❌ **Alasan: ${alasan}**\n🕐 Dibatalkan: ${new Date().toLocaleString('id-ID')}\n━━━━━━━━━━━━━━━━━━━━\n\n🔒 Pesan orderan sudah dihapus dari channel proses.` }) }).catch(()=>{});
     }
     toast('❌ Order dibatalkan');
   }catch(e){ alert('Gagal: '+e.message); }
@@ -966,7 +1100,8 @@ function loadTopups(){
       let actionBtns = '';
       if(t.status === 'verifikasi' || t.status === 'pending'){ actionBtns = `<button class="btn btn-success btn-sm" onclick="approveTopup(${t.id})">✅ Approve</button><button class="btn btn-danger btn-sm" onclick="rejectTopup(${t.id})">❌ Tolak</button>`; }
       else { actionBtns = `<button class="btn btn-danger btn-sm" onclick="hapusTopup(${t.id})">🗑️ Hapus</button>`; }
-      card.innerHTML = `<div class="item-head"><div><b>💰 Top Up #${t.id.toString().slice(-6)}</b><div style="font-size:11px;color:#5a5a5a;margin-top:4px">${t.date||'-'}</div></div><span class="badge ${cls}">${(t.status||'pending').toUpperCase()}</span></div><div class="item-body">Nominal: <b style="color:#4ade80">Rp${(t.nominal||t.jumlah||0).toLocaleString('id-ID')}</b><br>User: <b>${sensorEmail(t.email||'-')}</b> (${t.nickname||'-'})</div><div class="item-actions">${buktiBtn}${actionBtns}</div>`;
+      const ocrTag = t.ocrSkipped ? '<br>⚠️ <b style="color:#fbbf24">OCR Skip - cek manual</b>' : '';
+      card.innerHTML = `<div class="item-head"><div><b>💰 Top Up #${t.id.toString().slice(-6)}</b><div style="font-size:11px;color:#5a5a5a;margin-top:4px">${t.date||'-'}</div></div><span class="badge ${cls}">${(t.status||'pending').toUpperCase()}</span></div><div class="item-body">Nominal: <b style="color:#4ade80">Rp${(t.nominal||t.jumlah||0).toLocaleString('id-ID')}</b><br>User: <b>${sensorEmail(t.email||'-')}</b> (${t.nickname||'-'})${ocrTag}</div><div class="item-actions">${buktiBtn}${actionBtns}</div>`;
       list.appendChild(card);
     });
   });
@@ -986,23 +1121,41 @@ window.approveTopup = async (id)=>{
     const saldoLama = userSnap.val() || 0; const saldoBaru = saldoLama + nominal;
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'users/'+t.uid), { saldo: saldoBaru });
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'topup_saldo/'+id), { status:'selesai', approvedAt:Date.now() });
-    // Kirim log sukses ke channel #logs-topup-dompet
-    fetch("https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB", { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content:`✅ **TOP UP BERHASIL**\nID: #${id.toString().slice(-6)}\nUser: ${sensorEmail(t.email||'-')}\nNominal: Rp${nominal.toLocaleString('id-ID')}\nSaldo sekarang: Rp${saldoBaru.toLocaleString('id-ID')}` }) }).catch(()=>{});
+    // Kirim log sukses ke #logs-topup-dompet
+    if(window.WEBHOOK_TOPUP_LOGS){
+      fetch(window.WEBHOOK_TOPUP_LOGS, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content:`✅ **TOP UP BERHASIL**\nID: #${id.toString().slice(-6)}\nUser: ${sensorEmail(t.email||'-')} (${t.nickname||'-'})\nNominal: Rp${nominal.toLocaleString('id-ID')}\nSaldo sekarang: Rp${saldoBaru.toLocaleString('id-ID')}` }) }).catch(()=>{});
+    }
     toast(`✅ Saldo Rp${nominal.toLocaleString('id-ID')} ditambah!`);
   }catch(e){ alert('Gagal: '+e.message); }
 };
 window.rejectTopup = async (id)=>{
   const alasan = prompt('Alasan tolak?', 'Bukti tidak valid');
   if(alasan === null) return;
-  try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'topup_saldo/'+id), { status:'batal', batalReason:alasan }); toast('❌ Top up ditolak'); }catch(e){ alert('Gagal: '+e.message); }
+  try{
+    const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'topup_saldo/'+id));
+    const t = snap.val();
+    const nominal = t.nominal || t.jumlah || 0;
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'topup_saldo/'+id), { status:'batal', batalReason:alasan, rejectedAt:Date.now() });
+    // Kirim log GAGAL ke #logs-topup-dompet-fail
+    if(window.WEBHOOK_TOPUP_LOGS_FAIL){
+      fetch(window.WEBHOOK_TOPUP_LOGS_FAIL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content:`❌ **TOP UP DITOLAK**\nID: #${id.toString().slice(-6)}\nUser: ${sensorEmail(t.email||'-')} (${t.nickname||'-'})\nNominal: Rp${nominal.toLocaleString('id-ID')}\nAlasan: ${alasan}\nWaktu: ${new Date().toLocaleString('id-ID')}` }) }).catch(()=>{});
+    }
+    toast('❌ Top up ditolak');
+  }catch(e){ alert('Gagal: '+e.message); }
 };
 window.hapusTopup = async (id)=>{
   if(!confirm('Hapus top up #'+id.toString().slice(-6)+'?')) return;
   try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'topup_saldo/'+id)); toast('🗑️ Dihapus'); }catch(e){ alert('Gagal: '+e.message); }
 };
 
+// ============================================
+// CHAT DM-STYLE ADMIN
+// ============================================
 let currentChatUid = null;
 let chatUnsubscribe = null;
+let chatReplyTo = null;
+let chatCurrentData = {};
+
 function loadChats(){
   const list = document.getElementById('listChat');
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'chats'), (snap)=>{
@@ -1015,46 +1168,318 @@ function loadChats(){
       const unread = msgs.filter(m=>m.from === 'user' && !m.read).length;
       return { uid, last, unread, count: msgs.length };
     }).sort((a,b)=>(b.last.time||0)-(a.last.time||0));
+    document.getElementById('chatCount').innerText = sorted.length + ' percakapan';
     sorted.forEach(item=>{
       const card = document.createElement('div'); card.className = 'chat-list-item';
+      if(item.uid === currentChatUid) card.classList.add('active');
       card.onclick = ()=>openChat(item.uid);
-      const time = item.last.time ? new Date(item.last.time).toLocaleString('id-ID', {hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit'}) : '-';
+      const time = item.last.time ? formatChatListTime(item.last.time) : '-';
       const preview = item.last.image ? '📸 Gambar' : (item.last.text || '(kosong)');
-      card.innerHTML = `<div class="name"><span>👤 ${item.last.nickname || sensorEmail(item.last.email || '-')}</span>${item.unread > 0 ? `<span class="unread-badge">${item.unread}</span>` : ''}</div><div class="preview">${preview}</div><div class="time">${time} • ${item.count} pesan</div>`;
+      card.innerHTML = `<div class="av">👤</div><div class="info"><div class="name">${item.last.nickname || sensorEmail(item.last.email || '-')}</div><div class="preview">${preview}</div></div><div class="meta"><div class="time">${time}</div>${item.unread > 0 ? `<div class="unread">${item.unread}</div>` : ''}</div>`;
       list.appendChild(card);
     });
   });
 }
+
+function formatChatListTime(ts){
+  const d = new Date(ts); const now = new Date();
+  const diff = now - d;
+  if(diff < 86400000) return d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+  if(diff < 604800000) return ['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()];
+  return d.toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit'});
+}
+
 window.openChat = async (uid)=>{
   currentChatUid = uid;
-  document.getElementById('listChat').style.display = 'none';
-  document.getElementById('chatBox').style.display = 'flex';
+  // Mobile: sembunyiin sidebar, tampilkan chat
+  document.getElementById('chatEmpty').style.display = 'none';
+  document.getElementById('chatActiveBox').style.display = 'flex';
+  const backBtn = document.getElementById('chatBackBtn');
+  if(window.innerWidth <= 900 && backBtn) backBtn.style.display = 'block';
+  // Highlight di list
+  document.querySelectorAll('.chat-list-item').forEach(el=>el.classList.remove('active'));
   const userSnap = await window.wafaGet(window.wafaRef(window.wafaDB, 'users/'+uid));
   const u = userSnap.val() || {};
   document.getElementById('chatBoxName').innerText = `${u.nickname || 'User'} (${sensorEmail(u.email||'-')})`;
+  document.getElementById('chatBoxStatus').innerText = 'Online';
   if(chatUnsubscribe) chatUnsubscribe();
   chatUnsubscribe = window.wafaOnValue(window.wafaRef(window.wafaDB, 'chats/'+uid), (snap)=>{
     const data = snap.val() || {};
-    const msgs = Object.entries(data).map(([k,v])=>({...v, _id:k})).sort((a,b)=>(a.time||0)-(b.time||0));
-    const c = document.getElementById('chatMessages'); c.innerHTML = '';
-    if(msgs.length === 0){ c.innerHTML = '<div style="color:#5a5a5a;font-size:12px;text-align:center;padding:24px">Belum ada pesan</div>'; }
-    else { msgs.forEach(m=>{ const d = document.createElement('div'); const from = m.from === 'admin' ? 'admin' : m.from === 'bot' ? 'bot' : 'user'; d.className = 'msg ' + from; if(m.image){ d.innerHTML = `<img src="${m.image}">`; if(m.text) d.innerHTML = m.text + '<br>' + d.innerHTML; } else { d.innerText = m.text || ''; } c.appendChild(d); }); }
-    c.scrollTop = c.scrollHeight;
+    chatCurrentData = data;
+    renderChatMessages(data);
   });
 };
+
 window.closeChat = ()=>{
   currentChatUid = null;
   if(chatUnsubscribe){ chatUnsubscribe(); chatUnsubscribe = null; }
-  document.getElementById('chatBox').style.display = 'none';
-  document.getElementById('listChat').style.display = 'block';
-};
-window.sendReply = async ()=>{
-  if(!currentChatUid) return;
-  const inp = document.getElementById('chatText'); const t = inp.value.trim(); if(!t) return;
-  const msgId = Date.now() + '_' + Math.random().toString(36).slice(2,7);
-  try{ await window.wafaSet(window.wafaRef(window.wafaDB, 'chats/'+currentChatUid+'/'+msgId), { from: 'admin', text: t, time: Date.now(), read: true }); inp.value = ''; }catch(e){ alert('Gagal kirim: '+e.message); }
+  document.getElementById('chatEmpty').style.display = 'flex';
+  document.getElementById('chatActiveBox').style.display = 'none';
+  document.querySelectorAll('.chat-list-item').forEach(el=>el.classList.remove('active'));
 };
 
+window.closeChatMobile = ()=>{
+  document.getElementById('chatBackBtn').style.display = 'none';
+  closeChat();
+};
+
+// ===== FORMAT HELPERS =====
+function chatFormatDate(ts){
+  if(!ts) return '';
+  const d = new Date(ts);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const msgDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diff = Math.round((today - msgDay) / (1000*60*60*24));
+  if(diff === 0) return 'Hari ini';
+  if(diff === 1) return 'Kemarin';
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+function chatFormatTime(ts){ if(!ts) return ''; return new Date(ts).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}); }
+function chatGroupByDate(msgs){
+  const groups = []; let cur = null;
+  msgs.forEach(m=>{
+    const day = m.time ? new Date(m.time).toDateString() : 'unknown';
+    if(day !== cur){ groups.push({type:'date', date: m.time}); cur = day; }
+    groups.push({type:'msg', data: m});
+  });
+  return groups;
+}
+function chatEscape(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ===== RENDER CHAT =====
+function renderChatMessages(data){
+  const box = document.getElementById('chatMessages');
+  if(!box) return;
+  const msgs = Object.entries(data).map(([k,v])=>({...v,_id:k})).sort((a,b)=>(a.time||0)-(b.time||0));
+  const wasNearBottom = (box.scrollHeight - box.scrollTop - box.clientHeight) < 100;
+  box.innerHTML = '';
+  if(msgs.length === 0){
+    box.innerHTML = '<div style="text-align:center;color:#5a5a5a;font-size:12px;padding:24px">Belum ada pesan</div>';
+    return;
+  }
+  const groups = chatGroupByDate(msgs);
+  let prevFrom = null, prevTime = 0;
+  groups.forEach(g=>{
+    if(g.type === 'date'){
+      const sep = document.createElement('div');
+      sep.className = 'date-sep';
+      sep.innerHTML = `<span>${chatFormatDate(g.date)}</span>`;
+      box.appendChild(sep);
+      prevFrom = null; prevTime = 0;
+      return;
+    }
+    const m = g.data;
+    const from = m.from === 'admin' ? 'mine' : (m.from === 'bot') ? 'bot' : 'theirs';
+    const isMine = from === 'mine';
+    const isBot = from === 'bot';
+    const grouped = (prevFrom === from) && (m.time - prevTime < 120000);
+    prevFrom = from; prevTime = m.time;
+    const row = document.createElement('div');
+    row.className = 'msg-row ' + (isMine ? 'mine' : 'theirs');
+    if(!grouped) row.classList.add('grouped-top');
+    if(!isMine){
+      const av = document.createElement('div');
+      av.className = 'msg-avatar' + (grouped ? ' hidden' : '');
+      av.textContent = isBot ? '🤖' : '👤';
+      row.appendChild(av);
+    }
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble ' + (isMine ? 'mine' : (isBot ? 'bot' : 'theirs'));
+    bubble.dataset.id = m._id;
+    if(m.replyTo){
+      const rp = document.createElement('div');
+      rp.className = 'reply-preview';
+      const replyName = m.replyTo.from === 'admin' ? 'Kamu' : (m.replyTo.from === 'bot' ? 'Bot' : 'User');
+      rp.innerHTML = `<div class="reply-name">↩ ${chatEscape(replyName)}</div><div class="reply-text">${chatEscape(m.replyTo.text || '[Gambar]')}</div>`;
+      bubble.appendChild(rp);
+    }
+    if(m.image){
+      const img = document.createElement('img');
+      img.src = m.image;
+      img.onclick = (e)=>{ e.stopPropagation(); openImageViewer(m.image); };
+      bubble.appendChild(img);
+      if(m.text){ const t = document.createElement('div'); t.textContent = m.text; bubble.appendChild(t); }
+    } else {
+      bubble.appendChild(document.createTextNode(m.text || ''));
+    }
+    const footer = document.createElement('div');
+    footer.className = 'bubble-footer';
+    const tickHtml = isMine ? `<span class="read-tick${m.read ? ' read' : ''}">${m.read ? '✓✓' : '✓'}</span>` : '';
+    footer.innerHTML = `<span>${chatFormatTime(m.time)}</span>${tickHtml}`;
+    bubble.appendChild(footer);
+    attachMsgActions(bubble, m);
+    row.appendChild(bubble);
+    box.appendChild(row);
+  });
+  if(wasNearBottom) chatScrollToBottom(true);
+  updateChatScrollBtn();
+}
+
+function attachMsgActions(bubble, msg){
+  let pressTimer = null, longPressed = false;
+  const startPress = ()=>{ longPressed = false; pressTimer = setTimeout(()=>{ longPressed = true; showMsgMenu(bubble, msg); }, 500); };
+  const cancelPress = ()=>{ if(pressTimer){ clearTimeout(pressTimer); pressTimer = null; } };
+  bubble.addEventListener('touchstart', startPress, {passive:true});
+  bubble.addEventListener('touchend', (e)=>{ cancelPress(); if(longPressed) e.preventDefault(); });
+  bubble.addEventListener('touchmove', cancelPress, {passive:true});
+  bubble.addEventListener('touchcancel', cancelPress);
+  bubble.addEventListener('contextmenu', (e)=>{ e.preventDefault(); showMsgMenu(bubble, msg); });
+}
+
+function showMsgMenu(bubbleEl, msg){
+  document.querySelectorAll('.msg-menu').forEach(m=>m.remove());
+  const isMine = msg.from === 'admin';
+  const menu = document.createElement('div');
+  menu.className = 'msg-menu';
+  let buttons = '';
+  if(msg.text) buttons += `<button data-action="copy">📋 Copy</button>`;
+  buttons += `<button data-action="reply">↩️ Reply</button>`;
+  if(isMine) buttons += `<button data-action="delete" class="danger">🗑️ Hapus</button>`;
+  menu.innerHTML = buttons;
+  document.body.appendChild(menu);
+  const rect = bubbleEl.getBoundingClientRect();
+  const menuRect = menu.getBoundingClientRect();
+  let left = rect.left;
+  let top = rect.top - menuRect.height - 8;
+  if(top < 10) top = rect.bottom + 8;
+  if(left + menuRect.width > window.innerWidth - 10) left = window.innerWidth - menuRect.width - 10;
+  if(left < 10) left = 10;
+  menu.style.left = left + 'px';
+  menu.style.top = top + 'px';
+  menu.querySelectorAll('button').forEach(btn=>{
+    btn.onclick = (e)=>{
+      e.stopPropagation();
+      const action = btn.dataset.action;
+      menu.remove();
+      if(action === 'copy') copyMsg(msg.text);
+      else if(action === 'reply') setReply(msg);
+      else if(action === 'delete') confirmDeleteMsg(msg._id);
+    };
+  });
+  setTimeout(()=>{
+    const close = (e)=>{ if(!menu.contains(e.target)){ menu.remove(); document.removeEventListener('click', close); document.removeEventListener('touchstart', close); } };
+    document.addEventListener('click', close);
+    document.addEventListener('touchstart', close);
+  }, 50);
+}
+
+function copyMsg(text){
+  if(!text) return;
+  navigator.clipboard.writeText(text).then(()=>toast('📋 Pesan disalin')).catch(()=>toast('❌ Gagal menyalin'));
+}
+
+function setReply(msg){
+  chatReplyTo = { msgId: msg._id, text: msg.text || '[Gambar]', from: msg.from };
+  const bar = document.getElementById('chatReplyBar');
+  document.getElementById('chatReplyName').innerText = '↩ Membalas ' + (msg.from === 'admin' ? 'Kamu' : (msg.from === 'bot' ? 'Bot' : 'User'));
+  document.getElementById('chatReplyText').innerText = msg.text || '[Gambar]';
+  bar.classList.add('show');
+  document.getElementById('chatText').focus();
+}
+function cancelReply(){
+  chatReplyTo = null;
+  document.getElementById('chatReplyBar').classList.remove('show');
+}
+
+function confirmDeleteMsg(msgId){
+  const overlay = document.createElement('div');
+  overlay.className = 'confirm-overlay';
+  overlay.innerHTML = `<div class="confirm-box">
+    <div class="title">Hapus pesan?</div>
+    <div class="desc">Pesan bakal dihapus. Tindakan ini nggak bisa dibatalkan.</div>
+    <div class="btns">
+      <button class="cancel" id="cxlDel">Batal</button>
+      <button class="danger" id="cfmDel">Hapus</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#cxlDel').onclick = ()=>overlay.remove();
+  overlay.querySelector('#cfmDel').onclick = async ()=>{ overlay.remove(); await deleteMsgAdmin(msgId); };
+  overlay.onclick = (e)=>{ if(e.target === overlay) overlay.remove(); };
+}
+
+async function deleteMsgAdmin(msgId){
+  if(!currentChatUid){ toast('Pilih chat dulu'); return; }
+  try{
+    const url = `https://wafastoreonly-default-rtdb.asia-southeast1.firebasedatabase.app/chats/${currentChatUid}/${msgId}.json`;
+    const res = await fetch(url, { method: 'DELETE' });
+    if(res.ok) toast('🗑️ Pesan dihapus');
+    else toast('❌ Gagal hapus');
+  }catch(e){ toast('❌ Gagal hapus: ' + e.message); }
+}
+
+window.sendReply = async ()=>{
+  if(!currentChatUid){ toast('Pilih chat dulu'); return; }
+  const inp = document.getElementById('chatText');
+  const t = inp.value.trim();
+  if(!t) return;
+  const msgId = Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  const msgData = { from: 'admin', text: t, time: Date.now(), read: false };
+  if(chatReplyTo) msgData.replyTo = chatReplyTo;
+  try{
+    await window.wafaSet(window.wafaRef(window.wafaDB, 'chats/'+currentChatUid+'/'+msgId), msgData);
+    inp.value = '';
+    cancelReply();
+    chatScrollToBottom(true);
+  }catch(e){ alert('Gagal kirim: '+e.message); }
+};
+
+async function sendChatImage(input){
+  const file = input.files && input.files[0];
+  input.value = '';
+  if(!file || !currentChatUid) return;
+  if(file.size > 2 * 1024 * 1024){ toast('❌ Gambar max 2MB'); return; }
+  const reader = new FileReader();
+  reader.onload = async ()=>{
+    const msgId = Date.now() + '_' + Math.random().toString(36).slice(2,7);
+    const msgData = { from: 'admin', text: '', image: reader.result, time: Date.now(), read: false };
+    if(chatReplyTo){ msgData.replyTo = chatReplyTo; cancelReply(); }
+    try{
+      await window.wafaSet(window.wafaRef(window.wafaDB, 'chats/'+currentChatUid+'/'+msgId), msgData);
+      toast('📤 Gambar terkirim');
+      chatScrollToBottom(true);
+    }catch(e){ toast('❌ Gagal kirim gambar'); }
+  };
+  reader.readAsDataURL(file);
+}
+
+// Scroll helpers
+function chatScrollToBottom(smooth){
+  const box = document.getElementById('chatMessages');
+  if(!box) return;
+  box.scrollTo({ top: box.scrollHeight, behavior: smooth ? 'smooth' : 'auto' });
+  updateChatScrollBtn();
+}
+function updateChatScrollBtn(){
+  const box = document.getElementById('chatMessages');
+  const btn = document.getElementById('chatScrollBottom');
+  if(!box || !btn) return;
+  const dist = box.scrollHeight - box.scrollTop - box.clientHeight;
+  if(dist > 200) btn.classList.add('show');
+  else btn.classList.remove('show');
+}
+document.addEventListener('DOMContentLoaded', ()=>{
+  const box = document.getElementById('chatMessages');
+  if(box) box.addEventListener('scroll', updateChatScrollBtn);
+});
+
+// Image viewer
+function openImageViewer(src){
+  const v = document.getElementById('imgViewer');
+  const i = document.getElementById('imgViewerImg');
+  if(!v || !i) return;
+  i.src = src;
+  v.classList.add('show');
+}
+function closeImageViewer(e){
+  if(e && e.target && e.target.tagName === 'IMG') return;
+  document.getElementById('imgViewer').classList.remove('show');
+}
+
+// ===== CUSTOMERS =====
 function loadCustomers(){
   const list = document.getElementById('listCustomers');
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'users'), (snap)=>{
@@ -1076,6 +1501,7 @@ window.editSaldo = async (uid, saldoLama)=>{
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'users/'+uid), { saldo: saldoBaru }); toast(`✅ Saldo diupdate: Rp${saldoBaru.toLocaleString('id-ID')}`); }catch(e){ alert('Gagal: '+e.message); }
 };
 
+// ===== BRANDING =====
 let logoBase64 = null;
 let bannerBase64 = null;
 function loadBranding(){
@@ -1092,6 +1518,7 @@ window.uploadBanner = (input)=>{ const file = input.files[0]; if(!file) return; 
 window.saveBranding = async ()=>{ const brandName = document.getElementById('inputBrandName').value.trim(); const tagline = document.getElementById('inputTagline').value.trim(); if(!brandName){ alert('Isi nama brand dulu!'); return; } try{ const data = { brandName, tagline, updatedAt: Date.now() }; if(logoBase64) data.logo = logoBase64; await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/branding'), data); logoBase64 = null; toast('✅ Branding disimpan!'); }catch(e){ alert('Gagal: '+e.message); } };
 window.saveBanner = async ()=>{ if(!bannerBase64){ alert('Upload banner dulu!'); return; } try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/branding'), { banner: bannerBase64, updatedAt: Date.now() }); bannerBase64 = null; toast('✅ Banner disimpan!'); }catch(e){ alert('Gagal: '+e.message); } };
 
+// ===== GAMES =====
 const GAME_LIST = [
   { key: 'roblox', name: 'Roblox', defaultLogo: './roblox.png', active: true },
   { key: 'mlbb', name: 'Mobile Legends', defaultLogo: './mlbb.png', active: false },
@@ -1118,9 +1545,11 @@ window.editGameName = async (key, oldName)=>{ const newName = prompt(`Edit nama 
 window.toggleGameActive = async (key, currentActive)=>{ try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/games/' + key), { active: !currentActive, updatedAt: Date.now() }); toast(`✅ Game ${key} diubah`); }catch(e){ alert('Gagal: '+e.message); } };
 window.resetGameLogo = async (key)=>{ if(!confirm('Reset logo ke default?')) return; try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'settings/games/' + key + '/logo')); toast(`✅ Logo ${key} direset`); }catch(e){ alert('Gagal: '+e.message); } };
 
+// ===== WELCOME =====
 function loadWelcome(){ window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/welcome'), (snap)=>{ const d = snap.val(); if(!d) return; document.getElementById('welcomeActive').value = d.active === false ? 'false' : 'true'; if(d.title) document.getElementById('welcomeTitle').value = d.title; if(d.tagline) document.getElementById('welcomeTagline').value = d.tagline; if(d.message) document.getElementById('welcomeMessage').value = d.message; }); }
 window.saveWelcome = async ()=>{ const active = document.getElementById('welcomeActive').value === 'true'; const title = document.getElementById('welcomeTitle').value.trim(); const tagline = document.getElementById('welcomeTagline').value.trim(); const message = document.getElementById('welcomeMessage').value.trim(); try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/welcome'), { active, title, tagline, message, updatedAt: Date.now() }); toast('✅ Welcome disimpan!'); }catch(e){ alert('Gagal: '+e.message); } };
 
+// ===== SYARAT =====
 function loadSyarat(){
   ['username','gamepass','gift'].forEach(key=>{
     window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/syarat/' + key), (snap)=>{
@@ -1145,9 +1574,11 @@ window.saveSyarat = async (key)=>{
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/syarat/' + key), { active, title, items, updatedAt: Date.now() }); toast('✅ Syarat disimpan!'); }catch(e){ alert('Gagal: '+e.message); }
 };
 
+// ===== ANNOUNCEMENT =====
 function loadAnnouncement(){ window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/announcement'), (snap)=>{ const d = snap.val(); if(!d) return; document.getElementById('inputAnnActive').value = d.active === false ? 'false' : 'true'; }); }
 window.saveAnnouncement = async ()=>{ const active = document.getElementById('inputAnnActive').value === 'true'; try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/announcement'), { active, updatedAt: Date.now() }); toast('✅ Disimpan!'); }catch(e){ alert('Gagal: '+e.message); } };
 
+// ===== THEME =====
 function loadTheme(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/theme'), (snap)=>{
     const d = snap.val(); if(!d) return;
@@ -1162,6 +1593,7 @@ function updateThemePreview(){ const p = document.getElementById('inputPrimary')
 window.saveTheme = async ()=>{ try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/theme'), { primary: document.getElementById('inputPrimary').value, accent: document.getElementById('inputAccent').value, updatedAt: Date.now() }); toast('✅ Theme disimpan!'); }catch(e){ alert('Gagal: '+e.message); } };
 window.resetTheme = async ()=>{ if(!confirm('Reset warna?')) return; document.getElementById('inputPrimary').value = '#4a90e2'; document.getElementById('inputAccent').value = '#6b5ce7'; updateThemePreview(); try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/theme'), { primary: '#4a90e2', accent: '#6b5ce7', updatedAt: Date.now() }); toast('✅ Theme direset'); }catch(e){ alert('Gagal: '+e.message); } };
 
+// ===== HARGA =====
 function loadHarga(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/harga/roblox'), (snap)=>{
     const d = snap.val() || {};
@@ -1192,6 +1624,7 @@ window.saveHarga = async ()=>{
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/harga/roblox'), { perRobux, perRobuxGamepass, perRobuxGift, diskonPersen, voucherAktif, updatedAt: Date.now() }); toast('✅ Harga disimpan!'); }catch(e){ alert('Gagal: '+e.message); }
 };
 
+// ===== VOUCHER =====
 function loadVouchers(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'vouchers'), (snap)=>{
     const d = snap.val() || {}; const list = document.getElementById('listVouchers'); const keys = Object.keys(d);
@@ -1236,6 +1669,7 @@ window.saveVoucher = async ()=>{
 window.toggleVoucherActive = async (code, currentActive)=>{ try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'vouchers/' + code), { active: !currentActive, updatedAt: Date.now() }); toast('✅ Diubah'); }catch(e){ alert('Gagal: '+e.message); } };
 window.deleteVoucher = async (code)=>{ if(!confirm(`Hapus voucher ${code}?`)) return; try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'vouchers/' + code)); toast('🗑️ Dihapus'); }catch(e){ alert('Gagal: '+e.message); } };
 
+// ===== POPUP =====
 let popupButtons = [];
 let popupImgBase64 = null;
 function loadPopup(){
@@ -1286,6 +1720,7 @@ window.savePopup = async ()=>{
   try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/popup'), data); toast('✅ Pop-up disimpan!'); }catch(e){ alert('Gagal: '+e.message); }
 };
 
+// ===== KETERANGAN =====
 function loadKeterangan(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/keterangan'), (snap)=>{
     const d = snap.val() || {};
