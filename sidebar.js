@@ -1,4 +1,4 @@
-// SIDEBAR + CHAT WIDGET + BOT CS ADMIN
+// SIDEBAR + CHAT WIDGET + CS BOT + ADMIN CHAT (TERPISAH) + AVATAR
 (function(){
   const sidebarHTML = `
     <div id="wsOverlay" onclick="wsCloseSidebar()"></div>
@@ -22,13 +22,19 @@
         <div class="ws-item" id="wsMenuDompet" onclick="wsOpen('dompet')">👛 <span>Dompet</span></div>
         <div class="ws-item" id="wsMenuProfil" onclick="wsOpen('profil')">👤 <span>Profil</span></div>
         <div class="ws-item" id="wsMenuLeaderboard" onclick="wsOpen('leaderboard')">🏆 <span>Leaderboard</span></div>
-        <div class="ws-item" id="wsMenuChat" onclick="wsOpenChatAdmin()">💬 <span>Chat Admin</span></div>
+        <div class="ws-item" id="wsMenuChat" onclick="wsOpenChatAdmin()">👤 <span>Chat Admin</span></div>
+        <div class="ws-item" id="wsMenuCsBot" onclick="wsOpenCsBot()">🤖 <span>CS Bot</span></div>
         <div class="ws-item" id="wsMenuAdmin" style="display:none" onclick="wsOpen('admin')">🛡️ <span>Admin Panel</span></div>
       </nav>
       <div class="ws-userbox">
         <div class="ws-user" onclick="wsUserBoxClick()">
-          <span id="wsUserName">Guest</span>
-          <small id="wsUserEmail">Login untuk order</small>
+          <div class="ws-user-avatar" id="wsUserAvatar" onclick="event.stopPropagation();wsOpenAvatarPicker()" title="Klik buat ganti foto profil">
+            <span id="wsUserAvatarFallback">👤</span>
+          </div>
+          <div class="ws-user-info">
+            <span id="wsUserName">Guest</span>
+            <small id="wsUserEmail">Login untuk order</small>
+          </div>
         </div>
       </div>
     </aside>
@@ -91,20 +97,9 @@ function wsOpen(page){
   else if(page === 'leaderboard'){ if(typeof openLeaderboard === 'function') openLeaderboard(); else window.location.href='index.html#leaderboard'; }
   else if(page === 'admin'){ window.location.href='admin.html'; }
 }
-function wsOpenChatAdmin(){
-  wsCloseSidebar();
-  if(!wsIsLoggedIn()){
-    if(confirm('🔒 Chat butuh login dulu.\n\nMau login sekarang?')){
-      sessionStorage.setItem('wafa_redirect_after_login', 'index');
-      window.location.href='login.html';
-    }
-    return;
-  }
-  wsChatOpen('fullscreen');
-}
 function wsSetActive(menu){
   document.querySelectorAll('.ws-item').forEach(i=>i.classList.remove('active'));
-  const map = { 'beranda':'wsMenuBeranda', 'pesanan':'wsMenuPesanan', 'dompet':'wsMenuDompet', 'profil':'wsMenuProfil', 'leaderboard':'wsMenuLeaderboard', 'chat':'wsMenuChat', 'admin':'wsMenuAdmin' };
+  const map = { 'beranda':'wsMenuBeranda', 'pesanan':'wsMenuPesanan', 'dompet':'wsMenuDompet', 'profil':'wsMenuProfil', 'leaderboard':'wsMenuLeaderboard', 'chat':'wsMenuChat', 'csbot':'wsMenuCsBot', 'admin':'wsMenuAdmin' };
   const id = map[menu]; if(id){ const el = document.getElementById(id); if(el) el.classList.add('active'); }
 }
 function wsSetTitle(txt){ const el = document.getElementById('wsPageTitle'); if(el) el.innerText = txt; }
@@ -117,6 +112,10 @@ function wsToast(msg){
 
 const ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 
+// ===== AVATAR VARIABLES =====
+let wsUserAvatarData = null;
+let wsAdminAvatarData = null;
+
 // ===== LOAD USER =====
 async function wsLoadUser(){
   try{
@@ -125,6 +124,8 @@ async function wsLoadUser(){
     if(!uid){
       const e1=document.getElementById('wsUserName'), e2=document.getElementById('wsUserEmail'), e3=document.getElementById('wsHeaderUser');
       if(e1) e1.innerText='Guest'; if(e2) e2.innerText='Login untuk order'; if(e3) e3.innerText='👤 Guest';
+      wsUserAvatarData = null;
+      wsRenderUserAvatar();
       return;
     }
     const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'users/' + uid));
@@ -135,11 +136,101 @@ async function wsLoadUser(){
       const e1=document.getElementById('wsUserName'), e2=document.getElementById('wsUserEmail'), e3=document.getElementById('wsHeaderUser');
       if(e1) e1.innerText = name.slice(0,18);
       if(e2) e2.innerText = email.length > 20 ? email.slice(0,18)+'...' : email;
-      if(e3) e3.innerText = '👤 ' + name.slice(0,12);
+      if(e3) e3.innerHTML = (data.avatar ? `<img src="${data.avatar}" class="ws-header-user-avatar">` : '👤 ') + name.slice(0,12);
+      wsUserAvatarData = data.avatar || null;
+      wsRenderUserAvatar();
     }
     if(ADMIN_UIDS.includes(uid)){ const am = document.getElementById('wsMenuAdmin'); if(am) am.style.display='flex'; }
     try{ localStorage.setItem('wafa_user', JSON.stringify({nickname:data.nickname||'',email:data.email||'',saldo:data.saldo||0})); }catch(e){}
   }catch(e){ console.log('wsLoadUser err:', e); }
+}
+
+// ===== AVATAR USER =====
+function wsRenderUserAvatar(){
+  const box = document.getElementById('wsUserAvatar');
+  if(!box) return;
+  if(wsUserAvatarData){
+    box.innerHTML = `<img src="${wsUserAvatarData}" alt="avatar">`;
+  } else {
+    box.innerHTML = `<span id="wsUserAvatarFallback">👤</span>`;
+  }
+}
+
+function wsOpenAvatarPicker(){
+  if(!wsIsLoggedIn()){
+    if(confirm('🔒 Login dulu buat ganti foto profil.\n\nMau login sekarang?')){
+      sessionStorage.setItem('wafa_redirect_after_login', 'index');
+      window.location.href='login.html';
+    }
+    return;
+  }
+  let inp = document.getElementById('wsAvatarPickerInput');
+  if(!inp){
+    inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'image/*';
+    inp.id = 'wsAvatarPickerInput';
+    inp.style.display = 'none';
+    inp.addEventListener('change', ()=>wsHandleAvatarPick(inp));
+    document.body.appendChild(inp);
+  }
+  inp.value = '';
+  inp.click();
+}
+
+async function wsHandleAvatarPick(inp){
+  const file = inp.files && inp.files[0];
+  inp.value = '';
+  if(!file) return;
+  if(file.size > 2*1024*1024){ wsToast('❌ Foto max 2MB'); return; }
+  wsToast('⏳ Upload foto...');
+  try{
+    const dataUrl = await wsResizeImage(file, 200);
+    wsUserAvatarData = dataUrl;
+    wsRenderUserAvatar();
+    const uid = localStorage.getItem('wafa_uid');
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'users/' + uid), { avatar: dataUrl, avatarUpdatedAt: Date.now() });
+    wsToast('✅ Foto profil diupdate');
+    const e3 = document.getElementById('wsHeaderUser');
+    if(e3){
+      const curName = (e3.innerText || '').replace(/^👤\s*/, '').trim();
+      e3.innerHTML = `<img src="${dataUrl}" class="ws-header-user-avatar">` + curName;
+    }
+  }catch(e){ wsToast('❌ Gagal upload: ' + e.message); }
+}
+
+function wsResizeImage(file, maxSize){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        try{
+          const canvas = document.createElement('canvas');
+          canvas.width = maxSize; canvas.height = maxSize;
+          const ctx = canvas.getContext('2d');
+          const size = Math.min(img.width, img.height);
+          ctx.drawImage(img, (img.width - size)/2, (img.height - size)/2, size, size, 0, 0, maxSize, maxSize);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        }catch(err){ reject(err); }
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ===== AVATAR ADMIN =====
+function wsLoadAdminAvatar(){
+  try{
+    if(!window.wafaDB || !window.wafaRef || !window.wafaOnValue){ setTimeout(wsLoadAdminAvatar, 500); return; }
+    window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/branding/adminAvatar'), (snap)=>{
+      wsAdminAvatarData = snap.val() || null;
+      if(wsChatMode && wsCurrentChatData){ wsRenderChatMessages(wsCurrentChatData); }
+    });
+  }catch(e){}
 }
 
 // ===== LOAD BRANDING =====
@@ -150,6 +241,7 @@ function wsLoadBranding(){
       const d = snap.val(); if(!d) return;
       if(d.logo){ const li=document.getElementById('wsLogoImg'); if(li) li.src=d.logo; const fav=document.querySelector('link[rel="icon"]')||document.createElement('link'); fav.rel='icon'; fav.href=d.logo; document.head.appendChild(fav); }
       if(d.brandName){ const be=document.getElementById('wsBrandName'); if(be) be.innerText=d.brandName; const te=document.getElementById('wsPageTitle'); if(te) te.innerText=d.brandName+' ⚡'; }
+      if(d.adminAvatar) wsAdminAvatarData = d.adminAvatar;
     });
   }catch(e){}
 }
@@ -180,9 +272,10 @@ function wsLoadTheme(){
 }
 
 // ===== CHAT WIDGET =====
-let wsBotConfig = { enabled: false, aiEnabled: false, systemPrompt: '', faq: [] };
+let wsBotConfig = { enabled: false, faq: [] };
 let wsChatUnsub = null;
 let wsChatMode = null;
+let wsChatType = 'admin';
 let wsReplyTo = null;
 let wsCurrentChatData = {};
 
@@ -199,8 +292,11 @@ let wsCurrentChatData = {};
     #wsChatPanel.open{display:flex}
     #wsChatPanel.floating{position:fixed;right:20px;bottom:88px;width:380px;max-width:calc(100vw - 24px);height:600px;max-height:calc(100vh - 110px);border:1px solid #2a2a2a;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,0.8)}
     #wsChatPanel.fullscreen{position:fixed;inset:0;width:100vw;height:100vh;max-width:100vw;max-height:100vh;border:none;border-radius:0;z-index:99999}
+    #wsChatPanel.cs-mode #wsChatHeader{background:linear-gradient(135deg,#1a0f2e,#0f1a2e)}
+    #wsChatPanel.admin-mode #wsChatHeader{background:#141414}
     #wsChatHeader{padding:10px 12px;background:#141414;border-bottom:1px solid #1f1f1f;display:flex;align-items:center;gap:10px;flex-shrink:0;position:relative}
-    #wsChatHeader .ws-chat-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;position:relative}
+    #wsChatHeader .ws-chat-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;position:relative;overflow:hidden}
+    #wsChatHeader .ws-chat-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
     #wsChatHeader .ws-chat-avatar::after{content:'';position:absolute;bottom:1px;right:1px;width:10px;height:10px;background:#4ade80;border:2px solid #141414;border-radius:50%}
     #wsChatHeader .ws-chat-headinfo{flex:1;min-width:0}
     #wsChatHeader .ws-chat-title{font-weight:800;font-size:14px;color:#e8e8e8;display:block;line-height:1.2}
@@ -217,8 +313,10 @@ let wsCurrentChatData = {};
     .ws-msg-row.mine{justify-content:flex-end}
     .ws-msg-row.theirs{justify-content:flex-start}
     .ws-msg-row.grouped-top{margin-top:6px}
-    .ws-msg-avatar{width:26px;height:26px;border-radius:50%;background:#2a2a2a;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;align-self:flex-end;margin-bottom:2px}
+    .ws-msg-avatar{width:26px;height:26px;border-radius:50%;background:#2a2a2a;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;align-self:flex-end;margin-bottom:2px;overflow:hidden}
     .ws-msg-avatar.hidden{visibility:hidden}
+    .ws-msg-avatar.has-img{background:transparent}
+    .ws-msg-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
     .ws-bubble{max-width:78%;padding:7px 11px 6px 11px;border-radius:16px;font-size:13px;line-height:1.4;word-wrap:break-word;white-space:pre-wrap;position:relative;cursor:default}
     .ws-bubble.mine{background:#4a90e2;color:#fff;border-bottom-right-radius:4px}
     .ws-bubble.theirs{background:#1f1f1f;border:1px solid #2a2a2a;color:#e8e8e8;border-bottom-left-radius:4px}
@@ -245,6 +343,7 @@ let wsCurrentChatData = {};
     .ws-chat-quick{display:flex;gap:6px;padding:6px 10px 8px 10px;flex-wrap:wrap;background:#141414;border-top:1px solid #1f1f1f}
     .ws-chat-quick button{padding:6px 11px;border-radius:16px;border:1px solid #2a2a2a;background:#0a0a0a;color:#a8a8a8;font-size:11px;cursor:pointer;font-family:inherit}
     .ws-chat-quick button:hover{border-color:#4a90e2;color:#4a90e2}
+    #wsChatPanel.admin-mode .ws-chat-quick{display:none}
     #wsReplyBar{display:none;padding:8px 12px;background:#141414;border-top:1px solid #1f1f1f;gap:8px;align-items:center}
     #wsReplyBar.show{display:flex}
     #wsReplyBar .ws-reply-bar-content{flex:1;background:#1f1f1f;border-left:3px solid #4a90e2;border-radius:6px;padding:6px 10px;font-size:11px;overflow:hidden;min-width:0}
@@ -283,6 +382,16 @@ let wsCurrentChatData = {};
     .ws-confirm-box button.cancel{background:#2a2a2a;color:#e8e8e8}
     .ws-confirm-box button.danger{background:#ef4444;color:#fff}
     .ws-confirm-box input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #2a2a2a;background:#0a0a0a;color:#e8e8e8;font-size:13px;font-family:inherit;margin-bottom:12px;outline:none}
+    .ws-user{display:flex;align-items:center;gap:10px}
+    .ws-user-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;cursor:pointer;border:2px solid #2a2a2a;transition:0.15s;position:relative;overflow:hidden}
+    .ws-user-avatar:hover{border-color:#4a90e2}
+    .ws-user-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .ws-user-avatar::after{content:'📷';position:absolute;bottom:0;right:0;width:16px;height:16px;background:#4a90e2;border-radius:50%;font-size:9px;display:flex;align-items:center;justify-content:center;border:2px solid #0a0a0a;opacity:0;transition:0.15s}
+    .ws-user-avatar:hover::after{opacity:1}
+    .ws-user-info{flex:1;min-width:0}
+    .ws-user-info>span{display:block;font-weight:700;font-size:13px;color:#e8e8e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ws-user-info>small{display:block;font-size:10px;color:#8a8a8a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+    .ws-header-user-avatar{width:20px;height:20px;border-radius:50%;object-fit:cover;margin-right:4px;vertical-align:middle;display:inline-block}
     @media (max-width:500px){
       #wsChatPanel.floating{right:8px;left:8px;bottom:74px;width:auto;height:calc(100vh - 90px);max-height:calc(100vh - 90px);border-radius:16px}
       #wsChatFab{right:14px;bottom:14px;width:52px;height:52px}
@@ -295,16 +404,16 @@ let wsCurrentChatData = {};
   if(document.getElementById('wsChatFab')) return;
   const wrap = document.createElement('div');
   wrap.innerHTML = `
-    <button id="wsChatFab" onclick="wsOpenBotChat()" aria-label="Bot">
+    <button id="wsChatFab" onclick="wsOpenCsBot()" aria-label="Chat CS">
       🤖<span class="ws-chat-badge" id="wsChatBadge">0</span>
     </button>
-    <div id="wsChatPanel">
+    <div id="wsChatPanel" class="admin-mode">
       <div id="wsChatHeader">
         <button class="ws-chat-btn" id="wsChatBackBtn" style="display:none" onclick="wsChatClose()">←</button>
-        <div class="ws-chat-avatar">💬</div>
+        <div class="ws-chat-avatar" id="wsChatAvatar">👤</div>
         <div class="ws-chat-headinfo">
           <span class="ws-chat-title" id="wsChatTitle">Chat Admin</span>
-          <span class="ws-chat-status" id="wsChatStatus">Online • CS Admin + Admin</span>
+          <span class="ws-chat-status" id="wsChatStatus">Online • Dibalas manual admin</span>
         </div>
         <button class="ws-chat-btn" onclick="wsToggleHeaderMenu(event)">⋮</button>
         <button class="ws-chat-btn" onclick="wsChatClose()">✕</button>
@@ -341,19 +450,52 @@ let wsCurrentChatData = {};
   document.body.appendChild(wrap);
 })();
 
-// ===== FAB: BELUM AKTIF (NANTI BUAT BOT) =====
-function wsOpenBotChat(){
-  alert('🤖 Bot AI belum aktif.\n\nFitur ini bakal tersedia setelah admin setup API key Gemini.\n\nSementara chat manual dengan admin lewat menu 💬 Chat Admin di sidebar ya!');
+// ===== HELPER: PATH CHAT DINAMIS =====
+function wsChatBase(){
+  return wsChatType === 'cs' ? 'cs_chats' : 'admin_chats';
 }
+function wsChatPath(uid, msgId){
+  const base = wsChatBase();
+  return msgId ? `${base}/${uid}/${msgId}` : `${base}/${uid}`;
+}
+
+// ===== FAB: BUKA CS BOT =====
+function wsOpenCsBot(){
+  wsCloseSidebar();
+  if(!wsIsLoggedIn()){
+    if(confirm('🔒 CS Bot butuh login dulu.\n\nMau login sekarang?')){
+      sessionStorage.setItem('wafa_redirect_after_login', 'index');
+      window.location.href='login.html';
+    }
+    return;
+  }
+  wsChatOpen('floating', 'cs');
+}
+
+// ===== FAB BADGE (UNREAD DARI CS) =====
 function wsSyncChatFab(){
   const fab = document.getElementById('wsChatFab');
   if(!fab) return;
-  // 🔧 FAB DISEMBUNYIKAN DULU
-  fab.classList.remove('show');
+  fab.classList.add('show');
+}
+function wsInitFabBadge(){
+  const uid = localStorage.getItem('wafa_uid');
+  if(!uid || !window.wafaDB || !window.wafaOnValue){ setTimeout(wsInitFabBadge, 500); return; }
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'cs_chats/' + uid), (snap)=>{
+    const data = snap.val() || {};
+    let unread = 0;
+    Object.values(data).forEach(m=>{
+      if((m.from === 'admin' || m.from === 'bot') && !m.read) unread++;
+    });
+    const badge = document.getElementById('wsChatBadge');
+    if(!badge) return;
+    if(unread > 0){ badge.textContent = unread > 99 ? '99+' : unread; badge.classList.add('show'); }
+    else badge.classList.remove('show');
+  });
 }
 
-// ===== TOGGLE CHAT (mode: floating / fullscreen) =====
-function wsChatOpen(mode){
+// ===== TOGGLE CHAT =====
+function wsChatOpen(mode, type){
   if(!wsIsLoggedIn()){
     if(confirm('🔒 Chat butuh login dulu.\n\nMau login sekarang?')){
       sessionStorage.setItem('wafa_redirect_after_login','index');
@@ -361,9 +503,34 @@ function wsChatOpen(mode){
     }
     return;
   }
+  wsChatType = type || 'admin';
   const panel = document.getElementById('wsChatPanel');
   const backBtn = document.getElementById('wsChatBackBtn');
   if(!panel) return;
+
+  if(wsChatUnsub){ wsChatUnsub(); wsChatUnsub = null; }
+  wsCancelReply();
+
+  const avatar = document.getElementById('wsChatAvatar');
+  const title = document.getElementById('wsChatTitle');
+  const status = document.getElementById('wsChatStatus');
+  const empty = document.getElementById('wsChatEmpty');
+  if(wsChatType === 'cs'){
+    panel.classList.remove('admin-mode');
+    panel.classList.add('cs-mode');
+    if(avatar) avatar.textContent = '🤖';
+    if(title) title.textContent = 'CS Bot • WafaStoreOnly';
+    if(status) status.textContent = 'Online • Balasan otomatis';
+    if(empty){ empty.innerHTML = '<div class="big">🤖</div>Halo kak! Saya CS Bot WafaStoreOnly.<br>Ketik pertanyaan seputar order, pembayaran, atau layanan.<br><br><span style="opacity:0.6;font-size:11px">Kalau bot gak bisa jawab, admin bakal bales di sini juga.</span>'; }
+  } else {
+    panel.classList.remove('cs-mode');
+    panel.classList.add('admin-mode');
+    if(avatar) avatar.textContent = '👤';
+    if(title) title.textContent = 'Chat Admin';
+    if(status) status.textContent = 'Online • Dibalas manual admin';
+    if(empty){ empty.innerHTML = '<div class="big">💬</div>Halo kak! Ada yang bisa dibantu?<br>Chat langsung ke Admin ya.'; }
+  }
+
   panel.classList.remove('floating','fullscreen');
   panel.classList.add(mode);
   panel.classList.add('open');
@@ -372,13 +539,16 @@ function wsChatOpen(mode){
   wsChatOpenSession();
   setTimeout(()=>{ const inp=document.getElementById('wsChatTextInput'); if(inp) inp.focus(); wsScrollToBottom(true); }, 250);
 }
+
 function wsChatClose(){
   const panel = document.getElementById('wsChatPanel');
   if(!panel) return;
   panel.classList.remove('open','floating','fullscreen');
   wsChatMode = null;
+  wsCancelReply();
   wsChatCloseSession();
 }
+
 function wsOpenChatAdmin(){
   wsCloseSidebar();
   if(!wsIsLoggedIn()){
@@ -388,14 +558,14 @@ function wsOpenChatAdmin(){
     }
     return;
   }
-  wsChatOpen('fullscreen');
+  wsChatOpen('fullscreen', 'admin');
 }
 
 function wsChatOpenSession(){
   const uid = localStorage.getItem('wafa_uid');
   if(!uid || !window.wafaDB) return;
   if(wsChatUnsub) wsChatUnsub();
-  wsChatUnsub = window.wafaOnValue(window.wafaRef(window.wafaDB, 'chats/' + uid), (snap)=>{
+  wsChatUnsub = window.wafaOnValue(window.wafaRef(window.wafaDB, wsChatPath(uid)), (snap)=>{
     const data = snap.val() || {};
     wsCurrentChatData = data;
     wsRenderChatMessages(data);
@@ -428,11 +598,14 @@ function wsRenderChatMessages(data){
   const box = document.getElementById('wsChatMessages');
   if(!box) return;
   const msgs = Object.entries(data).map(([k,v])=>({...v,_id:k}))
-    .filter(m => !m.hiddenForUser) // user nggak liat pesan yang udah di-soft-delete
+    .filter(m => !m.hiddenForUser)
     .sort((a,b)=>(a.time||0)-(b.time||0));
 
   if(msgs.length === 0){
-    box.innerHTML = `<div id="wsChatEmpty"><div class="big">💬</div>Halo kak! Ada yang bisa dibantu?<br>Chat langsung ke Admin ya.</div>`;
+    const emptyMsg = wsChatType === 'cs'
+      ? '<div class="big">🤖</div>Halo kak! Saya CS Bot WafaStoreOnly.<br>Ketik pertanyaan seputar order, pembayaran, atau layanan.<br><br><span style="opacity:0.6;font-size:11px">Kalau bot gak bisa jawab, admin bakal bales di sini juga.</span>'
+      : '<div class="big">💬</div>Halo kak! Ada yang bisa dibantu?<br>Chat langsung ke Admin ya.';
+    box.innerHTML = `<div id="wsChatEmpty">${emptyMsg}</div>`;
     return;
   }
   const wasNearBottom = (box.scrollHeight - box.scrollTop - box.clientHeight) < 80;
@@ -464,7 +637,16 @@ function wsRenderChatMessages(data){
     if(!isUser){
       const av = document.createElement('div');
       av.className = 'ws-msg-avatar' + (grouped ? ' hidden' : '');
-      av.textContent = isBot ? '🤖' : '👨‍💼';
+      if(isBot){
+        av.textContent = '🤖';
+      } else if(isAdmin && wsAdminAvatarData){
+        av.classList.add('has-img');
+        av.innerHTML = `<img src="${wsAdminAvatarData}" alt="admin">`;
+      } else if(isAdmin){
+        av.textContent = '👨💼';
+      } else {
+        av.textContent = '👤';
+      }
       row.appendChild(av);
     }
 
@@ -472,29 +654,26 @@ function wsRenderChatMessages(data){
     bubble.className = 'ws-bubble ' + from;
     bubble.dataset.id = m._id;
 
-    // Reply preview
     if(m.replyTo){
       const rp = document.createElement('div');
       rp.className = 'ws-reply-preview';
-      const rn = m.replyTo.from === 'user' ? 'Kamu' : (m.replyTo.from === 'bot' ? 'CS Admin' : 'Admin');
+      const rn = m.replyTo.from === 'user' ? 'Kamu' : (m.replyTo.from === 'bot' ? 'CS Bot' : 'Admin');
       rp.innerHTML = `<div class="ws-reply-name">↩ ${wsEscape(rn)}</div><div class="ws-reply-text">${wsEscape(m.replyTo.text||'[Gambar]')}</div>`;
       bubble.appendChild(rp);
     }
 
-    // Label bot / admin
     if(isBot){
       const lbl = document.createElement('div');
       lbl.className = 'ws-bot-label';
-      lbl.innerHTML = '🤖 CS Admin <span style="font-weight:500;opacity:0.75;font-size:9px">• pesan otomatis</span>';
+      lbl.innerHTML = '🤖 CS Bot <span style="font-weight:500;opacity:0.75;font-size:9px">• pesan otomatis</span>';
       bubble.appendChild(lbl);
     } else if(isAdmin){
       const lbl = document.createElement('div');
       lbl.className = 'ws-admin-label';
-      lbl.innerHTML = '👨‍💼 Admin <span style="font-weight:500;opacity:0.7;font-size:9px">• manual</span>';
+      lbl.innerHTML = '👨💼 Admin <span style="font-weight:500;opacity:0.7;font-size:9px">• manual</span>';
       bubble.appendChild(lbl);
     }
 
-    // Content
     if(m.image){
       const img = document.createElement('img');
       img.src = m.image;
@@ -505,7 +684,6 @@ function wsRenderChatMessages(data){
       bubble.appendChild(document.createTextNode(m.text || ''));
     }
 
-    // Footer
     const footer = document.createElement('div');
     footer.className = 'ws-bubble-footer';
     const editedTag = m.edited ? ` <span style="opacity:0.6;font-style:italic">(diedit)</span>` : '';
@@ -537,7 +715,7 @@ function wsShowMsgMenu(bubbleEl, msg){
   document.querySelectorAll('.ws-msg-menu').forEach(m=>m.remove());
   const isMine = msg.from === 'user';
   const age = Date.now() - (msg.time||0);
-  const within3Min = age < 3*60*1000; // 3 menit
+  const within3Min = age < 3*60*1000;
   const menu = document.createElement('div');
   menu.className = 'ws-msg-menu';
   let buttons = '';
@@ -582,12 +760,13 @@ function wsCopyMsg(text){ if(!text) return; navigator.clipboard.writeText(text).
 function wsSetReply(msg){
   wsReplyTo = { msgId: msg._id, text: msg.text||'[Gambar]', from: msg.from };
   const bar = document.getElementById('wsReplyBar');
-  document.getElementById('wsReplyBarName').innerText = '↩ Membalas ' + (msg.from === 'user' ? 'Kamu' : (msg.from === 'bot' ? 'CS Admin' : 'Admin'));
+  const labelFrom = msg.from === 'user' ? 'Kamu' : (msg.from === 'bot' ? 'CS Bot' : 'Admin');
+  document.getElementById('wsReplyBarName').innerText = '↩ Membalas ' + labelFrom;
   document.getElementById('wsReplyBarText').innerText = msg.text || '[Gambar]';
   bar.classList.add('show');
   const inp = document.getElementById('wsChatTextInput'); if(inp) inp.focus();
 }
-function wsCancelReply(){ wsReplyTo = null; document.getElementById('wsReplyBar').classList.remove('show'); }
+function wsCancelReply(){ wsReplyTo = null; const bar = document.getElementById('wsReplyBar'); if(bar) bar.classList.remove('show'); }
 
 function wsEditMsgUser(msgId, oldText){
   const overlay = document.createElement('div');
@@ -603,9 +782,9 @@ function wsEditMsgUser(msgId, oldText){
     const uid = localStorage.getItem('wafa_uid');
     if(!uid) return;
     try{
-      const snap = await window.wafaGet(window.wafaRef(window.wafaDB, `chats/${uid}/${msgId}`));
+      const snap = await window.wafaGet(window.wafaRef(window.wafaDB, wsChatPath(uid, msgId)));
       const orig = snap.val() || {};
-      await window.wafaUpdate(window.wafaRef(window.wafaDB, `chats/${uid}/${msgId}`), {
+      await window.wafaUpdate(window.wafaRef(window.wafaDB, wsChatPath(uid, msgId)), {
         text: newText, edited: true, editedAt: Date.now(), editedBy: 'user',
         originalText: orig.originalText || orig.text || ''
       });
@@ -628,7 +807,7 @@ async function wsDeleteMsgUser(msgId){
   const uid = localStorage.getItem('wafa_uid');
   if(!uid) return;
   try{
-    await window.wafaUpdate(window.wafaRef(window.wafaDB, `chats/${uid}/${msgId}`), {
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, wsChatPath(uid, msgId)), {
       hiddenForUser: true, hiddenAt: Date.now()
     });
     wsToast('🗑️ Pesan dihapus');
@@ -641,7 +820,7 @@ function wsMarkRead(data){
   if(!uid) return;
   Object.entries(data).forEach(([k,v])=>{
     if((v.from === 'admin' || v.from === 'bot') && !v.read){
-      window.wafaUpdate(window.wafaRef(window.wafaDB, `chats/${uid}/${k}`), { read: true }).catch(()=>{});
+      window.wafaUpdate(window.wafaRef(window.wafaDB, wsChatPath(uid, k)), { read: true }).catch(()=>{});
     }
   });
 }
@@ -679,7 +858,7 @@ async function wsSendChatMsg(){
   if(wsReplyTo) msgData.replyTo = wsReplyTo;
   inp.value = ''; wsCancelReply();
   try{
-    await window.wafaSet(window.wafaRef(window.wafaDB, `chats/${uid}/${msgId}`), msgData);
+    await window.wafaSet(window.wafaRef(window.wafaDB, wsChatPath(uid, msgId)), msgData);
     wsScrollToBottom(true);
   }catch(e){ wsToast('❌ Gagal kirim'); return; }
 }
@@ -697,14 +876,14 @@ async function wsUploadChatImage(input){
     const msgId = Date.now() + '_' + Math.random().toString(36).slice(2,7);
     const msgData = { from: 'user', text: '', image: reader.result, time: Date.now(), read: false };
     if(wsReplyTo){ msgData.replyTo = wsReplyTo; wsCancelReply(); }
-    try{ await window.wafaSet(window.wafaRef(window.wafaDB, `chats/${uid}/${msgId}`), msgData); wsToast('📤 Gambar terkirim'); wsScrollToBottom(true); }catch(e){ wsToast('❌ Gagal kirim gambar'); }
+    try{ await window.wafaSet(window.wafaRef(window.wafaDB, wsChatPath(uid, msgId)), msgData); wsToast('📤 Gambar terkirim'); wsScrollToBottom(true); }catch(e){ wsToast('❌ Gagal kirim gambar'); }
   };
   reader.readAsDataURL(file);
 }
 
-function wsAddBotMsg(txt){ if(!txt) return; /* deprecated — bot reply dari Railway */ }
-function wsToggleBotChat(){ wsChatOpen('fullscreen'); }
-function wsToggleChatAdmin(){ wsChatOpen('fullscreen'); }
+function wsAddBotMsg(txt){ if(!txt) return; }
+function wsToggleBotChat(){ wsOpenCsBot(); }
+function wsToggleChatAdmin(){ wsOpenChatAdmin(); }
 
 function wsToggleHeaderMenu(e){
   e.stopPropagation();
@@ -757,9 +936,10 @@ async function wsDeleteAllChat(){
   if(!uid) return;
   try{
     const updates = {};
+    const base = wsChatBase();
     Object.keys(wsCurrentChatData || {}).forEach(msgId=>{
-      updates[`chats/${uid}/${msgId}/hiddenForUser`] = true;
-      updates[`chats/${uid}/${msgId}/hiddenAt`] = Date.now();
+      updates[`${base}/${uid}/${msgId}/hiddenForUser`] = true;
+      updates[`${base}/${uid}/${msgId}/hiddenAt`] = Date.now();
     });
     if(Object.keys(updates).length === 0){ wsToast('Nggak ada chat'); return; }
     await window.wafaUpdate(window.wafaRef(window.wafaDB, '/'), updates);
@@ -804,6 +984,8 @@ window.addEventListener('storage', (e)=>{ if(e.key === 'wafa_uid') wsSyncChatFab
 
 function wsInitAll(){
   wsLoadUser(); wsLoadBranding(); wsLoadGames(); wsLoadTheme(); wsSyncChatFab();
+  wsInitFabBadge();
+  wsLoadAdminAvatar();
   setInterval(wsSyncChatFab, 2000);
 }
 if(document.readyState === 'complete'){ wsInitAll(); }
