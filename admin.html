@@ -132,6 +132,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .bubble.theirs{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px}
 .bubble.bot{background:linear-gradient(135deg,#6b5ce7,#4a90e2);color:#fff;border-bottom-left-radius:4px}
 .bubble img{max-width:100%;max-height:280px;border-radius:10px;margin:-2px 0 4px 0;display:block;cursor:pointer}
+.bubble .msg-deleted{font-style:italic;opacity:0.6}
 .reply-preview{background:rgba(0,0,0,0.25);border-left:3px solid rgba(255,255,255,0.6);border-radius:6px;padding:5px 8px;margin-bottom:5px;font-size:11px;line-height:1.3;overflow:hidden}
 .bubble.theirs .reply-preview{background:rgba(255,255,255,0.05);border-left-color:#4a90e2}
 .reply-preview .reply-name{font-weight:800;opacity:0.9;margin-bottom:1px}
@@ -175,6 +176,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .confirm-box button{flex:1;padding:12px;border-radius:10px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
 .confirm-box button.cancel{background:var(--card-hover);color:var(--text)}
 .confirm-box button.danger{background:var(--danger);color:#fff}
+.confirm-box input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;margin-bottom:12px;outline:none}
 .cust-row{display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:12px;gap:10px}
 .cust-row b{font-size:13px;color:var(--text);font-weight:700}
 .brand-preview{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;gap:16px;align-items:center;margin-bottom:16px}
@@ -264,11 +266,6 @@ const db = getDatabase(app);
 const auth = getAuth(app);
 window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onValue; window.wafaGet=get; window.wafaUpdate=update; window.wafaRemove=remove;
 window.wafaAuth=auth; window.wafaSignOut=signOut;
-window.WEBHOOK_ORDER_PROSES = "https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
-window.WEBHOOK_ORDER_DONE = "https://discord.com/api/webhooks/1553277385795829770/CZA2wz3K99vCfKa5m0xBATsS4KKL-uJfAhKEN5X0pOwhUvGnWB-q6EV3bCzOzITQ3t5X";
-window.WEBHOOK_ORDER_FAIL = "https://discord.com/api/webhooks/1558876119137124493/82OYBsh9R34XudND9t909JEr71sbZPXGRwRjWemf4d6aS0UJxgvVsJf463la5p6n3gbS";
-window.WEBHOOK_TOPUP_LOGS = "https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB";
-window.WEBHOOK_TOPUP_LOGS_FAIL = "https://discord.com/api/webhooks/1558876882982797362/qJTAe6XIOf3Xz290AI6O71YOdox3nb4AYMx3FWypuNlbDjHthV6EihvG7DdLaRhjyIn_";
 window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 </script>
 </head>
@@ -293,7 +290,6 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       <small>Admin Panel</small>
     </div>
   </div>
-
   <div class="sb-section">
     <div class="sb-section-title">Menu Utama</div>
     <div class="sb-menu-item active" data-menu="dashboard" onclick="switchPage('dashboard')"><span class="icon">📊</span> Dashboard</div>
@@ -303,7 +299,6 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
     <div class="sb-menu-item" data-menu="botai" onclick="switchPage('botai')"><span class="icon">🤖</span> Bot AI</div>
     <div class="sb-menu-item" data-menu="customers" onclick="switchPage('customers')"><span class="icon">👥</span> Customers</div>
   </div>
-
   <div class="sb-section">
     <div class="sb-section-title">Kustomisasi</div>
     <div class="sb-menu-item" data-menu="branding" onclick="switchPage('branding')"><span class="icon">🎨</span> Branding</div>
@@ -317,13 +312,11 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
     <div class="sb-menu-item" data-menu="announcement" onclick="switchPage('announcement')"><span class="icon">📢</span> Announcement</div>
     <div class="sb-menu-item" data-menu="theme" onclick="switchPage('theme')"><span class="icon">🌈</span> Theme</div>
   </div>
-
   <div class="sb-section">
     <div class="sb-section-title">Sistem</div>
     <div class="sb-menu-item" data-menu="settings" onclick="switchPage('settings')"><span class="icon">⚙️</span> Settings</div>
     <div class="sb-menu-item" onclick="window.location.href='index.html'"><span class="icon">🌐</span> Lihat Website</div>
   </div>
-
   <div class="sb-footer">
     <div class="sb-user">
       <b id="sbUserName">Loading...</b>
@@ -337,11 +330,13 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
   <header class="admin-header">
     <div class="hamburger" onclick="toggleSidebar()">☰</div>
     <div class="header-search"><input type="text" id="globalSearch" placeholder="Cari order, customer, chat..."></div>
-    <div class="header-right"><div class="header-user" id="headerUserName">👤 Admin</div></div>
+    <div class="header-right" style="display:flex;gap:8px;align-items:center">
+      <div class="header-user" id="headerUserName">👤 Admin</div>
+      <div onclick="debugInfo()" style="padding:7px 14px;background:var(--warn);color:#000;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer">🐛 DEBUG</div>
+    </div>
   </header>
 
   <div class="admin-content">
-
     <div class="page" id="page-dashboard">
       <div class="page-title">Dashboard</div>
       <div class="page-sub">Ringkasan aktivitas WafaStoreOnly</div>
@@ -419,13 +414,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       <div class="page-title">🤖 Bot AI</div>
       <div class="page-sub">Atur bot auto-reply untuk chat floating di kanan bawah web</div>
       <div class="bot-status-banner">
-        <div class="left">
-          <div class="emoji">🤖</div>
-          <div>
-            <b id="botStatusTitle">Bot AI: Nonaktif</b>
-            <small id="botStatusDesc">Aktifkan bot biar bisa jawab otomatis pertanyaan user</small>
-          </div>
-        </div>
+        <div class="left"><div class="emoji">🤖</div><div><b id="botStatusTitle">Bot AI: Nonaktif</b><small id="botStatusDesc">Aktifkan bot biar bisa jawab otomatis pertanyaan user</small></div></div>
         <label class="switch"><input type="checkbox" id="botEnabledToggle" onchange="toggleBotMain()"><span class="slider"></span></label>
       </div>
       <div class="card">
@@ -444,10 +433,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div id="faqList"></div>
         <button class="btn btn-primary" onclick="addFaqItem()" style="margin-top:6px">➕ Tambah FAQ</button>
       </div>
-      <div class="card">
-        <div class="card-title">Contoh FAQ</div>
-        <button class="btn btn-purple btn-sm" onclick="loadSampleFaq()">📋 Load 7 FAQ Default</button>
-      </div>
+      <div class="card"><div class="card-title">Contoh FAQ</div><button class="btn btn-purple btn-sm" onclick="loadSampleFaq()">📋 Load 7 FAQ Default</button></div>
       <button class="btn btn-success" onclick="saveBotConfig()" style="width:100%;justify-content:center;padding:14px;margin-top:10px">💾 Simpan Bot</button>
     </div>
 
@@ -463,8 +449,8 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       <div class="card">
         <div class="card-title">Brand Identity</div>
         <div class="brand-preview"><img id="previewLogo" src="./logo.png" alt="logo"><div><b id="previewBrandName">WafaStoreOnly</b><small id="previewTagline">Top Up Robux Cepat & Aman</small></div></div>
-        <div class="input-group"><label>Nama Brand</label><input id="inputBrandName" placeholder="WafaStoreOnly"></div>
-        <div class="input-group"><label>Tagline</label><input id="inputTagline" placeholder="Top Up Robux Cepat & Aman"></div>
+        <div class="input-group"><label>Nama Brand</label><input id="inputBrandName"></div>
+        <div class="input-group"><label>Tagline</label><input id="inputTagline"></div>
         <div class="input-group"><label>Logo (max 500KB)</label><input type="file" id="inputLogoFile" accept="image/*" style="display:none" onchange="uploadLogo(this)"><label for="inputLogoFile" class="upload-btn">📸 Upload Logo Baru</label><span style="font-size:11px;color:#5a5a5a;margin-left:10px" id="logoFileName">Belum ada file</span></div>
         <button class="btn btn-success" onclick="saveBranding()">💾 Simpan Branding</button>
       </div>
@@ -637,7 +623,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div style="font-size:13px;color:#a8a8a8;line-height:1.9">
           <b style="color:#e8e8e8">Web URL:</b> <a href="https://wafastoreonly-official.vercel.app" style="color:#4a90e2" target="_blank">wafastoreonly-official.vercel.app</a><br>
           <b style="color:#e8e8e8">Firebase:</b> wafastoreonly<br>
-          <b style="color:#e8e8e8">Version:</b> Admin Panel v4.3
+          <b style="color:#e8e8e8">Version:</b> Admin Panel v4.4
         </div>
       </div>
     </div>
@@ -650,93 +636,86 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
   <button class="close-btn" onclick="closeImageViewer(event)">✕</button>
   <img id="imgViewerImg" src="" alt="Gambar">
 </div>
+
 <script>
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
 function sensorUid(u){if(!u)return'****';return u.slice(0,6)+'...'+u.slice(-4)}
-function sensorPrivateServer(url){
-  if(!url || url === '-') return '-';
-  try{
-    const match = url.match(/roblox\.com\/games\/(\d+)/i);
-    if(match){ const gameId = match[1]; const sensored = gameId.slice(0, 3) + '***' + gameId.slice(-2); return `roblox.com/games/${sensored}/...`; }
-    if(url.length <= 20) return url.slice(0, 5) + '***';
-    return url.slice(0, 20) + '***' + url.slice(-5);
-  }catch(e){ return '***'; }
-}
-
-function toggleSidebar(){
-  document.getElementById('adminSidebar').classList.toggle('open');
-  document.getElementById('sbOverlay').style.display = document.getElementById('adminSidebar').classList.contains('open')?'block':'none';
-}
-function closeSidebar(){
-  document.getElementById('adminSidebar').classList.remove('open');
-  document.getElementById('sbOverlay').style.display='none';
-}
-function checkAuthReady(){
-  if(window.wafaAuth && window.wafaDB && window.wafaOnValue && window.wafaGet){
-    window.wafaAuth.onAuthStateChanged((user)=>{
-      if(user && window.ADMIN_UIDS.includes(user.uid)){ initAdmin(user); }
-      else { document.getElementById('adminLock').style.display='flex'; document.getElementById('adminSidebar').style.display='none'; document.getElementById('adminMain').style.display='none'; }
-    });
-  } else { setTimeout(checkAuthReady, 100); }
-}
+function sensorPrivateServer(url){if(!url||url==='-')return'-';try{const m=url.match(/roblox\.com\/games\/(\d+)/i);if(m){const g=m[1];return`roblox.com/games/${g.slice(0,3)}***${g.slice(-2)}/...`;}if(url.length<=20)return url.slice(0,5)+'***';return url.slice(0,20)+'***'+url.slice(-5);}catch(e){return'***';}}
+function toggleSidebar(){document.getElementById('adminSidebar').classList.toggle('open');document.getElementById('sbOverlay').style.display=document.getElementById('adminSidebar').classList.contains('open')?'block':'none';}
+function closeSidebar(){document.getElementById('adminSidebar').classList.remove('open');document.getElementById('sbOverlay').style.display='none';}
+function checkAuthReady(){if(window.wafaAuth&&window.wafaDB&&window.wafaOnValue&&window.wafaGet){window.wafaAuth.onAuthStateChanged((user)=>{if(user&&window.ADMIN_UIDS.includes(user.uid)){initAdmin(user);}else{document.getElementById('adminLock').style.display='flex';document.getElementById('adminSidebar').style.display='none';document.getElementById('adminMain').style.display='none';}});}else{setTimeout(checkAuthReady,100);}}
 checkAuthReady();
-
 function initAdmin(user){
-  document.getElementById('sbUserName').innerText = user.displayName || user.email.split('@')[0];
-  document.getElementById('sbUserEmail').innerText = user.email;
-  document.getElementById('headerUserName').innerText = '👤 ' + (user.displayName || 'Admin');
-  document.getElementById('setEmail').value = user.email;
-  document.getElementById('setUid').value = user.uid;
-  document.getElementById('sbLogo').src = user.photoURL || './logo.png';
-  loadDashboard(); loadOrders(); loadTopups(); loadChats(); loadCustomers();
-  loadBranding(); loadGames(); loadWelcome(); loadSyarat(); loadAnnouncement();
-  loadTheme(); loadHarga(); loadVouchers(); loadPopup(); loadKeterangan();
+  document.getElementById('sbUserName').innerText=user.displayName||user.email.split('@')[0];
+  document.getElementById('sbUserEmail').innerText=user.email;
+  document.getElementById('headerUserName').innerText='👤 '+(user.displayName||'Admin');
+  document.getElementById('setEmail').value=user.email;
+  document.getElementById('setUid').value=user.uid;
+  document.getElementById('sbLogo').src=user.photoURL||'./logo.png';
+  loadDashboard();loadOrders();loadTopups();loadChats();loadCustomers();
+  loadBranding();loadGames();loadWelcome();loadSyarat();loadAnnouncement();
+  loadTheme();loadHarga();loadVouchers();loadPopup();loadKeterangan();
   loadBotConfig();
-  setTimeout(handleUrlAction, 1000);
+  setTimeout(handleUrlAction,1000);
 }
+function switchPage(menu){document.querySelectorAll('.page').forEach(p=>p.style.display='none');document.getElementById('page-'+menu).style.display='block';document.querySelectorAll('.sb-menu-item').forEach(i=>i.classList.remove('active'));const el=document.querySelector(`.sb-menu-item[data-menu="${menu}"]`);if(el)el.classList.add('active');closeSidebar();}
+function toast(msg){let t=document.getElementById('admToast');t.innerText=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),2500);}
+function logoutAdmin(){if(!confirm('Logout dari admin panel?'))return;localStorage.removeItem('wafa_uid');window.wafaAuth.signOut().then(()=>{location.href='login.html';}).catch(()=>{location.href='login.html';});}
+async function handleUrlAction(){const urlParams=new URLSearchParams(window.location.search);const actionId=urlParams.get('id');const action=urlParams.get('action');if(!actionId||!action)return;const idNum=parseInt(actionId);if(action==='selesai'){if(confirm(`Konfirmasi SELESAI untuk Order #${actionId.slice(-6)}?`)){await prosesSelesai(idNum);toast('✅ Order diselesaikan!');}}else if(action==='batal'){const alasan=prompt('Alasan batal?','Dibatalkan admin');if(alasan!==null){await prosesBatal(idNum,alasan);toast('❌ Order dibatalkan');}}window.history.replaceState({},'','admin.html');}
 
-function switchPage(menu){
-  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
-  document.getElementById('page-'+menu).style.display='block';
-  document.querySelectorAll('.sb-menu-item').forEach(i=>i.classList.remove('active'));
-  const el = document.querySelector(`.sb-menu-item[data-menu="${menu}"]`);
-  if(el) el.classList.add('active');
-  closeSidebar();
-}
-function toast(msg){
-  let t = document.getElementById('admToast');
-  t.innerText = msg; t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(()=>t.classList.remove('show'), 2500);
-}
-function logoutAdmin(){
-  if(!confirm('Logout dari admin panel?')) return;
-  localStorage.removeItem('wafa_uid');
-  window.wafaAuth.signOut().then(()=>{ location.href='login.html'; }).catch(()=>{ location.href='login.html'; });
-}
-async function handleUrlAction(){
-  const urlParams = new URLSearchParams(window.location.search);
-  const actionId = urlParams.get('id'); const action = urlParams.get('action');
-  if(!actionId || !action) return;
-  const idNum = parseInt(actionId);
-  if(action === 'selesai'){ if(confirm(`Konfirmasi SELESAI untuk Order #${actionId.slice(-6)}?`)){ await prosesSelesai(idNum); toast('✅ Order diselesaikan!'); } }
-  else if(action === 'batal'){ const alasan = prompt('Alasan batal?', 'Dibatalkan admin'); if(alasan !== null){ await prosesBatal(idNum, alasan); toast('❌ Order dibatalkan'); } }
-  window.history.replaceState({}, '', 'admin.html');
-}
+// ============ DEBUG TOOL (buat cek chat kosong) ============
+window.debugInfo = async function(){
+  let info = '=== DEBUG INFO ===\n\n';
+  if(window.wafaAuth && window.wafaAuth.currentUser){
+    info += '✅ Firebase Auth: LOGGED IN\n';
+    info += '   UID: ' + window.wafaAuth.currentUser.uid + '\n';
+    info += '   Email: ' + (window.wafaAuth.currentUser.email || '-') + '\n';
+  } else {
+    info += '❌ Firebase Auth: NOT LOGGED IN\n';
+    info += '   (Ini penyebab utama chat kosong!)\n';
+  }
+  info += '\n';
+  const lsUid = localStorage.getItem('wafa_uid');
+  info += '📦 localStorage.wafa_uid: ' + (lsUid || 'NULL') + '\n\n';
+  try {
+    const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'chats'));
+    const data = snap.val();
+    if(data){
+      const count = Object.keys(data).length;
+      info += '✅ Baca chats/: BERHASIL\n';
+      info += '   Jumlah user: ' + count + '\n';
+      Object.keys(data).slice(0,3).forEach(uid=>{
+        const msgs = data[uid];
+        info += '   - ' + uid.slice(0,10) + '... (' + Object.keys(msgs).length + ' pesan)\n';
+      });
+    } else {
+      info += '⚠️ Baca chats/: NULL (kosong atau diblokir)\n';
+    }
+  } catch(e){
+    info += '❌ Baca chats/: ERROR\n   ' + e.message + '\n';
+  }
+  info += '\n';
+  try {
+    const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'admins'));
+    const data = snap.val();
+    if(data){
+      info += '✅ Baca admins/: BERHASIL\n';
+      info += '   Admin UIDs: ' + Object.keys(data).join(', ') + '\n';
+    } else {
+      info += '⚠️ Baca admins/: NULL\n';
+    }
+  } catch(e){
+    info += '❌ Baca admins/: ERROR\n   ' + e.message + '\n';
+  }
+  alert(info);
+};
 
-// ===== BOT AI =====
+// ============ BOT AI ============
 let botFaqArray = [];
 const DEFAULT_BOT_PROMPT = `Kamu adalah "WafaBot", asisten customer service virtual dari WafaStoreOnly. Kamu ramah, sopan, helpful, dan menjawab dengan bahasa Indonesia santai.
 
 TENTANG WAFASTOREONLY:
 Toko online yang menjual layanan top up Robux (Roblox).
-
-CARA ORDER:
-1. Login/Daftar akun dulu
-2. Buka menu "Top Up Game"
-3. Pilih metode & masukkan username Roblox
-4. Pilih paket, lanjut bayar, upload bukti TF
-5. Tunggu admin proses
 
 ATURAN WAJIB:
 1. Jawab HANYA pertanyaan seputar WafaStoreOnly.
@@ -744,847 +723,303 @@ ATURAN WAJIB:
 3. Jawab SINGKAT max 3-4 kalimat.
 4. Jangan pakai markdown.
 5. Ramah & sopan.`;
+function loadBotConfig(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/bot_ai'),(snap)=>{const d=snap.val()||{};document.getElementById('botEnabledToggle').checked=d.enabled===true;document.getElementById('botAiToggle').checked=d.aiEnabled===true;document.getElementById('botSystemPrompt').value=d.systemPrompt||DEFAULT_BOT_PROMPT;botFaqArray=Array.isArray(d.faq)?d.faq:[];updateBotStatusUI();renderFaqList();});}
+function updateBotStatusUI(){const enabled=document.getElementById('botEnabledToggle').checked;const titleEl=document.getElementById('botStatusTitle');const descEl=document.getElementById('botStatusDesc');if(enabled){titleEl.innerHTML='Bot AI: <span style="color:#4ade80">Aktif</span>';descEl.innerText='Bot siap jawab otomatis 24 jam';}else{titleEl.innerHTML='Bot AI: <span style="color:#ef4444">Nonaktif</span>';descEl.innerText='Aktifkan bot biar bisa jawab otomatis';}}
+function toggleBotMain(){updateBotStatusUI();}
+function renderFaqList(){const list=document.getElementById('faqList');if(!list)return;if(botFaqArray.length===0){list.innerHTML='<div style="text-align:center;color:#5a5a5a;font-size:12px;padding:20px">Belum ada FAQ.</div>';return;}list.innerHTML='';botFaqArray.forEach((faq,idx)=>{const div=document.createElement('div');div.className='faq-item';div.innerHTML=`<div class="faq-head"><b>FAQ #${idx+1}</b><button class="faq-del" onclick="deleteFaqItem(${idx})">🗑️ Hapus</button></div><div class="input-group"><label>Keywords</label><input type="text" value="${escapeHtml(faq.keywords||'')}" onchange="updateFaqField(${idx},'keywords',this.value)"></div><div class="input-group"><label>Jawaban</label><textarea style="min-height:80px" onchange="updateFaqField(${idx},'answer',this.value)">${escapeHtml(faq.answer||'')}</textarea></div>`;list.appendChild(div);});}
+function escapeHtml(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function addFaqItem(){botFaqArray.push({keywords:'',answer:''});renderFaqList();}
+window.addFaqItem=addFaqItem;
+function deleteFaqItem(idx){if(!confirm('Hapus FAQ ini?'))return;botFaqArray.splice(idx,1);renderFaqList();}
+window.deleteFaqItem=deleteFaqItem;
+function updateFaqField(idx,field,value){if(botFaqArray[idx])botFaqArray[idx][field]=value;}
+window.updateFaqField=updateFaqField;
+function loadSampleFaq(){if(!confirm('Load 7 FAQ default?'))return;botFaqArray=[{keywords:'cara order, gimana order, cara beli',answer:'Login → Top Up Game → pilih metode & username → pilih paket → bayar → upload bukti TF → tunggu admin proses.'},{keywords:'metode pembayaran, payment',answer:'QRIS, DANA, GoPay, Seabank, Saldo Dompet Web.'},{keywords:'berapa lama, kapan masuk',answer:'Via Username: 5-10 menit. Via Gamepass: 5-7 hari. Gift: 5-10 menit.'},{keywords:'minimal top up',answer:'Minimal top up Rp10.000 ya kak.'},{keywords:'cara top up saldo, deposit',answer:'Menu Dompet → masukkan nominal → pilih metode → upload bukti → tunggu approve.'},{keywords:'refund, uang kembali',answer:'Refund hanya jika gagal proses karena kesalahan sistem.'},{keywords:'admin, hubungi admin',answer:'Chat Admin lewat menu 💬 Chat Admin di sidebar.'}];renderFaqList();toast('✅ 7 FAQ default di-load');}
+window.loadSampleFaq=loadSampleFaq;
+function resetBotPrompt(){if(!confirm('Reset ke default?'))return;document.getElementById('botSystemPrompt').value=DEFAULT_BOT_PROMPT;toast('✅ Direset');}
+window.resetBotPrompt=resetBotPrompt;
+async function saveBotConfig(){const enabled=document.getElementById('botEnabledToggle').checked;const aiEnabled=document.getElementById('botAiToggle').checked;const systemPrompt=document.getElementById('botSystemPrompt').value.trim();const cleanFaq=botFaqArray.filter(f=>f.keywords&&f.keywords.trim()&&f.answer&&f.answer.trim());const data={enabled,aiEnabled,systemPrompt,faq:cleanFaq,updatedAt:Date.now()};try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/bot_ai'),data);toast('✅ Bot disimpan!');}catch(e){alert('Gagal: '+e.message);}}
+window.saveBotConfig=saveBotConfig;
 
-function loadBotConfig(){
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/bot_ai'), (snap)=>{
-    const d = snap.val() || {};
-    document.getElementById('botEnabledToggle').checked = d.enabled === true;
-    document.getElementById('botAiToggle').checked = d.aiEnabled === true;
-    document.getElementById('botSystemPrompt').value = d.systemPrompt || DEFAULT_BOT_PROMPT;
-    botFaqArray = Array.isArray(d.faq) ? d.faq : [];
-    updateBotStatusUI();
-    renderFaqList();
-  });
-}
-function updateBotStatusUI(){
-  const enabled = document.getElementById('botEnabledToggle').checked;
-  const titleEl = document.getElementById('botStatusTitle');
-  const descEl = document.getElementById('botStatusDesc');
-  if(enabled){ titleEl.innerHTML = 'Bot AI: <span style="color:#4ade80">Aktif</span>'; descEl.innerText = 'Bot siap jawab otomatis 24 jam'; }
-  else { titleEl.innerHTML = 'Bot AI: <span style="color:#ef4444">Nonaktif</span>'; descEl.innerText = 'Aktifkan bot biar bisa jawab otomatis'; }
-}
-function toggleBotMain(){ updateBotStatusUI(); }
-function renderFaqList(){
-  const list = document.getElementById('faqList');
-  if(!list) return;
-  if(botFaqArray.length === 0){ list.innerHTML = '<div style="text-align:center;color:#5a5a5a;font-size:12px;padding:20px">Belum ada FAQ.</div>'; return; }
-  list.innerHTML = '';
-  botFaqArray.forEach((faq, idx)=>{
-    const div = document.createElement('div');
-    div.className = 'faq-item';
-    div.innerHTML = `<div class="faq-head"><b>FAQ #${idx + 1}</b><button class="faq-del" onclick="deleteFaqItem(${idx})">🗑️ Hapus</button></div><div class="input-group"><label>Keywords</label><input type="text" value="${escapeHtml(faq.keywords || '')}" onchange="updateFaqField(${idx}, 'keywords', this.value)"></div><div class="input-group"><label>Jawaban</label><textarea style="min-height:80px" onchange="updateFaqField(${idx}, 'answer', this.value)">${escapeHtml(faq.answer || '')}</textarea></div>`;
-    list.appendChild(div);
-  });
-}
-function escapeHtml(str){ if(!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function addFaqItem(){ botFaqArray.push({ keywords: '', answer: '' }); renderFaqList(); }
-window.addFaqItem = addFaqItem;
-function deleteFaqItem(idx){ if(!confirm('Hapus FAQ ini?')) return; botFaqArray.splice(idx, 1); renderFaqList(); }
-window.deleteFaqItem = deleteFaqItem;
-function updateFaqField(idx, field, value){ if(botFaqArray[idx]) botFaqArray[idx][field] = value; }
-window.updateFaqField = updateFaqField;
-
-function loadSampleFaq(){
-  if(!confirm('Load 7 FAQ default?')) return;
-  botFaqArray = [
-    { keywords: 'cara order, gimana order, cara beli', answer: 'Cara order: Login → Top Up Game → pilih metode & username → pilih paket → bayar → upload bukti TF → tunggu admin proses.' },
-    { keywords: 'metode pembayaran, bayar pake apa, payment', answer: 'Pembayaran: QRIS, DANA, GoPay, Seabank, Saldo Dompet Web.' },
-    { keywords: 'berapa lama, kapan masuk, proses berapa lama', answer: 'Via Username: 5-10 menit. Via Gamepass: 5-7 hari. Gift In Game: 5-10 menit.' },
-    { keywords: 'minimal top up, min top up', answer: 'Minimal top up Rp10.000 ya kak.' },
-    { keywords: 'cara top up saldo, isi saldo, deposit', answer: 'Buka menu Dompet → masukkan nominal → pilih metode → upload bukti → tunggu approve.' },
-    { keywords: 'refund, uang kembali', answer: 'Refund hanya jika gagal proses karena kesalahan sistem.' },
-    { keywords: 'admin, hubungi admin', answer: 'Chat Admin lewat menu 💬 Chat Admin di sidebar ya kak.' }
-  ];
-  renderFaqList();
-  toast('✅ 7 FAQ default di-load');
-}
-window.loadSampleFaq = loadSampleFaq;
-function resetBotPrompt(){ if(!confirm('Reset ke default?')) return; document.getElementById('botSystemPrompt').value = DEFAULT_BOT_PROMPT; toast('✅ Direset'); }
-window.resetBotPrompt = resetBotPrompt;
-async function saveBotConfig(){
-  const enabled = document.getElementById('botEnabledToggle').checked;
-  const aiEnabled = document.getElementById('botAiToggle').checked;
-  const systemPrompt = document.getElementById('botSystemPrompt').value.trim();
-  const cleanFaq = botFaqArray.filter(f => f.keywords && f.keywords.trim() && f.answer && f.answer.trim());
-  const data = { enabled, aiEnabled, systemPrompt, faq: cleanFaq, updatedAt: Date.now() };
-  try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/bot_ai'), data); toast('✅ Bot disimpan!'); }catch(e){ alert('Gagal: ' + e.message); }
-}
-window.saveBotConfig = saveBotConfig;
-
-// ===== DASHBOARD =====
+// ============ DASHBOARD ============
 function loadDashboard(){
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'orders'), (snap)=>{
-    const data = snap.val() || {}; const orders = Object.values(data);
-    let aktif = 0, totalOrder = orders.length, revenueToday = 0;
-    const today = new Date().toLocaleDateString('id-ID');
-    orders.forEach(o=>{ if(o.status === 'verifikasi' || o.status === 'proses') aktif++; if(o.date && o.date.includes(today.split('/')[0])) revenueToday += (o.total || 0); });
-    document.getElementById('stTotalOrder').innerText = totalOrder;
-    document.getElementById('stOrderAktif').innerText = aktif;
-    document.getElementById('stRevenueToday').innerText = 'Rp' + revenueToday.toLocaleString('id-ID');
-    const recent = orders.sort((a,b)=>b.id-a.id).slice(0,5);
-    const el = document.getElementById('dashboardRecentOrders'); el.innerHTML = '';
-    if(recent.length === 0){ el.innerHTML = '<div style="color:#5a5a5a;font-size:13px;text-align:center;padding:24px">Belum ada order</div>'; return; }
-    recent.forEach(o=>{
-      const cls = o.status=='verifikasi'?'verif':o.status=='proses'?'proses':o.status=='selesai'?'done':'batal';
-      const d = document.createElement('div'); d.className = 'item-card ' + cls;
-      d.innerHTML = `<div class="item-head"><b>📦 #${o.id.toString().slice(-6)}</b><span class="badge ${cls}">${(o.status||'').toUpperCase()}</span></div><div class="item-body">Username: <b>${o.username||'-'}</b> • ${o.jumlah||0} Robux<br>Total: <b style="color:#4ade80">Rp${(o.total||0).toLocaleString('id-ID')}</b> • ${o.date||'-'}</div>`;
-      el.appendChild(d);
-    });
-  });
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'users'), (snap)=>{ const data = snap.val() || {}; document.getElementById('stTotalUser').innerText = Object.keys(data).length; });
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'topup_saldo'), (snap)=>{ const data = snap.val() || {}; const pending = Object.values(data).filter(t=>t.status === 'verifikasi' || t.status === 'pending').length; document.getElementById('stTopupPending').innerText = pending; });
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'chats'), (snap)=>{ const data = snap.val() || {}; document.getElementById('stChatUser').innerText = Object.keys(data).length; });
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'orders'),(snap)=>{const data=snap.val()||{};const orders=Object.values(data);let aktif=0,totalOrder=orders.length,revenueToday=0;const today=new Date().toLocaleDateString('id-ID');orders.forEach(o=>{if(o.status==='verifikasi'||o.status==='proses')aktif++;if(o.date&&o.date.includes(today.split('/')[0]))revenueToday+=(o.total||0);});document.getElementById('stTotalOrder').innerText=totalOrder;document.getElementById('stOrderAktif').innerText=aktif;document.getElementById('stRevenueToday').innerText='Rp'+revenueToday.toLocaleString('id-ID');const recent=orders.sort((a,b)=>b.id-a.id).slice(0,5);const el=document.getElementById('dashboardRecentOrders');el.innerHTML='';if(recent.length===0){el.innerHTML='<div style="color:#5a5a5a;font-size:13px;text-align:center;padding:24px">Belum ada order</div>';return;}recent.forEach(o=>{const cls=o.status=='verifikasi'?'verif':o.status=='proses'?'proses':o.status=='selesai'?'done':'batal';const d=document.createElement('div');d.className='item-card '+cls;d.innerHTML=`<div class="item-head"><b>📦 #${o.id.toString().slice(-6)}</b><span class="badge ${cls}">${(o.status||'').toUpperCase()}</span></div><div class="item-body">Username: <b>${o.username||'-'}</b> • ${o.jumlah||0} Robux<br>Total: <b style="color:#4ade80">Rp${(o.total||0).toLocaleString('id-ID')}</b> • ${o.date||'-'}</div>`;el.appendChild(d);});});
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'users'),(snap)=>{const data=snap.val()||{};document.getElementById('stTotalUser').innerText=Object.keys(data).length;});
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'topup_saldo'),(snap)=>{const data=snap.val()||{};const pending=Object.values(data).filter(t=>t.status==='verifikasi'||t.status==='pending').length;document.getElementById('stTopupPending').innerText=pending;});
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'chats'),(snap)=>{const data=snap.val()||{};document.getElementById('stChatUser').innerText=Object.keys(data).length;});
 }
 
-// ===== ORDERS =====
+// ============ ORDERS ============
 function loadOrders(){
-  const list = document.getElementById('listOrders');
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'orders'), (snap)=>{
-    const data = snap.val(); list.innerHTML = '';
-    if(!data){ list.innerHTML = '<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada order</div>'; return; }
-    const orders = Object.values(data).sort((a,b)=>b.id-a.id);
-    orders.slice(0, 50).forEach(o=>{
-      const cls = o.status=='verifikasi'?'verif':o.status=='proses'?'proses':o.status=='selesai'?'done':'batal';
-      const card = document.createElement('div'); card.className = 'item-card ' + cls;
-      let extra = '';
-      if(o.method == 'gamepass' && o.gamepassLink) extra += `<br>🔗 Gamepass: <b style="word-break:break-all;font-size:11px">${o.gamepassLink}</b>`;
-      if(o.method == 'gift' && o.item) extra += `<br>🎁 Item: <b>${o.item}</b>`;
-      if(o.method == 'gift' && o.privateServer) extra += `<br>🔒 Private Server: <b style="word-break:break-all;font-size:11px">${sensorPrivateServer(o.privateServer)}</b>`;
-      if(o.metodeBayar == 'saldo') extra += `<br>💳 <b style="color:#4ade80">Via Saldo Web</b>`;
-      if(o.voucherCode) extra += `<br>🎟️ Voucher: <b style="color:#4ade80">${o.voucherCode} (-Rp${(o.voucherPotongan||0).toLocaleString('id-ID')})</b>`;
-      if(o.ocrSkipped) extra += `<br>⚠️ <b style="color:#fbbf24">OCR Skip - cek manual</b>`;
-      let buktiBtn = o.bukti ? `<button class="btn btn-primary btn-sm" onclick="lihatBukti('${o.id}')">🖼️ Bukti</button>` : '';
-      let actionBtns = '';
-      if(o.status === 'verifikasi' || o.status === 'proses'){ actionBtns = `<button class="btn btn-success btn-sm" onclick="prosesSelesai(${o.id})">✅ Selesai</button><button class="btn btn-danger btn-sm" onclick="prosesBatal(${o.id}, 'Dibatalkan admin')">❌ Batal</button>`; }
-      else { actionBtns = `<button class="btn btn-danger btn-sm" onclick="hapusOrder(${o.id})">🗑️ Hapus</button>`; }
-      card.innerHTML = `<div class="item-head"><div><b>📦 Order #${o.id.toString().slice(-6)}</b><div style="font-size:11px;color:#5a5a5a;margin-top:4px">${o.date||'-'}</div></div><span class="badge ${cls}">${(o.status||'').toUpperCase()}</span></div><div class="item-body">👤 <b>${o.username||'-'}</b> • 📊 <b>${o.jumlah||0} Robux</b><br>💰 <b style="color:#4ade80">Rp${(o.total||0).toLocaleString('id-ID')}</b> • 🔧 ${o.method||'-'}<br>📧 <b>${sensorEmail(o.email||'-')}</b> (${o.nickname||'-'})${extra}</div><div class="item-actions">${buktiBtn}${actionBtns}</div>`;
-      list.appendChild(card);
-    });
-  });
+  const list=document.getElementById('listOrders');
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'orders'),(snap)=>{const data=snap.val();list.innerHTML='';if(!data){list.innerHTML='<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada order</div>';return;}const orders=Object.values(data).sort((a,b)=>b.id-a.id);orders.slice(0,50).forEach(o=>{const cls=o.status=='verifikasi'?'verif':o.status=='proses'?'proses':o.status=='selesai'?'done':'batal';const card=document.createElement('div');card.className='item-card '+cls;let extra='';if(o.method=='gamepass'&&o.gamepassLink)extra+=`<br>🔗 Gamepass: <b style="word-break:break-all;font-size:11px">${o.gamepassLink}</b>`;if(o.method=='gift'&&o.item)extra+=`<br>🎁 Item: <b>${o.item}</b>`;if(o.metodeBayar=='saldo')extra+=`<br>💳 <b style="color:#4ade80">Via Saldo Web</b>`;if(o.voucherCode)extra+=`<br>🎟️ Voucher: <b style="color:#4ade80">${o.voucherCode}</b>`;if(o.ocrSkipped)extra+=`<br>⚠️ <b style="color:#fbbf24">OCR Skip</b>`;let buktiBtn=o.bukti?`<button class="btn btn-primary btn-sm" onclick="lihatBukti('${o.id}')">🖼️ Bukti</button>`:'';let actionBtns='';if(o.status==='verifikasi'||o.status==='proses'){actionBtns=`<button class="btn btn-success btn-sm" onclick="prosesSelesai(${o.id})">✅ Selesai</button><button class="btn btn-danger btn-sm" onclick="prosesBatal(${o.id},'Dibatalkan admin')">❌ Batal</button>`;}else{actionBtns=`<button class="btn btn-danger btn-sm" onclick="hapusOrder(${o.id})">🗑️ Hapus</button>`;}card.innerHTML=`<div class="item-head"><div><b>📦 Order #${o.id.toString().slice(-6)}</b><div style="font-size:11px;color:#5a5a5a;margin-top:4px">${o.date||'-'}</div></div><span class="badge ${cls}">${(o.status||'').toUpperCase()}</span></div><div class="item-body">👤 <b>${o.username||'-'}</b> • 📊 <b>${o.jumlah||0} Robux</b><br>💰 <b style="color:#4ade80">Rp${(o.total||0).toLocaleString('id-ID')}</b> • 🔧 ${o.method||'-'}<br>📧 <b>${sensorEmail(o.email||'-')}</b> (${o.nickname||'-'})${extra}</div><div class="item-actions">${buktiBtn}${actionBtns}</div>`;list.appendChild(card);});});
 }
+window.lihatBukti=async(id)=>{const snap=await window.wafaGet(window.wafaRef(window.wafaDB,'orders/'+id));const o=snap.val();if(!o||!o.bukti){alert('Bukti tidak ada');return;}const w=window.open('');w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${o.bukti}"></body></html>`);};
+window.prosesSelesai=async(id)=>{try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'orders/'+id),{status:'selesai',selesaiAt:Date.now(),diprosesOleh:'Admin Web',doneNotified:false});const snap=await window.wafaGet(window.wafaRef(window.wafaDB,'orders/'+id));const o=snap.val();await window.wafaSet(window.wafaRef(window.wafaDB,'logs/'+id),{id:id,nickname:o.nickname||'User',username:o.username||'-',jumlah:o.jumlah||0,date:o.date||'-',selesaiAt:Date.now(),status:'selesai'});toast('✅ Order diselesaikan! Bot kirim log.');}catch(e){alert('Gagal: '+e.message);}};
+window.prosesBatal=async(id,alasan)=>{try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'orders/'+id),{status:'batal',batalReason:alasan,batalAt:Date.now(),failNotified:false});toast('❌ Order dibatalkan. Bot kirim log.');}catch(e){alert('Gagal: '+e.message);}};
+window.hapusOrder=async(id)=>{if(!confirm('Hapus order #'+id.toString().slice(-6)+'?'))return;try{await window.wafaRemove(window.wafaRef(window.wafaDB,'orders/'+id));toast('🗑️ Order dihapus');}catch(e){alert('Gagal: '+e.message);}};
 
-window.lihatBukti = async (id)=>{
-  const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'orders/'+id));
-  const o = snap.val(); if(!o || !o.bukti){ alert('Bukti tidak ada'); return; }
-  const w = window.open('');
-  w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${o.bukti}"></body></html>`);
-};
-
-// ===== PROSES SELESAI (webhook mati — notif via BOT) =====
-window.prosesSelesai = async (id)=>{
-  try{
-    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), {
-      status:'selesai',
-      selesaiAt: Date.now(),
-      diprosesOleh: 'Admin Web',
-      doneNotified: false
-    });
-    const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'orders/'+id));
-    const o = snap.val();
-    await window.wafaSet(window.wafaRef(window.wafaDB, 'logs/'+id), {
-      id: id, nickname: o.nickname || 'User', username: o.username || '-',
-      jumlah: o.jumlah || 0, date: o.date || '-', selesaiAt: Date.now(), status: 'selesai'
-    });
-    // ❌ WEBHOOK DIMATIIN — notif Discord otomatis dari BOT
-    toast('✅ Order diselesaikan! Bot akan kirim log ke Discord.');
-  }catch(e){ alert('Gagal: '+e.message); }
-};
-
-// ===== PROSES BATAL (webhook mati) =====
-window.prosesBatal = async (id, alasan)=>{
-  try{
-    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), {
-      status:'batal',
-      batalReason: alasan,
-      batalAt: Date.now(),
-      failNotified: false
-    });
-    // ❌ WEBHOOK DIMATIIN — notif Discord otomatis dari BOT
-    toast('❌ Order dibatalkan. Bot akan kirim log ke Discord.');
-  }catch(e){ alert('Gagal: '+e.message); }
-};
-
-window.hapusOrder = async (id)=>{
-  if(!confirm('Hapus order #'+id.toString().slice(-6)+'?')) return;
-  try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'orders/'+id)); toast('🗑️ Order dihapus'); }catch(e){ alert('Gagal: '+e.message); }
-};
-
-// ===== TOPUP =====
+// ============ TOPUP ============
 function loadTopups(){
-  const list = document.getElementById('listTopup');
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'topup_saldo'), (snap)=>{
-    const data = snap.val(); list.innerHTML = '';
-    if(!data){ list.innerHTML = '<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada top up</div>'; return; }
-    const topups = Object.values(data).sort((a,b)=>b.id-a.id);
-    topups.slice(0, 50).forEach(t=>{
-      const cls = t.status=='selesai'?'done':t.status=='batal'?'batal':'verif';
-      const card = document.createElement('div'); card.className = 'item-card ' + cls;
-      let buktiBtn = t.bukti ? `<button class="btn btn-primary btn-sm" onclick="lihatBuktiTopup('${t.id}')">🖼️ Bukti</button>` : '';
-      let actionBtns = '';
-      if(t.status === 'verifikasi' || t.status === 'pending'){ actionBtns = `<button class="btn btn-success btn-sm" onclick="approveTopup(${t.id})">✅ Approve</button><button class="btn btn-danger btn-sm" onclick="rejectTopup(${t.id})">❌ Tolak</button>`; }
-      else { actionBtns = `<button class="btn btn-danger btn-sm" onclick="hapusTopup(${t.id})">🗑️ Hapus</button>`; }
-      const ocrTag = t.ocrSkipped ? '<br>⚠️ <b style="color:#fbbf24">OCR Skip</b>' : '';
-      card.innerHTML = `<div class="item-head"><div><b>💰 Top Up #${t.id.toString().slice(-6)}</b><div style="font-size:11px;color:#5a5a5a;margin-top:4px">${t.date||'-'}</div></div><span class="badge ${cls}">${(t.status||'pending').toUpperCase()}</span></div><div class="item-body">Nominal: <b style="color:#4ade80">Rp${(t.nominal||t.jumlah||0).toLocaleString('id-ID')}</b><br>User: <b>${sensorEmail(t.email||'-')}</b> (${t.nickname||'-'})${ocrTag}</div><div class="item-actions">${buktiBtn}${actionBtns}</div>`;
-      list.appendChild(card);
-    });
-  });
+  const list=document.getElementById('listTopup');
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'topup_saldo'),(snap)=>{const data=snap.val();list.innerHTML='';if(!data){list.innerHTML='<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada top up</div>';return;}const topups=Object.values(data).sort((a,b)=>b.id-a.id);topups.slice(0,50).forEach(t=>{const cls=t.status=='selesai'?'done':t.status=='batal'?'batal':'verif';const card=document.createElement('div');card.className='item-card '+cls;let buktiBtn=t.bukti?`<button class="btn btn-primary btn-sm" onclick="lihatBuktiTopup('${t.id}')">🖼️ Bukti</button>`:'';let actionBtns='';if(t.status==='verifikasi'||t.status==='pending'){actionBtns=`<button class="btn btn-success btn-sm" onclick="approveTopup(${t.id})">✅ Approve</button><button class="btn btn-danger btn-sm" onclick="rejectTopup(${t.id})">❌ Tolak</button>`;}else{actionBtns=`<button class="btn btn-danger btn-sm" onclick="hapusTopup(${t.id})">🗑️ Hapus</button>`;}card.innerHTML=`<div class="item-head"><div><b>💰 Top Up #${t.id.toString().slice(-6)}</b><div style="font-size:11px;color:#5a5a5a;margin-top:4px">${t.date||'-'}</div></div><span class="badge ${cls}">${(t.status||'pending').toUpperCase()}</span></div><div class="item-body">Nominal: <b style="color:#4ade80">Rp${(t.nominal||t.jumlah||0).toLocaleString('id-ID')}</b><br>User: <b>${sensorEmail(t.email||'-')}</b> (${t.nickname||'-'})</div><div class="item-actions">${buktiBtn}${actionBtns}</div>`;list.appendChild(card);});});
 }
-window.lihatBuktiTopup = async (id)=>{
-  const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'topup_saldo/'+id));
-  const t = snap.val(); if(!t || !t.bukti){ alert('Bukti tidak ada'); return; }
-  const w = window.open('');
-  w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${t.bukti}"></body></html>`);
-};
+window.lihatBuktiTopup=async(id)=>{const snap=await window.wafaGet(window.wafaRef(window.wafaDB,'topup_saldo/'+id));const t=snap.val();if(!t||!t.bukti){alert('Bukti tidak ada');return;}const w=window.open('');w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${t.bukti}"></body></html>`);};
+window.approveTopup=async(id)=>{if(!confirm('Approve top up ini?'))return;try{const snap=await window.wafaGet(window.wafaRef(window.wafaDB,'topup_saldo/'+id));const t=snap.val();const nominal=t.nominal||t.jumlah||0;const userSnap=await window.wafaGet(window.wafaRef(window.wafaDB,'users/'+t.uid+'/saldo'));const saldoLama=userSnap.val()||0;const saldoBaru=saldoLama+nominal;await window.wafaUpdate(window.wafaRef(window.wafaDB,'users/'+t.uid),{saldo:saldoBaru});await window.wafaUpdate(window.wafaRef(window.wafaDB,'topup_saldo/'+id),{status:'selesai',approvedAt:Date.now(),approvedBy:'Admin Web',doneNotified:false});toast(`✅ Saldo Rp${nominal.toLocaleString('id-ID')} ditambah!`);}catch(e){alert('Gagal: '+e.message);}};
+window.rejectTopup=async(id)=>{const alasan=prompt('Alasan tolak?','Bukti tidak valid');if(alasan===null)return;try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'topup_saldo/'+id),{status:'batal',batalReason:alasan,rejectedAt:Date.now(),failNotified:false});toast('❌ Ditolak');}catch(e){alert('Gagal: '+e.message);}};
+window.hapusTopup=async(id)=>{if(!confirm('Hapus top up #'+id.toString().slice(-6)+'?'))return;try{await window.wafaRemove(window.wafaRef(window.wafaDB,'topup_saldo/'+id));toast('🗑️ Dihapus');}catch(e){alert('Gagal: '+e.message);}};
 
-// ===== APPROVE TOPUP (webhook mati) =====
-window.approveTopup = async (id)=>{
-  if(!confirm('Approve top up ini?')) return;
-  try{
-    const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'topup_saldo/'+id));
-    const t = snap.val(); const nominal = t.nominal || t.jumlah || 0;
-    const userSnap = await window.wafaGet(window.wafaRef(window.wafaDB, 'users/'+t.uid+'/saldo'));
-    const saldoLama = userSnap.val() || 0; const saldoBaru = saldoLama + nominal;
-    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'users/'+t.uid), { saldo: saldoBaru });
-    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'topup_saldo/'+id), {
-      status:'selesai',
-      approvedAt: Date.now(),
-      approvedBy: 'Admin Web',
-      doneNotified: false
-    });
-    // ❌ WEBHOOK DIMATIIN — notif Discord otomatis dari BOT
-    toast(`✅ Saldo Rp${nominal.toLocaleString('id-ID')} ditambah! Bot kirim log.`);
-  }catch(e){ alert('Gagal: '+e.message); }
-};
-
-// ===== REJECT TOPUP (webhook mati) =====
-window.rejectTopup = async (id)=>{
-  const alasan = prompt('Alasan tolak?', 'Bukti tidak valid');
-  if(alasan === null) return;
-  try{
-    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'topup_saldo/'+id), {
-      status:'batal',
-      batalReason: alasan,
-      rejectedAt: Date.now(),
-      failNotified: false
-    });
-    // ❌ WEBHOOK DIMATIIN — notif Discord otomatis dari BOT
-    toast('❌ Ditolak. Bot kirim log.');
-  }catch(e){ alert('Gagal: '+e.message); }
-};
-window.hapusTopup = async (id)=>{
-  if(!confirm('Hapus top up #'+id.toString().slice(-6)+'?')) return;
-  try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'topup_saldo/'+id)); toast('🗑️ Dihapus'); }catch(e){ alert('Gagal: '+e.message); }
-};
-
-// ===== CHAT DM STYLE =====
-let currentChatUid = null;
-let chatUnsubscribe = null;
-let chatReplyTo = null;
-let chatCurrentData = {};
-
+// ============ CHAT DM STYLE ============
+let currentChatUid=null,chatUnsubscribe=null,chatReplyTo=null,chatCurrentData={};
 function loadChats(){
-  const list = document.getElementById('listChat');
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'chats'), (snap)=>{
-    const data = snap.val(); list.innerHTML = '';
-    if(!data){ list.innerHTML = '<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada chat</div>'; return; }
-    const uids = Object.keys(data);
-    const sorted = uids.map(uid=>{
-      const msgs = Object.values(data[uid] || {}).sort((a,b)=>(b.time||0)-(a.time||0));
-      const last = msgs[0] || {};
-      const unread = msgs.filter(m=>m.from === 'user' && !m.read).length;
-      return { uid, last, unread, count: msgs.length };
-    }).sort((a,b)=>(b.last.time||0)-(a.last.time||0));
-    document.getElementById('chatCount').innerText = sorted.length + ' percakapan';
-    sorted.forEach(item=>{
-      const card = document.createElement('div'); card.className = 'chat-list-item';
-      if(item.uid === currentChatUid) card.classList.add('active');
-      card.onclick = ()=>openChat(item.uid);
-      const time = item.last.time ? formatChatListTime(item.last.time) : '-';
-      const preview = item.last.image ? '📸 Gambar' : (item.last.text || '(kosong)');
-      card.innerHTML = `
-        <button class="del-chat" onclick="event.stopPropagation();confirmDeleteChat('${item.uid}')" title="Hapus chat ini">🗑️</button>
-        <div class="av">👤</div>
-        <div class="info"><div class="name">${item.last.nickname || sensorEmail(item.last.email || '-')}</div><div class="preview">${preview}</div></div>
-        <div class="meta"><div class="time">${time}</div>${item.unread > 0 ? `<div class="unread">${item.unread}</div>` : ''}</div>
-      `;
-      list.appendChild(card);
-    });
-  });
+  const list=document.getElementById('listChat');
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'chats'),(snap)=>{const data=snap.val();list.innerHTML='';if(!data){list.innerHTML='<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada chat</div>';return;}const uids=Object.keys(data);const sorted=uids.map(uid=>{const msgs=Object.values(data[uid]||{}).sort((a,b)=>(b.time||0)-(a.time||0));const last=msgs[0]||{};const unread=msgs.filter(m=>m.from==='user'&&!m.read).length;return{uid,last,unread,count:msgs.length};}).sort((a,b)=>(b.last.time||0)-(a.last.time||0));document.getElementById('chatCount').innerText=sorted.length+' percakapan';sorted.forEach(item=>{const card=document.createElement('div');card.className='chat-list-item';if(item.uid===currentChatUid)card.classList.add('active');card.onclick=()=>openChat(item.uid);const time=item.last.time?formatChatListTime(item.last.time):'-';const preview=item.last.image?'📸 Gambar':(item.last.text||'(kosong)');card.innerHTML=`<button class="del-chat" onclick="event.stopPropagation();confirmDeleteChat('${item.uid}')" title="Hapus chat ini">🗑️</button><div class="av">👤</div><div class="info"><div class="name">${item.last.nickname||sensorEmail(item.last.email||'-')}</div><div class="preview">${preview}</div></div><div class="meta"><div class="time">${time}</div>${item.unread>0?`<div class="unread">${item.unread}</div>`:''}</div>`;list.appendChild(card);});});
 }
-
-function formatChatListTime(ts){
-  const d = new Date(ts); const now = new Date();
-  const diff = now - d;
-  if(diff < 86400000) return d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
-  if(diff < 604800000) return ['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()];
-  return d.toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit'});
-}
-
-window.openChat = async (uid)=>{
-  currentChatUid = uid;
-  document.getElementById('chatEmpty').style.display = 'none';
-  document.getElementById('chatActiveBox').style.display = 'flex';
-  const backBtn = document.getElementById('chatBackBtn');
-  if(window.innerWidth <= 900 && backBtn) backBtn.style.display = 'block';
+function formatChatListTime(ts){const d=new Date(ts);const now=new Date();const diff=now-d;if(diff<86400000)return d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});if(diff<604800000)return['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()];return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit'});}
+window.openChat=async(uid)=>{
+  currentChatUid=uid;
+  document.getElementById('chatEmpty').style.display='none';
+  document.getElementById('chatActiveBox').style.display='flex';
+  const backBtn=document.getElementById('chatBackBtn');if(window.innerWidth<=900&&backBtn)backBtn.style.display='block';
   document.querySelectorAll('.chat-list-item').forEach(el=>el.classList.remove('active'));
-  const userSnap = await window.wafaGet(window.wafaRef(window.wafaDB, 'users/'+uid));
-  const u = userSnap.val() || {};
-  document.getElementById('chatBoxName').innerText = `${u.nickname || 'User'} (${sensorEmail(u.email||'-')})`;
-  document.getElementById('chatBoxStatus').innerText = 'Online';
-  if(chatUnsubscribe) chatUnsubscribe();
-  chatUnsubscribe = window.wafaOnValue(window.wafaRef(window.wafaDB, 'chats/'+uid), (snap)=>{
-    const data = snap.val() || {};
-    chatCurrentData = data;
-    renderChatMessages(data);
-  });
+  const userSnap=await window.wafaGet(window.wafaRef(window.wafaDB,'users/'+uid));
+  const u=userSnap.val()||{};
+  document.getElementById('chatBoxName').innerText=`${u.nickname||'User'} (${sensorEmail(u.email||'-')})`;
+  document.getElementById('chatBoxStatus').innerText='Online';
+  if(chatUnsubscribe)chatUnsubscribe();
+  chatUnsubscribe=window.wafaOnValue(window.wafaRef(window.wafaDB,'chats/'+uid),(snap)=>{const data=snap.val()||{};chatCurrentData=data;renderChatMessages(data);});
 };
-
-window.closeChat = ()=>{
-  currentChatUid = null;
-  if(chatUnsubscribe){ chatUnsubscribe(); chatUnsubscribe = null; }
-  document.getElementById('chatEmpty').style.display = 'flex';
-  document.getElementById('chatActiveBox').style.display = 'none';
-  document.querySelectorAll('.chat-list-item').forEach(el=>el.classList.remove('active'));
-};
-window.closeChatMobile = ()=>{
-  document.getElementById('chatBackBtn').style.display = 'none';
-  closeChat();
-};
-
-function chatFormatDate(ts){
-  if(!ts) return '';
-  const d = new Date(ts); const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const msgDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const diff = Math.round((today - msgDay) / (1000*60*60*24));
-  if(diff === 0) return 'Hari ini';
-  if(diff === 1) return 'Kemarin';
-  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-  return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-}
-function chatFormatTime(ts){ if(!ts) return ''; return new Date(ts).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}); }
-function chatGroupByDate(msgs){ const groups = []; let cur = null; msgs.forEach(m=>{ const day = m.time ? new Date(m.time).toDateString() : 'unknown'; if(day !== cur){ groups.push({type:'date', date: m.time}); cur = day; } groups.push({type:'msg', data: m}); }); return groups; }
-function chatEscape(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
+window.closeChat=()=>{currentChatUid=null;if(chatUnsubscribe){chatUnsubscribe();chatUnsubscribe=null;}document.getElementById('chatEmpty').style.display='flex';document.getElementById('chatActiveBox').style.display='none';document.querySelectorAll('.chat-list-item').forEach(el=>el.classList.remove('active'));};
+window.closeChatMobile=()=>{document.getElementById('chatBackBtn').style.display='none';closeChat();};
+function chatFormatDate(ts){if(!ts)return'';const d=new Date(ts);const now=new Date();const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());const msgDay=new Date(d.getFullYear(),d.getMonth(),d.getDate());const diff=Math.round((today-msgDay)/(1000*60*60*24));if(diff===0)return'Hari ini';if(diff===1)return'Kemarin';const days=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];const months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;}
+function chatFormatTime(ts){if(!ts)return'';return new Date(ts).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});}
+function chatGroupByDate(msgs){const groups=[];let cur=null;msgs.forEach(m=>{const day=m.time?new Date(m.time).toDateString():'unknown';if(day!==cur){groups.push({type:'date',date:m.time});cur=day;}groups.push({type:'msg',data:m});});return groups;}
+function chatEscape(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function renderChatMessages(data){
-  const box = document.getElementById('chatMessages');
-  if(!box) return;
-  const msgs = Object.entries(data).map(([k,v])=>({...v,_id:k})).sort((a,b)=>(a.time||0)-(b.time||0));
-  const wasNearBottom = (box.scrollHeight - box.scrollTop - box.clientHeight) < 100;
-  box.innerHTML = '';
-  if(msgs.length === 0){
-    box.innerHTML = '<div style="text-align:center;color:#5a5a5a;font-size:12px;padding:24px">Belum ada pesan</div>';
-    return;
-  }
-  const groups = chatGroupByDate(msgs);
-  let prevFrom = null, prevTime = 0;
+  const box=document.getElementById('chatMessages');if(!box)return;
+  const msgs=Object.entries(data).map(([k,v])=>({...v,_id:k})).sort((a,b)=>(a.time||0)-(b.time||0));
+  const wasNearBottom=(box.scrollHeight-box.scrollTop-box.clientHeight)<100;
+  box.innerHTML='';
+  if(msgs.length===0){box.innerHTML='<div style="text-align:center;color:#5a5a5a;font-size:12px;padding:24px">Belum ada pesan</div>';return;}
+  const groups=chatGroupByDate(msgs);let prevFrom=null,prevTime=0;
   groups.forEach(g=>{
-    if(g.type === 'date'){
-      const sep = document.createElement('div');
-      sep.className = 'date-sep';
-      sep.innerHTML = `<span>${chatFormatDate(g.date)}</span>`;
-      box.appendChild(sep);
-      prevFrom = null; prevTime = 0;
-      return;
-    }
-    const m = g.data;
-    const from = m.from === 'admin' ? 'mine' : (m.from === 'bot') ? 'bot' : 'theirs';
-    const isMine = from === 'mine';
-    const isBot = from === 'bot';
-    const grouped = (prevFrom === from) && (m.time - prevTime < 120000);
-    prevFrom = from; prevTime = m.time;
-    const row = document.createElement('div');
-    row.className = 'msg-row ' + (isMine ? 'mine' : 'theirs');
-    if(!grouped) row.classList.add('grouped-top');
-    if(!isMine){
-      const av = document.createElement('div');
-      av.className = 'msg-avatar' + (grouped ? ' hidden' : '');
-      av.textContent = isBot ? '🤖' : '👤';
-      row.appendChild(av);
-    }
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble ' + (isMine ? 'mine' : (isBot ? 'bot' : 'theirs'));
-    bubble.dataset.id = m._id;
-    if(m.replyTo){
-      const rp = document.createElement('div');
-      rp.className = 'reply-preview';
-      const replyName = m.replyTo.from === 'admin' ? 'Kamu' : (m.replyTo.from === 'bot' ? 'Bot' : 'User');
-      rp.innerHTML = `<div class="reply-name">↩ ${chatEscape(replyName)}</div><div class="reply-text">${chatEscape(m.replyTo.text || '[Gambar]')}</div>`;
-      bubble.appendChild(rp);
-    }
-    if(m.image){
-      const img = document.createElement('img');
-      img.src = m.image;
-      img.onclick = (e)=>{ e.stopPropagation(); openImageViewer(m.image); };
-      bubble.appendChild(img);
-      if(m.text){ const t = document.createElement('div'); t.textContent = m.text; bubble.appendChild(t); }
-    } else {
-      bubble.appendChild(document.createTextNode(m.text || ''));
-    }
-    const footer = document.createElement('div');
-    footer.className = 'bubble-footer';
-    const tickHtml = isMine ? `<span class="read-tick${m.read ? ' read' : ''}">${m.read ? '✓✓' : '✓'}</span>` : '';
-    footer.innerHTML = `<span>${chatFormatTime(m.time)}</span>${tickHtml}`;
+    if(g.type==='date'){const sep=document.createElement('div');sep.className='date-sep';sep.innerHTML=`<span>${chatFormatDate(g.date)}</span>`;box.appendChild(sep);prevFrom=null;prevTime=0;return;}
+    const m=g.data;
+    const from=m.from==='admin'?'mine':(m.from==='bot')?'bot':'theirs';
+    const isMine=from==='mine';const isBot=from==='bot';
+    const grouped=(prevFrom===from)&&(m.time-prevTime<120000);prevFrom=from;prevTime=m.time;
+    const row=document.createElement('div');row.className='msg-row '+(isMine?'mine':'theirs');if(!grouped)row.classList.add('grouped-top');
+    if(!isMine){const av=document.createElement('div');av.className='msg-avatar'+(grouped?' hidden':'');av.textContent=isBot?'🤖':'👤';row.appendChild(av);}
+    const bubble=document.createElement('div');bubble.className='bubble '+(isMine?'mine':(isBot?'bot':'theirs'));bubble.dataset.id=m._id;
+    if(m.replyTo){const rp=document.createElement('div');rp.className='reply-preview';const replyName=m.replyTo.from==='admin'?'Kamu':(m.replyTo.from==='bot'?'Bot':'User');rp.innerHTML=`<div class="reply-name">↩ ${chatEscape(replyName)}</div><div class="reply-text">${chatEscape(m.replyTo.text||'[Gambar]')}</div>`;bubble.appendChild(rp);}
+    if(m.hiddenForUser){const del=document.createElement('div');del.className='msg-deleted';del.style.fontSize='11px';del.style.marginBottom='4px';del.textContent='🚫 User hapus pesan ini';bubble.appendChild(del);}
+    if(m.image){const img=document.createElement('img');img.src=m.image;img.onclick=(e)=>{e.stopPropagation();openImageViewer(m.image);};bubble.appendChild(img);if(m.text){const t=document.createElement('div');t.textContent=m.text;bubble.appendChild(t);}}
+    else{bubble.appendChild(document.createTextNode(m.text||''));}
+    const footer=document.createElement('div');footer.className='bubble-footer';
+    let editedTag=m.edited?` <span style="opacity:0.6;font-style:italic">(diedit${m.editedBy==='admin'?' admin':''})</span>`:'';
+    const tickHtml=isMine?`<span class="read-tick${m.read?' read':''}">${m.read?'✓✓':'✓'}</span>`:'';
+    footer.innerHTML=`<span>${chatFormatTime(m.time)}${editedTag}</span>${tickHtml}`;
     bubble.appendChild(footer);
-    attachMsgActions(bubble, m);
-    row.appendChild(bubble);
-    box.appendChild(row);
+    attachMsgActions(bubble,m);
+    row.appendChild(bubble);box.appendChild(row);
   });
-  if(wasNearBottom) chatScrollToBottom(true);
-  updateChatScrollBtn();
+  if(wasNearBottom)chatScrollToBottom(true);updateChatScrollBtn();
 }
-
-function attachMsgActions(bubble, msg){
-  let pressTimer = null, longPressed = false;
-  const startPress = ()=>{ longPressed = false; pressTimer = setTimeout(()=>{ longPressed = true; showMsgMenu(bubble, msg); }, 500); };
-  const cancelPress = ()=>{ if(pressTimer){ clearTimeout(pressTimer); pressTimer = null; } };
-  bubble.addEventListener('touchstart', startPress, {passive:true});
-  bubble.addEventListener('touchend', (e)=>{ cancelPress(); if(longPressed) e.preventDefault(); });
-  bubble.addEventListener('touchmove', cancelPress, {passive:true});
-  bubble.addEventListener('touchcancel', cancelPress);
-  bubble.addEventListener('contextmenu', (e)=>{ e.preventDefault(); showMsgMenu(bubble, msg); });
+function attachMsgActions(bubble,msg){
+  let pressTimer=null,longPressed=false;
+  const startPress=()=>{longPressed=false;pressTimer=setTimeout(()=>{longPressed=true;showMsgMenu(bubble,msg);},500);};
+  const cancelPress=()=>{if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}};
+  bubble.addEventListener('touchstart',startPress,{passive:true});
+  bubble.addEventListener('touchend',(e)=>{cancelPress();if(longPressed)e.preventDefault();});
+  bubble.addEventListener('touchmove',cancelPress,{passive:true});
+  bubble.addEventListener('touchcancel',cancelPress);
+  bubble.addEventListener('contextmenu',(e)=>{e.preventDefault();showMsgMenu(bubble,msg);});
 }
-
-function showMsgMenu(bubbleEl, msg){
+function showMsgMenu(bubbleEl,msg){
   document.querySelectorAll('.msg-menu').forEach(m=>m.remove());
-  const isMine = msg.from === 'admin';
-  const menu = document.createElement('div');
-  menu.className = 'msg-menu';
-  let buttons = '';
-  if(msg.text) buttons += `<button data-action="copy">📋 Copy</button>`;
-  buttons += `<button data-action="reply">↩️ Reply</button>`;
-  if(isMine) buttons += `<button data-action="delete" class="danger">🗑️ Hapus</button>`;
-  menu.innerHTML = buttons;
-  document.body.appendChild(menu);
-  const rect = bubbleEl.getBoundingClientRect();
-  const menuRect = menu.getBoundingClientRect();
-  let left = rect.left;
-  let top = rect.top - menuRect.height - 8;
-  if(top < 10) top = rect.bottom + 8;
-  if(left + menuRect.width > window.innerWidth - 10) left = window.innerWidth - menuRect.width - 10;
-  if(left < 10) left = 10;
-  menu.style.left = left + 'px';
-  menu.style.top = top + 'px';
+  const menu=document.createElement('div');menu.className='msg-menu';
+  let buttons='';
+  if(msg.text&&!msg.hiddenForUser)buttons+=`<button data-action="copy">📋 Copy</button>`;
+  if(!msg.hiddenForUser){
+    buttons+=`<button data-action="edit">✏️ Edit</button>`;
+    buttons+=`<button data-action="delete" class="danger">🗑️ Hapus</button>`;
+  }
+  menu.innerHTML=buttons;document.body.appendChild(menu);
+  const rect=bubbleEl.getBoundingClientRect();const menuRect=menu.getBoundingClientRect();
+  let left=rect.left;let top=rect.top-menuRect.height-8;
+  if(top<10)top=rect.bottom+8;
+  if(left+menuRect.width>window.innerWidth-10)left=window.innerWidth-menuRect.width-10;
+  if(left<10)left=10;
+  menu.style.left=left+'px';menu.style.top=top+'px';
   menu.querySelectorAll('button').forEach(btn=>{
-    btn.onclick = (e)=>{
-      e.stopPropagation();
-      const action = btn.dataset.action;
-      menu.remove();
-      if(action === 'copy') copyMsg(msg.text);
-      else if(action === 'reply') setReply(msg);
-      else if(action === 'delete') confirmDeleteMsg(msg._id);
+    btn.onclick=(e)=>{
+      e.stopPropagation();const action=btn.dataset.action;menu.remove();
+      if(action==='copy')copyMsg(msg.text);
+      else if(action==='edit')editMsgAdmin(msg._id,msg.text||'');
+      else if(action==='delete')confirmDeleteMsg(msg._id);
     };
   });
-  setTimeout(()=>{
-    const close = (e)=>{ if(!menu.contains(e.target)){ menu.remove(); document.removeEventListener('click', close); document.removeEventListener('touchstart', close); } };
-    document.addEventListener('click', close);
-    document.addEventListener('touchstart', close);
-  }, 50);
+  setTimeout(()=>{const close=(e)=>{if(!menu.contains(e.target)){menu.remove();document.removeEventListener('click',close);document.removeEventListener('touchstart',close);}};document.addEventListener('click',close);document.addEventListener('touchstart',close);},50);
 }
-
-function copyMsg(text){ if(!text) return; navigator.clipboard.writeText(text).then(()=>toast('📋 Disalin')).catch(()=>toast('❌ Gagal')); }
-function setReply(msg){
-  chatReplyTo = { msgId: msg._id, text: msg.text || '[Gambar]', from: msg.from };
-  const bar = document.getElementById('chatReplyBar');
-  document.getElementById('chatReplyName').innerText = '↩ Membalas ' + (msg.from === 'admin' ? 'Kamu' : (msg.from === 'bot' ? 'Bot' : 'User'));
-  document.getElementById('chatReplyText').innerText = msg.text || '[Gambar]';
-  bar.classList.add('show');
-  document.getElementById('chatText').focus();
-}
-function cancelReply(){ chatReplyTo = null; document.getElementById('chatReplyBar').classList.remove('show'); }
-
-function confirmDeleteMsg(msgId){
-  const overlay = document.createElement('div');
-  overlay.className = 'confirm-overlay';
-  overlay.innerHTML = `<div class="confirm-box"><div class="title">Hapus pesan?</div><div class="desc">Pesan bakal dihapus.</div><div class="btns"><button class="cancel" id="cxlDel">Batal</button><button class="danger" id="cfmDel">Hapus</button></div></div>`;
+function copyMsg(text){if(!text)return;navigator.clipboard.writeText(text).then(()=>toast('📋 Disalin')).catch(()=>toast('❌ Gagal'));}
+function editMsgAdmin(msgId,oldText){
+  const overlay=document.createElement('div');overlay.className='confirm-overlay';
+  overlay.innerHTML=`<div class="confirm-box"><div class="title">✏️ Edit Pesan</div><div class="desc">Admin bisa edit kapan aja.</div><input type="text" id="editInput" value="${chatEscape(oldText).replace(/"/g,'&quot;')}"><div class="btns"><button class="cancel" id="cxlEdit">Batal</button><button class="danger" id="cfmEdit" style="background:var(--primary)">Simpan</button></div></div>`;
   document.body.appendChild(overlay);
-  overlay.querySelector('#cxlDel').onclick = ()=>overlay.remove();
-  overlay.querySelector('#cfmDel').onclick = async ()=>{ overlay.remove(); await deleteMsgAdmin(msgId); };
-  overlay.onclick = (e)=>{ if(e.target === overlay) overlay.remove(); };
-}
-
-async function deleteMsgAdmin(msgId){
-  if(!currentChatUid){ toast('Pilih chat dulu'); return; }
-  try{
-    const url = `https://wafastoreonly-default-rtdb.asia-southeast1.firebasedatabase.app/chats/${currentChatUid}/${msgId}.json`;
-    const res = await fetch(url, { method: 'DELETE' });
-    if(res.ok) toast('🗑️ Pesan dihapus');
-    else toast('❌ Gagal hapus');
-  }catch(e){ toast('❌ Gagal hapus: ' + e.message); }
-}
-
-window.confirmDeleteChat = function(uid){ confirmDeleteChatDialog(uid, false); };
-window.confirmDeleteCurrentChat = function(){
-  if(!currentChatUid){ toast('Pilih chat dulu'); return; }
-  confirmDeleteChatDialog(currentChatUid, true);
-};
-
-function confirmDeleteChatDialog(uid, closeAfter){
-  const overlay = document.createElement('div');
-  overlay.className = 'confirm-overlay';
-  overlay.innerHTML = `
-    <div class="confirm-box">
-      <div style="font-size:36px;margin-bottom:8px">🗑️</div>
-      <div class="title">Hapus seluruh chat?</div>
-      <div class="desc">
-        Semua percakapan user ini bakal dihapus permanen dari Firebase.<br><br>
-        <b style="color:#ef4444">Tindakan ini nggak bisa dibatalin.</b>
-      </div>
-      <div class="btns">
-        <button class="cancel" id="cxlChatDel">Batal</button>
-        <button class="danger" id="cfmChatDel">Hapus</button>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-  overlay.querySelector('#cxlChatDel').onclick = ()=>overlay.remove();
-  overlay.querySelector('#cfmChatDel').onclick = async ()=>{ overlay.remove(); await deleteChatUser(uid, closeAfter); };
-  overlay.onclick = (e)=>{ if(e.target === overlay) overlay.remove(); };
-}
-
-async function deleteChatUser(uid, closeAfter){
-  try{
-    await window.wafaRemove(window.wafaRef(window.wafaDB, 'chats/' + uid));
-    try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'chat_meta/' + uid)); }catch(e){}
-    toast('🗑️ Chat dihapus');
-    if(closeAfter) closeChat();
-  }catch(e){ alert('Gagal hapus chat: ' + e.message); }
-}
-
-window.sendReply = async ()=>{
-  if(!currentChatUid){ toast('Pilih chat dulu'); return; }
-  const inp = document.getElementById('chatText');
-  const t = inp.value.trim();
-  if(!t) return;
-  const msgId = Date.now() + '_' + Math.random().toString(36).slice(2,7);
-  const msgData = { from: 'admin', text: t, time: Date.now(), read: false };
-  if(chatReplyTo) msgData.replyTo = chatReplyTo;
-  try{
-    await window.wafaSet(window.wafaRef(window.wafaDB, 'chats/'+currentChatUid+'/'+msgId), msgData);
-    inp.value = '';
-    cancelReply();
-    chatScrollToBottom(true);
-  }catch(e){ alert('Gagal kirim: '+e.message); }
-};
-
-async function sendChatImage(input){
-  const file = input.files && input.files[0];
-  input.value = '';
-  if(!file || !currentChatUid) return;
-  if(file.size > 2 * 1024 * 1024){ toast('❌ Gambar max 2MB'); return; }
-  const reader = new FileReader();
-  reader.onload = async ()=>{
-    const msgId = Date.now() + '_' + Math.random().toString(36).slice(2,7);
-    const msgData = { from: 'admin', text: '', image: reader.result, time: Date.now(), read: false };
-    if(chatReplyTo){ msgData.replyTo = chatReplyTo; cancelReply(); }
+  const inp=overlay.querySelector('#editInput');inp.focus();
+  overlay.querySelector('#cxlEdit').onclick=()=>overlay.remove();
+  overlay.querySelector('#cfmEdit').onclick=async()=>{
+    const newText=inp.value.trim();
+    if(!newText){toast('Isi teks dulu');return;}
+    overlay.remove();
+    if(!currentChatUid){toast('Pilih chat dulu');return;}
     try{
-      await window.wafaSet(window.wafaRef(window.wafaDB, 'chats/'+currentChatUid+'/'+msgId), msgData);
-      toast('📤 Gambar terkirim');
-      chatScrollToBottom(true);
-    }catch(e){ toast('❌ Gagal kirim'); }
+      const snap=await window.wafaGet(window.wafaRef(window.wafaDB,`chats/${currentChatUid}/${msgId}`));
+      const orig=snap.val()||{};
+      await window.wafaUpdate(window.wafaRef(window.wafaDB,`chats/${currentChatUid}/${msgId}`),{
+        text:newText,edited:true,editedAt:Date.now(),editedBy:'admin',
+        originalText:orig.originalText||orig.text||''
+      });
+      toast('✏️ Pesan diedit');
+    }catch(e){toast('❌ Gagal edit: '+e.message);}
+  };
+  overlay.onclick=(e)=>{if(e.target===overlay)overlay.remove();};
+}
+function confirmDeleteMsg(msgId){
+  const overlay=document.createElement('div');overlay.className='confirm-overlay';
+  overlay.innerHTML=`<div class="confirm-box"><div class="title">Hapus pesan?</div><div class="desc">Pesan bakal <b style="color:#ef4444">dihapus permanen</b> dari Firebase.</div><div class="btns"><button class="cancel" id="cxlDel">Batal</button><button class="danger" id="cfmDel">Hapus</button></div></div>`;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#cxlDel').onclick=()=>overlay.remove();
+  overlay.querySelector('#cfmDel').onclick=async()=>{overlay.remove();await deleteMsgAdmin(msgId);};
+  overlay.onclick=(e)=>{if(e.target===overlay)overlay.remove();};
+}
+async function deleteMsgAdmin(msgId){
+  if(!currentChatUid){toast('Pilih chat dulu');return;}
+  try{
+    await window.wafaRemove(window.wafaRef(window.wafaDB,`chats/${currentChatUid}/${msgId}`));
+    toast('🗑️ Pesan dihapus permanen');
+  }catch(e){toast('❌ Gagal: '+e.message);}
+}
+window.confirmDeleteChat=function(uid){confirmDeleteChatDialog(uid,false);};
+window.confirmDeleteCurrentChat=function(){if(!currentChatUid){toast('Pilih chat dulu');return;}confirmDeleteChatDialog(currentChatUid,true);};
+function confirmDeleteChatDialog(uid,closeAfter){
+  const overlay=document.createElement('div');overlay.className='confirm-overlay';
+  overlay.innerHTML=`<div class="confirm-box"><div style="font-size:36px;margin-bottom:8px">🗑️</div><div class="title">Hapus seluruh chat?</div><div class="desc">Semua pesan user ini bakal dihapus <b style="color:#ef4444">permanen</b>.<br><br>Tindakan ini nggak bisa dibatalin.</div><div class="btns"><button class="cancel" id="cxlChatDel">Batal</button><button class="danger" id="cfmChatDel">Hapus</button></div></div>`;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#cxlChatDel').onclick=()=>overlay.remove();
+  overlay.querySelector('#cfmChatDel').onclick=async()=>{overlay.remove();await deleteChatUser(uid,closeAfter);};
+  overlay.onclick=(e)=>{if(e.target===overlay)overlay.remove();};
+}
+async function deleteChatUser(uid,closeAfter){
+  try{
+    await window.wafaRemove(window.wafaRef(window.wafaDB,'chats/'+uid));
+    try{await window.wafaRemove(window.wafaRef(window.wafaDB,'chat_meta/'+uid));}catch(e){}
+    toast('🗑️ Chat dihapus permanen');
+    if(closeAfter)closeChat();
+  }catch(e){alert('Gagal hapus chat: '+e.message);}
+}
+window.sendReply=async()=>{
+  if(!currentChatUid){toast('Pilih chat dulu');return;}
+  const inp=document.getElementById('chatText');const t=inp.value.trim();if(!t)return;
+  const msgId=Date.now()+'_'+Math.random().toString(36).slice(2,7);
+  const msgData={from:'admin',text:t,time:Date.now(),read:false};
+  if(chatReplyTo)msgData.replyTo=chatReplyTo;
+  try{
+    await window.wafaSet(window.wafaRef(window.wafaDB,'chats/'+currentChatUid+'/'+msgId),msgData);
+    inp.value='';cancelReply();chatScrollToBottom(true);
+  }catch(e){alert('Gagal kirim: '+e.message);}
+};
+async function sendChatImage(input){
+  const file=input.files&&input.files[0];input.value='';
+  if(!file||!currentChatUid)return;
+  if(file.size>2*1024*1024){toast('❌ Gambar max 2MB');return;}
+  const reader=new FileReader();
+  reader.onload=async()=>{
+    const msgId=Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    const msgData={from:'admin',text:'',image:reader.result,time:Date.now(),read:false};
+    if(chatReplyTo){msgData.replyTo=chatReplyTo;cancelReply();}
+    try{await window.wafaSet(window.wafaRef(window.wafaDB,'chats/'+currentChatUid+'/'+msgId),msgData);toast('📤 Gambar terkirim');chatScrollToBottom(true);}catch(e){toast('❌ Gagal kirim');}
   };
   reader.readAsDataURL(file);
 }
+function chatScrollToBottom(smooth){const box=document.getElementById('chatMessages');if(!box)return;box.scrollTo({top:box.scrollHeight,behavior:smooth?'smooth':'auto'});updateChatScrollBtn();}
+function updateChatScrollBtn(){const box=document.getElementById('chatMessages');const btn=document.getElementById('chatScrollBottom');if(!box||!btn)return;const dist=box.scrollHeight-box.scrollTop-box.clientHeight;if(dist>200)btn.classList.add('show');else btn.classList.remove('show');}
+document.addEventListener('DOMContentLoaded',()=>{const box=document.getElementById('chatMessages');if(box)box.addEventListener('scroll',updateChatScrollBtn);});
+function openImageViewer(src){const v=document.getElementById('imgViewer');const i=document.getElementById('imgViewerImg');if(!v||!i)return;i.src=src;v.classList.add('show');}
+function closeImageViewer(e){if(e&&e.target&&e.target.tagName==='IMG')return;document.getElementById('imgViewer').classList.remove('show');}
 
-function chatScrollToBottom(smooth){
-  const box = document.getElementById('chatMessages');
-  if(!box) return;
-  box.scrollTo({ top: box.scrollHeight, behavior: smooth ? 'smooth' : 'auto' });
-  updateChatScrollBtn();
-}
-function updateChatScrollBtn(){
-  const box = document.getElementById('chatMessages');
-  const btn = document.getElementById('chatScrollBottom');
-  if(!box || !btn) return;
-  const dist = box.scrollHeight - box.scrollTop - box.clientHeight;
-  if(dist > 200) btn.classList.add('show');
-  else btn.classList.remove('show');
-}
-document.addEventListener('DOMContentLoaded', ()=>{
-  const box = document.getElementById('chatMessages');
-  if(box) box.addEventListener('scroll', updateChatScrollBtn);
-});
-
-function openImageViewer(src){
-  const v = document.getElementById('imgViewer');
-  const i = document.getElementById('imgViewerImg');
-  if(!v || !i) return;
-  i.src = src;
-  v.classList.add('show');
-}
-function closeImageViewer(e){
-  if(e && e.target && e.target.tagName === 'IMG') return;
-  document.getElementById('imgViewer').classList.remove('show');
-}
-
-// ===== CUSTOMERS =====
+// ============ CUSTOMERS ============
 function loadCustomers(){
-  const list = document.getElementById('listCustomers');
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'users'), (snap)=>{
-    const data = snap.val(); list.innerHTML = '';
-    if(!data){ list.innerHTML = '<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada user</div>'; return; }
-    const users = Object.entries(data).map(([uid, u])=>({...u, uid}));
-    users.forEach(u=>{
-      const row = document.createElement('div'); row.className = 'cust-row';
-      row.innerHTML = `<div><b>${u.nickname || u.name || 'User'}</b><br><span style="font-size:11px;color:#8a8a8a">${sensorEmail(u.email||'-')} • ${sensorUid(u.uid)}</span></div><div style="text-align:right"><b style="color:#4ade80">Rp${(u.saldo||0).toLocaleString('id-ID')}</b><br><button class="btn btn-primary btn-sm" onclick="editSaldo('${u.uid}', ${u.saldo||0})" style="margin-top:6px">Edit</button></div>`;
-      list.appendChild(row);
-    });
-  });
+  const list=document.getElementById('listCustomers');
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'users'),(snap)=>{const data=snap.val();list.innerHTML='';if(!data){list.innerHTML='<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada user</div>';return;}const users=Object.entries(data).map(([uid,u])=>({...u,uid}));users.forEach(u=>{const row=document.createElement('div');row.className='cust-row';row.innerHTML=`<div><b>${u.nickname||u.name||'User'}</b><br><span style="font-size:11px;color:#8a8a8a">${sensorEmail(u.email||'-')} • ${sensorUid(u.uid)}</span></div><div style="text-align:right"><b style="color:#4ade80">Rp${(u.saldo||0).toLocaleString('id-ID')}</b><br><button class="btn btn-primary btn-sm" onclick="editSaldo('${u.uid}',${u.saldo||0})" style="margin-top:6px">Edit</button></div>`;list.appendChild(row);});});
 }
-window.editSaldo = async (uid, saldoLama)=>{
-  const input = prompt(`Edit saldo user.\n\nSaldo sekarang: Rp${saldoLama.toLocaleString('id-ID')}\n\nMasukkan saldo baru:`, saldoLama);
-  if(input === null) return;
-  const saldoBaru = parseInt(input) || 0;
-  if(saldoBaru < 0){ alert('Saldo ga boleh negatif'); return; }
-  try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'users/'+uid), { saldo: saldoBaru }); toast(`✅ Saldo diupdate`); }catch(e){ alert('Gagal: '+e.message); }
-};
+window.editSaldo=async(uid,saldoLama)=>{const input=prompt(`Edit saldo user.\n\nSaldo sekarang: Rp${saldoLama.toLocaleString('id-ID')}\n\nMasukkan saldo baru:`,saldoLama);if(input===null)return;const saldoBaru=parseInt(input)||0;if(saldoBaru<0){alert('Saldo ga boleh negatif');return;}try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'users/'+uid),{saldo:saldoBaru});toast(`✅ Saldo diupdate`);}catch(e){alert('Gagal: '+e.message);}};
 
-// ===== BRANDING =====
-let logoBase64 = null;
-let bannerBase64 = null;
-function loadBranding(){
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/branding'), (snap)=>{
-    const d = snap.val(); if(!d) return;
-    if(d.brandName){ document.getElementById('inputBrandName').value = d.brandName; document.getElementById('previewBrandName').innerText = d.brandName; document.getElementById('sbBrandName').innerText = d.brandName; }
-    if(d.tagline){ document.getElementById('inputTagline').value = d.tagline; document.getElementById('previewTagline').innerText = d.tagline; }
-    if(d.logo){ document.getElementById('previewLogo').src = d.logo; document.getElementById('sbLogo').src = d.logo; }
-    if(d.banner){ document.getElementById('bannerPreview').style.backgroundImage = `url('${d.banner}')`; document.getElementById('bannerPreview').innerText = ''; }
-  });
-}
-window.uploadLogo = (input)=>{ const file = input.files[0]; if(!file) return; if(file.size > 500*1024){ alert('❌ Max 500KB'); input.value=''; return; } const reader = new FileReader(); reader.onload = (e)=>{ logoBase64 = e.target.result; document.getElementById('previewLogo').src = logoBase64; document.getElementById('sbLogo').src = logoBase64; document.getElementById('logoFileName').innerText = '✅ ' + file.name; }; reader.readAsDataURL(file); };
-window.uploadBanner = (input)=>{ const file = input.files[0]; if(!file) return; if(file.size > 500*1024){ alert('❌ Max 500KB'); input.value=''; return; } const reader = new FileReader(); reader.onload = (e)=>{ bannerBase64 = e.target.result; document.getElementById('bannerPreview').style.backgroundImage = `url('${bannerBase64}')`; document.getElementById('bannerPreview').innerText = ''; document.getElementById('bannerFileName').innerText = '✅ ' + file.name; }; reader.readAsDataURL(file); };
-window.saveBranding = async ()=>{ const brandName = document.getElementById('inputBrandName').value.trim(); const tagline = document.getElementById('inputTagline').value.trim(); if(!brandName){ alert('Isi nama brand!'); return; } try{ const data = { brandName, tagline, updatedAt: Date.now() }; if(logoBase64) data.logo = logoBase64; await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/branding'), data); logoBase64 = null; toast('✅ Disimpan!'); }catch(e){ alert('Gagal: '+e.message); } };
-window.saveBanner = async ()=>{ if(!bannerBase64){ alert('Upload dulu!'); return; } try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/branding'), { banner: bannerBase64, updatedAt: Date.now() }); bannerBase64 = null; toast('✅ Banner disimpan!'); }catch(e){ alert('Gagal: '+e.message); } };
+// ============ BRANDING ============
+let logoBase64=null,bannerBase64=null;
+function loadBranding(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/branding'),(snap)=>{const d=snap.val();if(!d)return;if(d.brandName){document.getElementById('inputBrandName').value=d.brandName;document.getElementById('previewBrandName').innerText=d.brandName;document.getElementById('sbBrandName').innerText=d.brandName;}if(d.tagline){document.getElementById('inputTagline').value=d.tagline;document.getElementById('previewTagline').innerText=d.tagline;}if(d.logo){document.getElementById('previewLogo').src=d.logo;document.getElementById('sbLogo').src=d.logo;}if(d.banner){document.getElementById('bannerPreview').style.backgroundImage=`url('${d.banner}')`;document.getElementById('bannerPreview').innerText='';}});}
+window.uploadLogo=(input)=>{const file=input.files[0];if(!file)return;if(file.size>500*1024){alert('❌ Max 500KB');input.value='';return;}const reader=new FileReader();reader.onload=(e)=>{logoBase64=e.target.result;document.getElementById('previewLogo').src=logoBase64;document.getElementById('sbLogo').src=logoBase64;document.getElementById('logoFileName').innerText='✅ '+file.name;};reader.readAsDataURL(file);};
+window.uploadBanner=(input)=>{const file=input.files[0];if(!file)return;if(file.size>500*1024){alert('❌ Max 500KB');input.value='';return;}const reader=new FileReader();reader.onload=(e)=>{bannerBase64=e.target.result;document.getElementById('bannerPreview').style.backgroundImage=`url('${bannerBase64}')`;document.getElementById('bannerPreview').innerText='';document.getElementById('bannerFileName').innerText='✅ '+file.name;};reader.readAsDataURL(file);};
+window.saveBranding=async()=>{const brandName=document.getElementById('inputBrandName').value.trim();const tagline=document.getElementById('inputTagline').value.trim();if(!brandName){alert('Isi nama brand!');return;}try{const data={brandName,tagline,updatedAt:Date.now()};if(logoBase64)data.logo=logoBase64;await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/branding'),data);logoBase64=null;toast('✅ Disimpan!');}catch(e){alert('Gagal: '+e.message);}};
+window.saveBanner=async()=>{if(!bannerBase64){alert('Upload dulu!');return;}try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/branding'),{banner:bannerBase64,updatedAt:Date.now()});bannerBase64=null;toast('✅ Banner disimpan!');}catch(e){alert('Gagal: '+e.message);}};
 
-// ===== GAMES =====
-const GAME_LIST = [
-  { key: 'roblox', name: 'Roblox', defaultLogo: './roblox.png', active: true },
-  { key: 'mlbb', name: 'Mobile Legends', defaultLogo: './mlbb.png', active: false },
-  { key: 'pubg', name: 'PUBG Mobile', defaultLogo: './pubg.png', active: false },
-  { key: 'ff', name: 'Free Fire', defaultLogo: './ff.png', active: false },
-  { key: 'genshin', name: 'Genshin Impact', defaultLogo: './genshin.png', active: false },
-  { key: 'valorant', name: 'Valorant', defaultLogo: './valorant.png', active: false }
-];
-function loadGames(){ window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/games'), (snap)=>{ const d = snap.val() || {}; renderGameGrid(d); }); }
-function renderGameGrid(data){
-  const grid = document.getElementById('gameGrid'); grid.innerHTML = '';
-  GAME_LIST.forEach(g=>{
-    const saved = data[g.key] || {};
-    const logo = saved.logo || g.defaultLogo;
-    const name = saved.name || g.name;
-    const isActive = saved.active !== undefined ? saved.active : g.active;
-    const card = document.createElement('div'); card.className = 'game-card ' + (isActive ? 'active' : 'inactive');
-    card.innerHTML = `<div class="status-badge">${isActive ? 'AKTIF' : 'SOON'}</div><img src="${logo}" alt="${name}"><div class="game-name">${name}</div><div style="display:flex;flex-direction:column;gap:6px"><input type="file" id="upload_${g.key}" accept="image/*" style="display:none" onchange="uploadGameLogo('${g.key}', this)"><button class="btn btn-primary btn-sm" onclick="document.getElementById('upload_${g.key}').click()" style="justify-content:center">📸 Logo</button><button class="btn btn-grey btn-sm" onclick="editGameName('${g.key}', '${name}')" style="justify-content:center">✏️ Nama</button><button class="btn ${isActive ? 'btn-danger' : 'btn-success'} btn-sm" onclick="toggleGameActive('${g.key}', ${isActive})" style="justify-content:center">${isActive ? '❌ Off' : '✅ On'}</button></div>`;
-    grid.appendChild(card);
-  });
-}
-window.uploadGameLogo = (key, input)=>{ const file = input.files[0]; if(!file) return; if(file.size > 500*1024){ alert('❌ Max 500KB'); input.value=''; return; } const reader = new FileReader(); reader.onload = async (e)=>{ try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/games/' + key), { logo: e.target.result, updatedAt: Date.now() }); toast(`✅ Logo ${key}`); }catch(err){ alert('Gagal'); } }; reader.readAsDataURL(file); };
-window.editGameName = async (key, oldName)=>{ const newName = prompt(`Nama game "${key}":`, oldName); if(newName === null || !newName.trim()) return; try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/games/' + key), { name: newName.trim(), updatedAt: Date.now() }); }catch(e){ alert('Gagal'); } };
-window.toggleGameActive = async (key, currentActive)=>{ try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/games/' + key), { active: !currentActive, updatedAt: Date.now() }); }catch(e){ alert('Gagal'); } };
+// ============ GAMES ============
+const GAME_LIST=[{key:'roblox',name:'Roblox',defaultLogo:'./roblox.png',active:true},{key:'mlbb',name:'Mobile Legends',defaultLogo:'./mlbb.png',active:false},{key:'pubg',name:'PUBG Mobile',defaultLogo:'./pubg.png',active:false},{key:'ff',name:'Free Fire',defaultLogo:'./ff.png',active:false},{key:'genshin',name:'Genshin Impact',defaultLogo:'./genshin.png',active:false},{key:'valorant',name:'Valorant',defaultLogo:'./valorant.png',active:false}];
+function loadGames(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/games'),(snap)=>{const d=snap.val()||{};renderGameGrid(d);});}
+function renderGameGrid(data){const grid=document.getElementById('gameGrid');grid.innerHTML='';GAME_LIST.forEach(g=>{const saved=data[g.key]||{};const logo=saved.logo||g.defaultLogo;const name=saved.name||g.name;const isActive=saved.active!==undefined?saved.active:g.active;const card=document.createElement('div');card.className='game-card '+(isActive?'active':'inactive');card.innerHTML=`<div class="status-badge">${isActive?'AKTIF':'SOON'}</div><img src="${logo}" alt="${name}"><div class="game-name">${name}</div><div style="display:flex;flex-direction:column;gap:6px"><input type="file" id="upload_${g.key}" accept="image/*" style="display:none" onchange="uploadGameLogo('${g.key}',this)"><button class="btn btn-primary btn-sm" onclick="document.getElementById('upload_${g.key}').click()" style="justify-content:center">📸 Logo</button><button class="btn btn-grey btn-sm" onclick="editGameName('${g.key}','${name}')" style="justify-content:center">✏️ Nama</button><button class="btn ${isActive?'btn-danger':'btn-success'} btn-sm" onclick="toggleGameActive('${g.key}',${isActive})" style="justify-content:center">${isActive?'❌ Off':'✅ On'}</button></div>`;grid.appendChild(card);});}
+window.uploadGameLogo=(key,input)=>{const file=input.files[0];if(!file)return;if(file.size>500*1024){alert('❌ Max 500KB');input.value='';return;}const reader=new FileReader();reader.onload=async(e)=>{try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/games/'+key),{logo:e.target.result,updatedAt:Date.now()});toast(`✅ Logo ${key}`);}catch(err){alert('Gagal');}};reader.readAsDataURL(file);};
+window.editGameName=async(key,oldName)=>{const newName=prompt(`Nama game "${key}":`,oldName);if(newName===null||!newName.trim())return;try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/games/'+key),{name:newName.trim(),updatedAt:Date.now()});}catch(e){alert('Gagal');}};
+window.toggleGameActive=async(key,currentActive)=>{try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/games/'+key),{active:!currentActive,updatedAt:Date.now()});}catch(e){alert('Gagal');}};
 
-// ===== WELCOME =====
-function loadWelcome(){ window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/welcome'), (snap)=>{ const d = snap.val(); if(!d) return; document.getElementById('welcomeActive').value = d.active === false ? 'false' : 'true'; if(d.title) document.getElementById('welcomeTitle').value = d.title; if(d.tagline) document.getElementById('welcomeTagline').value = d.tagline; if(d.message) document.getElementById('welcomeMessage').value = d.message; }); }
-window.saveWelcome = async ()=>{ const active = document.getElementById('welcomeActive').value === 'true'; const title = document.getElementById('welcomeTitle').value.trim(); const tagline = document.getElementById('welcomeTagline').value.trim(); const message = document.getElementById('welcomeMessage').value.trim(); try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/welcome'), { active, title, tagline, message, updatedAt: Date.now() }); toast('✅ Disimpan'); }catch(e){ alert('Gagal'); } };
+// ============ WELCOME ============
+function loadWelcome(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/welcome'),(snap)=>{const d=snap.val();if(!d)return;document.getElementById('welcomeActive').value=d.active===false?'false':'true';if(d.title)document.getElementById('welcomeTitle').value=d.title;if(d.tagline)document.getElementById('welcomeTagline').value=d.tagline;if(d.message)document.getElementById('welcomeMessage').value=d.message;});}
+window.saveWelcome=async()=>{const active=document.getElementById('welcomeActive').value==='true';const title=document.getElementById('welcomeTitle').value.trim();const tagline=document.getElementById('welcomeTagline').value.trim();const message=document.getElementById('welcomeMessage').value.trim();try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/welcome'),{active,title,tagline,message,updatedAt:Date.now()});toast('✅ Disimpan');}catch(e){alert('Gagal');}};
 
-// ===== SYARAT =====
-function loadSyarat(){
-  ['username','gamepass','gift'].forEach(key=>{
-    window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/syarat/' + key), (snap)=>{
-      const d = snap.val(); if(!d) return;
-      const cap = key.charAt(0).toUpperCase() + key.slice(1);
-      const activeEl = document.getElementById('syaratActive' + cap);
-      const titleEl = document.getElementById('syaratTitle' + cap);
-      const itemsEl = document.getElementById('syaratItems' + cap);
-      if(activeEl) activeEl.value = d.active === false ? 'false' : 'true';
-      if(titleEl && d.title) titleEl.value = d.title;
-      if(itemsEl && d.items) itemsEl.value = d.items;
-    });
-  });
-}
-window.saveSyarat = async (key)=>{
-  const cap = key.charAt(0).toUpperCase() + key.slice(1);
-  const active = document.getElementById('syaratActive' + cap).value === 'true';
-  const title = document.getElementById('syaratTitle' + cap).value.trim();
-  const items = document.getElementById('syaratItems' + cap).value;
-  if(!title){ alert('Isi judul!'); return; }
-  if(!items.trim()){ alert('Isi minimal 1 syarat!'); return; }
-  try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/syarat/' + key), { active, title, items, updatedAt: Date.now() }); toast('✅ Disimpan'); }catch(e){ alert('Gagal'); }
-};
+// ============ SYARAT ============
+function loadSyarat(){['username','gamepass','gift'].forEach(key=>{window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/syarat/'+key),(snap)=>{const d=snap.val();if(!d)return;const cap=key.charAt(0).toUpperCase()+key.slice(1);const activeEl=document.getElementById('syaratActive'+cap);const titleEl=document.getElementById('syaratTitle'+cap);const itemsEl=document.getElementById('syaratItems'+cap);if(activeEl)activeEl.value=d.active===false?'false':'true';if(titleEl&&d.title)titleEl.value=d.title;if(itemsEl&&d.items)itemsEl.value=d.items;});});}
+window.saveSyarat=async(key)=>{const cap=key.charAt(0).toUpperCase()+key.slice(1);const active=document.getElementById('syaratActive'+cap).value==='true';const title=document.getElementById('syaratTitle'+cap).value.trim();const items=document.getElementById('syaratItems'+cap).value;if(!title){alert('Isi judul!');return;}if(!items.trim()){alert('Isi minimal 1 syarat!');return;}try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/syarat/'+key),{active,title,items,updatedAt:Date.now()});toast('✅ Disimpan');}catch(e){alert('Gagal');}};
 
-// ===== ANNOUNCEMENT =====
-function loadAnnouncement(){ window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/announcement'), (snap)=>{ const d = snap.val(); if(!d) return; document.getElementById('inputAnnActive').value = d.active === false ? 'false' : 'true'; }); }
-window.saveAnnouncement = async ()=>{ const active = document.getElementById('inputAnnActive').value === 'true'; try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/announcement'), { active, updatedAt: Date.now() }); toast('✅ Disimpan'); }catch(e){ alert('Gagal'); } };
+// ============ ANNOUNCEMENT ============
+function loadAnnouncement(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/announcement'),(snap)=>{const d=snap.val();if(!d)return;document.getElementById('inputAnnActive').value=d.active===false?'false':'true';});}
+window.saveAnnouncement=async()=>{const active=document.getElementById('inputAnnActive').value==='true';try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/announcement'),{active,updatedAt:Date.now()});toast('✅ Disimpan');}catch(e){alert('Gagal');}};
 
-// ===== THEME =====
-function loadTheme(){
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/theme'), (snap)=>{
-    const d = snap.val(); if(!d) return;
-    if(d.primary) document.getElementById('inputPrimary').value = d.primary;
-    if(d.accent) document.getElementById('inputAccent').value = d.accent;
-    updateThemePreview();
-  });
-  document.getElementById('inputPrimary').addEventListener('input', updateThemePreview);
-  document.getElementById('inputAccent').addEventListener('input', updateThemePreview);
-}
-function updateThemePreview(){ const p = document.getElementById('inputPrimary').value; const a = document.getElementById('inputAccent').value; const el = document.getElementById('themePreview'); el.style.background = `linear-gradient(90deg, ${p}, ${a})`; el.innerText = `Preview`; }
-window.saveTheme = async ()=>{ try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/theme'), { primary: document.getElementById('inputPrimary').value, accent: document.getElementById('inputAccent').value, updatedAt: Date.now() }); toast('✅ Disimpan'); }catch(e){ alert('Gagal'); } };
-window.resetTheme = async ()=>{ if(!confirm('Reset warna?')) return; document.getElementById('inputPrimary').value = '#4a90e2'; document.getElementById('inputAccent').value = '#6b5ce7'; updateThemePreview(); try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/theme'), { primary: '#4a90e2', accent: '#6b5ce7', updatedAt: Date.now() }); }catch(e){} };
+// ============ THEME ============
+function loadTheme(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/theme'),(snap)=>{const d=snap.val();if(!d)return;if(d.primary)document.getElementById('inputPrimary').value=d.primary;if(d.accent)document.getElementById('inputAccent').value=d.accent;updateThemePreview();});document.getElementById('inputPrimary').addEventListener('input',updateThemePreview);document.getElementById('inputAccent').addEventListener('input',updateThemePreview);}
+function updateThemePreview(){const p=document.getElementById('inputPrimary').value;const a=document.getElementById('inputAccent').value;const el=document.getElementById('themePreview');el.style.background=`linear-gradient(90deg, ${p}, ${a})`;el.innerText=`Preview`;}
+window.saveTheme=async()=>{try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/theme'),{primary:document.getElementById('inputPrimary').value,accent:document.getElementById('inputAccent').value,updatedAt:Date.now()});toast('✅ Disimpan');}catch(e){alert('Gagal');}};
+window.resetTheme=async()=>{if(!confirm('Reset warna?'))return;document.getElementById('inputPrimary').value='#4a90e2';document.getElementById('inputAccent').value='#6b5ce7';updateThemePreview();try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/theme'),{primary:'#4a90e2',accent:'#6b5ce7',updatedAt:Date.now()});}catch(e){}};
 
-// ===== HARGA =====
-function loadHarga(){
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/harga/roblox'), (snap)=>{
-    const d = snap.val() || {};
-    document.getElementById('inpPerRobux').value = d.perRobux || 160;
-    document.getElementById('inpPerRobuxGamepass').value = d.perRobuxGamepass || 140;
-    document.getElementById('inpPerRobuxGift').value = d.perRobuxGift || 95;
-    document.getElementById('inpDiskonPersen').value = d.diskonPersen || 0;
-    document.getElementById('inpVoucherAktif').value = d.voucherAktif === false ? 'false' : 'true';
-    renderPreviewHarga(d);
-  });
-  ['inpPerRobux','inpPerRobuxGamepass','inpPerRobuxGift','inpDiskonPersen'].forEach(id=>{
-    document.getElementById(id)?.addEventListener('input', ()=>{ renderPreviewHarga({ perRobux: parseInt(document.getElementById('inpPerRobux').value) || 160, perRobuxGamepass: parseInt(document.getElementById('inpPerRobuxGamepass').value) || 140, perRobuxGift: parseInt(document.getElementById('inpPerRobuxGift').value) || 95, diskonPersen: parseInt(document.getElementById('inpDiskonPersen').value) || 0 }); });
-  });
-}
-function renderPreviewHarga(d){
-  const p = d.perRobux || 160; const gp = d.perRobuxGamepass || 140; const g = d.perRobuxGift || 95; const disc = d.diskonPersen || 0;
-  const coret = disc > 0 ? Math.round(p / (1 - disc/100)) : p;
-  const el = document.getElementById('previewHarga'); if(!el) return;
-  el.innerHTML = `<b>Via Username:</b> Rp${p.toLocaleString('id-ID')}/robux ${disc > 0 ? `<span style="color:#5a5a5a;text-decoration:line-through">Rp${coret.toLocaleString('id-ID')}</span>` : ''}<br><b>Via Gamepass:</b> Rp${gp.toLocaleString('id-ID')}/robux<br><b>Gift In Game:</b> Rp${g.toLocaleString('id-ID')}/robux`;
-}
-window.saveHarga = async ()=>{
-  const perRobux = parseInt(document.getElementById('inpPerRobux').value) || 160;
-  const perRobuxGamepass = parseInt(document.getElementById('inpPerRobuxGamepass').value) || 140;
-  const perRobuxGift = parseInt(document.getElementById('inpPerRobuxGift').value) || 95;
-  const diskonPersen = parseInt(document.getElementById('inpDiskonPersen').value) || 0;
-  const voucherAktif = document.getElementById('inpVoucherAktif').value === 'true';
-  if(diskonPersen < 0 || diskonPersen > 100){ alert('Diskon 0-100%'); return; }
-  try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/harga/roblox'), { perRobux, perRobuxGamepass, perRobuxGift, diskonPersen, voucherAktif, updatedAt: Date.now() }); toast('✅ Disimpan'); }catch(e){ alert('Gagal'); }
-};
+// ============ HARGA ============
+function loadHarga(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/harga/roblox'),(snap)=>{const d=snap.val()||{};document.getElementById('inpPerRobux').value=d.perRobux||160;document.getElementById('inpPerRobuxGamepass').value=d.perRobuxGamepass||140;document.getElementById('inpPerRobuxGift').value=d.perRobuxGift||95;document.getElementById('inpDiskonPersen').value=d.diskonPersen||0;document.getElementById('inpVoucherAktif').value=d.voucherAktif===false?'false':'true';renderPreviewHarga(d);});['inpPerRobux','inpPerRobuxGamepass','inpPerRobuxGift','inpDiskonPersen'].forEach(id=>{document.getElementById(id)?.addEventListener('input',()=>{renderPreviewHarga({perRobux:parseInt(document.getElementById('inpPerRobux').value)||160,perRobuxGamepass:parseInt(document.getElementById('inpPerRobuxGamepass').value)||140,perRobuxGift:parseInt(document.getElementById('inpPerRobuxGift').value)||95,diskonPersen:parseInt(document.getElementById('inpDiskonPersen').value)||0});});});}
+function renderPreviewHarga(d){const p=d.perRobux||160;const gp=d.perRobuxGamepass||140;const g=d.perRobuxGift||95;const disc=d.diskonPersen||0;const coret=disc>0?Math.round(p/(1-disc/100)):p;const el=document.getElementById('previewHarga');if(!el)return;el.innerHTML=`<b>Via Username:</b> Rp${p.toLocaleString('id-ID')}/robux ${disc>0?`<span style="color:#5a5a5a;text-decoration:line-through">Rp${coret.toLocaleString('id-ID')}</span>`:''}<br><b>Via Gamepass:</b> Rp${gp.toLocaleString('id-ID')}/robux<br><b>Gift In Game:</b> Rp${g.toLocaleString('id-ID')}/robux`;}
+window.saveHarga=async()=>{const perRobux=parseInt(document.getElementById('inpPerRobux').value)||160;const perRobuxGamepass=parseInt(document.getElementById('inpPerRobuxGamepass').value)||140;const perRobuxGift=parseInt(document.getElementById('inpPerRobuxGift').value)||95;const diskonPersen=parseInt(document.getElementById('inpDiskonPersen').value)||0;const voucherAktif=document.getElementById('inpVoucherAktif').value==='true';if(diskonPersen<0||diskonPersen>100){alert('Diskon 0-100%');return;}try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/harga/roblox'),{perRobux,perRobuxGamepass,perRobuxGift,diskonPersen,voucherAktif,updatedAt:Date.now()});toast('✅ Disimpan');}catch(e){alert('Gagal');}};
 
-// ===== VOUCHER =====
-function loadVouchers(){
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'vouchers'), (snap)=>{
-    const d = snap.val() || {}; const list = document.getElementById('listVouchers'); const keys = Object.keys(d);
-    if(keys.length === 0){ list.innerHTML = '<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada voucher</div>'; return; }
-    list.innerHTML = '';
-    keys.forEach(code=>{
-      const v = d[code];
-      const isExpired = v.expiry && v.expiry > 0 && Date.now() > v.expiry;
-      const isHabis = v.quota && v.used >= v.quota;
-      const statusColor = (v.active === false || isExpired || isHabis) ? '#ef4444' : '#4ade80';
-      const statusText = v.active === false ? 'NONAKTIF' : isExpired ? 'EXPIRED' : isHabis ? 'HABIS' : 'AKTIF';
-      const valText = v.type === 'persen' ? `${v.value}%` : `Rp${(v.value||0).toLocaleString('id-ID')}`;
-      const card = document.createElement('div'); card.className = 'item-card';
-      card.style.borderColor = statusColor + '40';
-      card.innerHTML = `<div class="item-head"><div><b style="font-family:monospace;font-size:16px">🎟️ ${code}</b><div style="font-size:11px;color:#5a5a5a;margin-top:4px">Potongan: <b style="color:#4ade80">${valText}</b></div></div><span class="badge" style="background:${statusColor}20;color:${statusColor};border:1px solid ${statusColor}60">${statusText}</span></div><div class="item-body">Min: <b>Rp${(v.minPurchase||0).toLocaleString('id-ID')}</b><br>Kuota: <b>${v.used||0}/${v.quota||'∞'}</b></div><div class="item-actions"><button class="btn btn-primary btn-sm" onclick="editVoucher('${code}')">✏️ Edit</button><button class="btn btn-warn btn-sm" onclick="toggleVoucherActive('${code}', ${v.active !== false})">${v.active !== false ? '❌ Off' : '✅ On'}</button><button class="btn btn-danger btn-sm" onclick="deleteVoucher('${code}')">🗑️</button></div>`;
-      list.appendChild(card);
-    });
-  });
-}
-window.updateVoucherForm = ()=>{ const type = document.getElementById('vType').value; document.getElementById('vValueHint').innerText = type === 'persen' ? 'Isi 10 = potongan 10%' : 'Isi 5000 = potongan Rp5.000'; };
-window.clearVoucherForm = ()=>{ document.getElementById('vEditCode').value = ''; document.getElementById('vCode').value = ''; document.getElementById('vCode').disabled = false; document.getElementById('vType').value = 'persen'; document.getElementById('vValue').value = ''; document.getElementById('vMinPurchase').value = 0; document.getElementById('vMaxDiscount').value = 0; document.getElementById('vQuota').value = 100; document.getElementById('vActive').value = 'true'; document.getElementById('vExpiry').value = ''; updateVoucherForm(); };
-window.editVoucher = async (code)=>{ const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'vouchers/' + code)); const v = snap.val(); if(!v) return; document.getElementById('vEditCode').value = code; document.getElementById('vCode').value = code; document.getElementById('vCode').disabled = true; document.getElementById('vType').value = v.type || 'persen'; document.getElementById('vValue').value = v.value || 0; document.getElementById('vMinPurchase').value = v.minPurchase || 0; document.getElementById('vMaxDiscount').value = v.maxDiscount || 0; document.getElementById('vQuota').value = v.quota || 100; document.getElementById('vActive').value = v.active === false ? 'false' : 'true'; document.getElementById('vExpiry').value = v.expiry ? new Date(v.expiry).toISOString().slice(0,16) : ''; updateVoucherForm(); };
-window.saveVoucher = async ()=>{
-  const code = (document.getElementById('vCode').value || '').trim().toUpperCase();
-  const type = document.getElementById('vType').value;
-  const value = parseInt(document.getElementById('vValue').value) || 0;
-  const minPurchase = parseInt(document.getElementById('vMinPurchase').value) || 0;
-  const maxDiscount = parseInt(document.getElementById('vMaxDiscount').value) || 0;
-  const quota = parseInt(document.getElementById('vQuota').value) || 100;
-  const active = document.getElementById('vActive').value === 'true';
-  const expiryInput = document.getElementById('vExpiry').value;
-  const expiry = expiryInput ? new Date(expiryInput).getTime() : 0;
-  if(!code){ alert('Isi kode!'); return; }
-  if(!/^[A-Z0-9_-]+$/.test(code)){ alert('Kode cuma boleh huruf, angka, _ dan -'); return; }
-  if(value <= 0){ alert('Nilai > 0'); return; }
-  try{
-    const existing = (await window.wafaGet(window.wafaRef(window.wafaDB, 'vouchers/' + code))).val() || {};
-    await window.wafaSet(window.wafaRef(window.wafaDB, 'vouchers/' + code), { code, type, value, minPurchase, maxDiscount, quota, active, expiry, used: existing.used || 0, createdAt: existing.createdAt || Date.now(), updatedAt: Date.now() });
-    toast('✅ Disimpan'); clearVoucherForm();
-  }catch(e){ alert('Gagal: '+e.message); }
-};
-window.toggleVoucherActive = async (code, currentActive)=>{ try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'vouchers/' + code), { active: !currentActive, updatedAt: Date.now() }); }catch(e){ alert('Gagal'); } };
-window.deleteVoucher = async (code)=>{ if(!confirm(`Hapus voucher ${code}?`)) return; try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'vouchers/' + code)); toast('🗑️ Dihapus'); }catch(e){ alert('Gagal'); } };
+// ============ VOUCHER ============
+function loadVouchers(){window.wafaOnValue(window.wafaRef(window.wafaDB,'vouchers'),(snap)=>{const d=snap.val()||{};const list=document.getElementById('listVouchers');const keys=Object.keys(d);if(keys.length===0){list.innerHTML='<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada voucher</div>';return;}list.innerHTML='';keys.forEach(code=>{const v=d[code];const isExpired=v.expiry&&v.expiry>0&&Date.now()>v.expiry;const isHabis=v.quota&&v.used>=v.quota;const statusColor=(v.active===false||isExpired||isHabis)?'#ef4444':'#4ade80';const statusText=v.active===false?'NONAKTIF':isExpired?'EXPIRED':isHabis?'HABIS':'AKTIF';const valText=v.type==='persen'?`${v.value}%`:`Rp${(v.value||0).toLocaleString('id-ID')}`;const card=document.createElement('div');card.className='item-card';card.style.borderColor=statusColor+'40';card.innerHTML=`<div class="item-head"><div><b style="font-family:monospace;font-size:16px">🎟️ ${code}</b><div style="font-size:11px;color:#5a5a5a;margin-top:4px">Potongan: <b style="color:#4ade80">${valText}</b></div></div><span class="badge" style="background:${statusColor}20;color:${statusColor};border:1px solid ${statusColor}60">${statusText}</span></div><div class="item-body">Min: <b>Rp${(v.minPurchase||0).toLocaleString('id-ID')}</b><br>Kuota: <b>${v.used||0}/${v.quota||'∞'}</b></div><div class="item-actions"><button class="btn btn-primary btn-sm" onclick="editVoucher('${code}')">✏️ Edit</button><button class="btn btn-warn btn-sm" onclick="toggleVoucherActive('${code}',${v.active!==false})">${v.active!==false?'❌ Off':'✅ On'}</button><button class="btn btn-danger btn-sm" onclick="deleteVoucher('${code}')">🗑️</button></div>`;list.appendChild(card);});});}
+window.updateVoucherForm=()=>{const type=document.getElementById('vType').value;document.getElementById('vValueHint').innerText=type==='persen'?'Isi 10 = potongan 10%':'Isi 5000 = potongan Rp5.000';};
+window.clearVoucherForm=()=>{document.getElementById('vEditCode').value='';document.getElementById('vCode').value='';document.getElementById('vCode').disabled=false;document.getElementById('vType').value='persen';document.getElementById('vValue').value='';document.getElementById('vMinPurchase').value=0;document.getElementById('vMaxDiscount').value=0;document.getElementById('vQuota').value=100;document.getElementById('vActive').value='true';document.getElementById('vExpiry').value='';updateVoucherForm();};
+window.editVoucher=async(code)=>{const snap=await window.wafaGet(window.wafaRef(window.wafaDB,'vouchers/'+code));const v=snap.val();if(!v)return;document.getElementById('vEditCode').value=code;document.getElementById('vCode').value=code;document.getElementById('vCode').disabled=true;document.getElementById('vType').value=v.type||'persen';document.getElementById('vValue').value=v.value||0;document.getElementById('vMinPurchase').value=v.minPurchase||0;document.getElementById('vMaxDiscount').value=v.maxDiscount||0;document.getElementById('vQuota').value=v.quota||100;document.getElementById('vActive').value=v.active===false?'false':'true';document.getElementById('vExpiry').value=v.expiry?new Date(v.expiry).toISOString().slice(0,16):'';updateVoucherForm();};
+window.saveVoucher=async()=>{const code=(document.getElementById('vCode').value||'').trim().toUpperCase();const type=document.getElementById('vType').value;const value=parseInt(document.getElementById('vValue').value)||0;const minPurchase=parseInt(document.getElementById('vMinPurchase').value)||0;const maxDiscount=parseInt(document.getElementById('vMaxDiscount').value)||0;const quota=parseInt(document.getElementById('vQuota').value)||100;const active=document.getElementById('vActive').value==='true';const expiryInput=document.getElementById('vExpiry').value;const expiry=expiryInput?new Date(expiryInput).getTime():0;if(!code){alert('Isi kode!');return;}if(!/^[A-Z0-9_-]+$/.test(code)){alert('Kode cuma boleh huruf, angka, _ dan -');return;}if(value<=0){alert('Nilai > 0');return;}try{const existing=(await window.wafaGet(window.wafaRef(window.wafaDB,'vouchers/'+code))).val()||{};await window.wafaSet(window.wafaRef(window.wafaDB,'vouchers/'+code),{code,type,value,minPurchase,maxDiscount,quota,active,expiry,used:existing.used||0,createdAt:existing.createdAt||Date.now(),updatedAt:Date.now()});toast('✅ Disimpan');clearVoucherForm();}catch(e){alert('Gagal: '+e.message);}};
+window.toggleVoucherActive=async(code,currentActive)=>{try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'vouchers/'+code),{active:!currentActive,updatedAt:Date.now()});}catch(e){alert('Gagal');}};
+window.deleteVoucher=async(code)=>{if(!confirm(`Hapus voucher ${code}?`))return;try{await window.wafaRemove(window.wafaRef(window.wafaDB,'vouchers/'+code));toast('🗑️ Dihapus');}catch(e){alert('Gagal');}};
 
-// ===== POPUP =====
-let popupButtons = [];
-let popupImgBase64 = null;
-function loadPopup(){
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/popup'), (snap)=>{
-    const d = snap.val() || {};
-    document.getElementById('popupActive').value = d.active === false ? 'false' : 'true';
-    if(d.title) document.getElementById('popupTitle').value = d.title;
-    if(d.desc) document.getElementById('popupDesc').value = d.desc;
-    document.getElementById('popupEveryMinutes').value = d.everyMinutes || 0;
-    if(d.image){ popupImgBase64 = d.image; document.getElementById('popupImgName').innerText = '✅ Ada'; }
-    popupButtons = d.buttons || [];
-    renderPopupButtons(); renderPopupPreview();
-  });
-  ['popupTitle','popupDesc'].forEach(id=> document.getElementById(id)?.addEventListener('input', renderPopupPreview));
-}
-function renderPopupButtons(){
-  const list = document.getElementById('popupButtonsList'); if(!list) return;
-  list.innerHTML = '';
-  popupButtons.forEach((btn, idx)=>{
-    const row = document.createElement('div'); row.className = 'popup-btn-row';
-    row.innerHTML = `<input type="text" placeholder="🎮" value="${btn.icon || ''}" onchange="updatePopupBtn(${idx},'icon',this.value)" maxlength="3"><input type="text" placeholder="Discord" value="${btn.label || ''}" onchange="updatePopupBtn(${idx},'label',this.value)"><input type="text" placeholder="https://..." value="${btn.url || ''}" onchange="updatePopupBtn(${idx},'url',this.value)"><button class="btn-del" onclick="removePopupButton(${idx})">✕</button>`;
-    list.appendChild(row);
-  });
-}
-window.addPopupButton = ()=>{ popupButtons.push({ icon: '🔗', label: '', url: '' }); renderPopupButtons(); renderPopupPreview(); };
-window.removePopupButton = (idx)=>{ popupButtons.splice(idx, 1); renderPopupButtons(); renderPopupPreview(); };
-window.updatePopupBtn = (idx, key, value)=>{ popupButtons[idx][key] = value; renderPopupPreview(); };
-window.uploadPopupImg = (input)=>{ const file = input.files[0]; if(!file) return; if(file.size > 500*1024){ alert('Max 500KB'); input.value=''; return; } const reader = new FileReader(); reader.onload = (e)=>{ popupImgBase64 = e.target.result; document.getElementById('popupImgName').innerText = '✅ ' + file.name; renderPopupPreview(); }; reader.readAsDataURL(file); };
-function detectPlatformClass(url){
-  if(!url) return ''; const u = url.toLowerCase();
-  if(u.includes('discord')) return 'discord'; if(u.includes('instagram')) return 'instagram';
-  if(u.includes('tiktok')) return 'tiktok'; if(u.includes('facebook') || u.includes('fb.com')) return 'facebook';
-  if(u.includes('wa.me') || u.includes('whatsapp')) return 'whatsapp';
-  if(u.includes('sociabuzz')) return 'sociabuzz';
-  return '';
-}
-function renderPopupPreview(){
-  const el = document.getElementById('popupPreview'); if(!el) return;
-  const title = document.getElementById('popupTitle')?.value || '🎉 Promo Spesial!';
-  const desc = document.getElementById('popupDesc')?.value || 'Gabung sosmed kami!';
-  let buttonsHtml = '';
-  popupButtons.forEach(btn=>{ if(btn.label && btn.url){ const cls = detectPlatformClass(btn.url); buttonsHtml += `<div class="popup-btn-preview ${cls}">${btn.icon || '🔗'} ${btn.label}</div>`; } });
-  el.innerHTML = `<div style="background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:24px;max-width:340px;margin:0 auto">${popupImgBase64 ? `<img src="${popupImgBase64}" style="width:100%;border-radius:12px;margin-bottom:14px">` : ''}<div style="font-size:18px;font-weight:800;color:#e8e8e8;margin-bottom:8px">${title}</div><div style="font-size:12px;color:#a8a8a8;line-height:1.6;margin-bottom:14px">${desc}</div>${buttonsHtml}</div>`;
-}
-window.savePopup = async ()=>{
-  const data = { active: document.getElementById('popupActive').value === 'true', title: document.getElementById('popupTitle').value.trim(), desc: document.getElementById('popupDesc').value.trim(), everyMinutes: parseInt(document.getElementById('popupEveryMinutes').value) || 0, buttons: popupButtons.filter(b=>b.label && b.url), updatedAt: Date.now() };
-  if(popupImgBase64) data.image = popupImgBase64;
-  try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/popup'), data); toast('✅ Disimpan'); }catch(e){ alert('Gagal'); }
-};
+// ============ POPUP ============
+let popupButtons=[],popupImgBase64=null;
+function loadPopup(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/popup'),(snap)=>{const d=snap.val()||{};document.getElementById('popupActive').value=d.active===false?'false':'true';if(d.title)document.getElementById('popupTitle').value=d.title;if(d.desc)document.getElementById('popupDesc').value=d.desc;document.getElementById('popupEveryMinutes').value=d.everyMinutes||0;if(d.image){popupImgBase64=d.image;document.getElementById('popupImgName').innerText='✅ Ada';}popupButtons=d.buttons||[];renderPopupButtons();renderPopupPreview();});['popupTitle','popupDesc'].forEach(id=>document.getElementById(id)?.addEventListener('input',renderPopupPreview));}
+function renderPopupButtons(){const list=document.getElementById('popupButtonsList');if(!list)return;list.innerHTML='';popupButtons.forEach((btn,idx)=>{const row=document.createElement('div');row.className='popup-btn-row';row.innerHTML=`<input type="text" placeholder="🎮" value="${btn.icon||''}" onchange="updatePopupBtn(${idx},'icon',this.value)" maxlength="3"><input type="text" placeholder="Discord" value="${btn.label||''}" onchange="updatePopupBtn(${idx},'label',this.value)"><input type="text" placeholder="https://..." value="${btn.url||''}" onchange="updatePopupBtn(${idx},'url',this.value)"><button class="btn-del" onclick="removePopupButton(${idx})">✕</button>`;list.appendChild(row);});}
+window.addPopupButton=()=>{popupButtons.push({icon:'🔗',label:'',url:''});renderPopupButtons();renderPopupPreview();};
+window.removePopupButton=(idx)=>{popupButtons.splice(idx,1);renderPopupButtons();renderPopupPreview();};
+window.updatePopupBtn=(idx,key,value)=>{popupButtons[idx][key]=value;renderPopupPreview();};
+window.uploadPopupImg=(input)=>{const file=input.files[0];if(!file)return;if(file.size>500*1024){alert('Max 500KB');input.value='';return;}const reader=new FileReader();reader.onload=(e)=>{popupImgBase64=e.target.result;document.getElementById('popupImgName').innerText='✅ '+file.name;renderPopupPreview();};reader.readAsDataURL(file);};
+function detectPlatformClass(url){if(!url)return'';const u=url.toLowerCase();if(u.includes('discord'))return'discord';if(u.includes('instagram'))return'instagram';if(u.includes('tiktok'))return'tiktok';if(u.includes('facebook')||u.includes('fb.com'))return'facebook';if(u.includes('wa.me')||u.includes('whatsapp'))return'whatsapp';if(u.includes('sociabuzz'))return'sociabuzz';return'';}
+function renderPopupPreview(){const el=document.getElementById('popupPreview');if(!el)return;const title=document.getElementById('popupTitle')?.value||'🎉 Promo Spesial!';const desc=document.getElementById('popupDesc')?.value||'Gabung sosmed kami!';let buttonsHtml='';popupButtons.forEach(btn=>{if(btn.label&&btn.url){const cls=detectPlatformClass(btn.url);buttonsHtml+=`<div class="popup-btn-preview ${cls}">${btn.icon||'🔗'} ${btn.label}</div>`;}});el.innerHTML=`<div style="background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:24px;max-width:340px;margin:0 auto">${popupImgBase64?`<img src="${popupImgBase64}" style="width:100%;border-radius:12px;margin-bottom:14px">`:''}<div style="font-size:18px;font-weight:800;color:#e8e8e8;margin-bottom:8px">${title}</div><div style="font-size:12px;color:#a8a8a8;line-height:1.6;margin-bottom:14px">${desc}</div>${buttonsHtml}</div>`;}
+window.savePopup=async()=>{const data={active:document.getElementById('popupActive').value==='true',title:document.getElementById('popupTitle').value.trim(),desc:document.getElementById('popupDesc').value.trim(),everyMinutes:parseInt(document.getElementById('popupEveryMinutes').value)||0,buttons:popupButtons.filter(b=>b.label&&b.url),updatedAt:Date.now()};if(popupImgBase64)data.image=popupImgBase64;try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/popup'),data);toast('✅ Disimpan');}catch(e){alert('Gagal');}};
 
-// ===== KETERANGAN =====
-function loadKeterangan(){
-  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/keterangan'), (snap)=>{
-    const d = snap.val() || {};
-    document.getElementById('ketActive').value = d.active === false ? 'false' : 'true';
-    if(d.headerTitle) document.getElementById('ketHeaderTitle').value = d.headerTitle;
-    if(d.flag) document.getElementById('ketFlag').value = d.flag;
-    if(d.welcome) document.getElementById('ketWelcome').value = d.welcome;
-    if(d.whyTitle) document.getElementById('ketWhyTitle').value = d.whyTitle;
-    if(d.whyList) document.getElementById('ketWhyList').value = d.whyList;
-    if(d.col1Title) document.getElementById('ketCol1Title').value = d.col1Title;
-    if(d.col1List) document.getElementById('ketCol1List').value = d.col1List;
-    if(d.col2Title) document.getElementById('ketCol2Title').value = d.col2Title;
-    if(d.col2List) document.getElementById('ketCol2List').value = d.col2List;
-    if(d.col3Title) document.getElementById('ketCol3Title').value = d.col3Title;
-    if(d.col3List) document.getElementById('ketCol3List').value = d.col3List;
-  });
-}
-window.saveKeterangan = async ()=>{
-  const data = { active: document.getElementById('ketActive').value === 'true', headerTitle: document.getElementById('ketHeaderTitle').value.trim(), flag: document.getElementById('ketFlag').value.trim(), welcome: document.getElementById('ketWelcome').value, whyTitle: document.getElementById('ketWhyTitle').value.trim(), whyList: document.getElementById('ketWhyList').value, col1Title: document.getElementById('ketCol1Title').value.trim(), col1List: document.getElementById('ketCol1List').value, col2Title: document.getElementById('ketCol2Title').value.trim(), col2List: document.getElementById('ketCol2List').value, col3Title: document.getElementById('ketCol3Title').value.trim(), col3List: document.getElementById('ketCol3List').value, updatedAt: Date.now() };
-  try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/keterangan'), data); toast('✅ Disimpan'); }catch(e){ alert('Gagal'); }
-};
+// ============ KETERANGAN ============
+function loadKeterangan(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/keterangan'),(snap)=>{const d=snap.val()||{};document.getElementById('ketActive').value=d.active===false?'false':'true';if(d.headerTitle)document.getElementById('ketHeaderTitle').value=d.headerTitle;if(d.flag)document.getElementById('ketFlag').value=d.flag;if(d.welcome)document.getElementById('ketWelcome').value=d.welcome;if(d.whyTitle)document.getElementById('ketWhyTitle').value=d.whyTitle;if(d.whyList)document.getElementById('ketWhyList').value=d.whyList;if(d.col1Title)document.getElementById('ketCol1Title').value=d.col1Title;if(d.col1List)document.getElementById('ketCol1List').value=d.col1List;if(d.col2Title)document.getElementById('ketCol2Title').value=d.col2Title;if(d.col2List)document.getElementById('ketCol2List').value=d.col2List;if(d.col3Title)document.getElementById('ketCol3Title').value=d.col3Title;if(d.col3List)document.getElementById('ketCol3List').value=d.col3List;});}
+window.saveKeterangan=async()=>{const data={active:document.getElementById('ketActive').value==='true',headerTitle:document.getElementById('ketHeaderTitle').value.trim(),flag:document.getElementById('ketFlag').value.trim(),welcome:document.getElementById('ketWelcome').value,whyTitle:document.getElementById('ketWhyTitle').value.trim(),whyList:document.getElementById('ketWhyList').value,col1Title:document.getElementById('ketCol1Title').value.trim(),col1List:document.getElementById('ketCol1List').value,col2Title:document.getElementById('ketCol2Title').value.trim(),col2List:document.getElementById('ketCol2List').value,col3Title:document.getElementById('ketCol3Title').value.trim(),col3List:document.getElementById('ketCol3List').value,updatedAt:Date.now()};try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/keterangan'),data);toast('✅ Disimpan');}catch(e){alert('Gagal');}};
 
-document.getElementById('globalSearch')?.addEventListener('input', (e)=>{
-  const q = e.target.value.toLowerCase().trim(); if(!q){ return; }
-  document.querySelectorAll('.item-card, .cust-row, .chat-list-item, .game-card').forEach(el=>{ const txt = el.innerText.toLowerCase(); el.style.display = txt.includes(q) ? '' : 'none'; });
-});
+document.getElementById('globalSearch')?.addEventListener('input',(e)=>{const q=e.target.value.toLowerCase().trim();if(!q){return;}document.querySelectorAll('.item-card, .cust-row, .chat-list-item, .game-card').forEach(el=>{const txt=el.innerText.toLowerCase();el.style.display=txt.includes(q)?'':'none';});});
 </script>
 </body>
 </html>
