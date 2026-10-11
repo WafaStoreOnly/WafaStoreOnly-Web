@@ -82,8 +82,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .badge.proses{background:rgba(74,144,226,0.15);color:#4a90e2;border:1px solid rgba(74,144,226,0.4)}
 .badge.done{background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.4)}
 .badge.batal{background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.4)}
-
-/* DM CHAT */
 .chat-layout{display:grid;grid-template-columns:340px 1fr;gap:14px;height:calc(100vh - 180px);min-height:520px}
 .chat-sidebar{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .chat-sidebar-header{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--bg2)}
@@ -105,7 +103,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .chat-list-item .del-chat{position:absolute;right:6px;top:6px;width:24px;height:24px;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.4);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:11px;cursor:pointer;padding:0}
 .chat-list-item:hover .del-chat{display:flex}
 .chat-list-item .del-chat:hover{background:var(--danger);color:#fff}
-
 .chat-main{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .chat-main-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--muted2);text-align:center;padding:32px;flex-direction:column;gap:12px;font-size:13px}
 .chat-main-empty .big{font-size:64px;opacity:0.3;line-height:1}
@@ -119,21 +116,17 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .chat-main-header .close-btn:hover{background:var(--card-hover);color:var(--text)}
 .chat-main-header .del-main{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.4);color:#ef4444;font-size:14px;cursor:pointer;padding:6px 12px;border-radius:8px;font-family:inherit;font-weight:700}
 .chat-main-header .del-main:hover{background:var(--danger);color:#fff}
-
 .chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:2px;background:var(--bg)}
 .chat-messages::-webkit-scrollbar{width:5px}
 .chat-messages::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:4px}
-
 .date-sep{text-align:center;margin:12px 0 6px}
 .date-sep span{display:inline-block;background:var(--bg2);border:1px solid var(--border);color:var(--muted);font-size:10px;font-weight:700;padding:4px 12px;border-radius:12px;letter-spacing:0.3px;text-transform:uppercase}
-
 .msg-row{display:flex;gap:6px;align-items:flex-end;padding:1px 0}
 .msg-row.mine{justify-content:flex-end}
 .msg-row.theirs{justify-content:flex-start}
 .msg-row.grouped-top{margin-top:6px}
 .msg-avatar{width:26px;height:26px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;align-self:flex-end;margin-bottom:2px;border:1px solid var(--border)}
 .msg-avatar.hidden{visibility:hidden}
-
 .bubble{max-width:70%;padding:7px 11px 6px 11px;border-radius:16px;font-size:13px;line-height:1.4;word-wrap:break-word;white-space:pre-wrap;position:relative;box-shadow:0 1px 1px rgba(0,0,0,0.2);cursor:default}
 .bubble.mine{background:#4a90e2;color:#fff;border-bottom-right-radius:4px}
 .bubble.theirs{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px}
@@ -148,21 +141,18 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .bubble.theirs .bubble-footer{color:var(--muted)}
 .read-tick{font-size:11px;letter-spacing:-2px;font-weight:700}
 .read-tick.read{color:#6ee7f9}
-
 .msg-menu{position:fixed;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:6px;z-index:999999;box-shadow:0 12px 40px rgba(0,0,0,0.7);min-width:170px;animation:menuPop 0.15s ease}
 @keyframes menuPop{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
 .msg-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:transparent;border:none;color:var(--text);font-size:13px;cursor:pointer;text-align:left;border-radius:8px;font-family:inherit}
 .msg-menu button:hover{background:var(--card-hover)}
 .msg-menu button.danger{color:var(--danger)}
 .msg-menu button.danger:hover{background:rgba(239,68,68,0.12)}
-
 .reply-bar{display:none;padding:8px 12px;background:var(--bg2);border-top:1px solid var(--border);gap:8px;align-items:center}
 .reply-bar.show{display:flex}
 .reply-bar .reply-bar-content{flex:1;background:var(--card);border-left:3px solid var(--primary);border-radius:6px;padding:6px 10px;font-size:11px;overflow:hidden;min-width:0}
 .reply-bar .reply-bar-name{font-weight:800;color:var(--primary);margin-bottom:1px}
 .reply-bar .reply-bar-text{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .reply-bar .reply-close{background:transparent;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 6px;font-family:inherit}
-
 .chat-input{display:flex;gap:6px;padding:10px;border-top:1px solid var(--border);background:var(--bg2);align-items:flex-end;flex-shrink:0}
 .chat-input input[type=text]{flex:1;padding:9px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--text);outline:none;font-size:13px;font-family:inherit;min-width:0}
 .chat-input input[type=text]:focus{border-color:var(--primary)}
@@ -171,15 +161,12 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .icon-btn.attach:hover{background:var(--card-hover)}
 .icon-btn.send{background:var(--primary);color:#fff}
 .icon-btn.send:hover{background:#3a7bc8}
-
 .scroll-bottom{position:absolute;right:20px;bottom:130px;width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:16px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
 .scroll-bottom.show{display:flex}
-
 .img-viewer{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9999999;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px)}
 .img-viewer.show{display:flex}
 .img-viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px}
 .img-viewer .close-btn{position:absolute;top:16px;right:16px;width:40px;height:40px;background:var(--card);border:1px solid var(--border);border-radius:50%;color:var(--text);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-
 .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999998;display:flex;align-items:center;justify-content:center;padding:20px}
 .confirm-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;max-width:340px;width:100%;text-align:center}
 .confirm-box .title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px}
@@ -188,7 +175,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .confirm-box button{flex:1;padding:12px;border-radius:10px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
 .confirm-box button.cancel{background:var(--card-hover);color:var(--text)}
 .confirm-box button.danger{background:var(--danger);color:#fff}
-
 .cust-row{display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:12px;gap:10px}
 .cust-row b{font-size:13px;color:var(--text);font-weight:700}
 .brand-preview{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;gap:16px;align-items:center;margin-bottom:16px}
@@ -278,10 +264,10 @@ const db = getDatabase(app);
 const auth = getAuth(app);
 window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onValue; window.wafaGet=get; window.wafaUpdate=update; window.wafaRemove=remove;
 window.wafaAuth=auth; window.wafaSignOut=signOut;
-window.WEBHOOK_ORDER_PROSES    = "https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
-window.WEBHOOK_ORDER_DONE      = "https://discord.com/api/webhooks/1553277385795829770/CZA2wz3K99vCfKa5m0xBATsS4KKL-uJfAhKEN5X0pOwhUvGnWB-q6EV3bCzOzITQ3t5X";
-window.WEBHOOK_ORDER_FAIL      = "https://discord.com/api/webhooks/1558876119137124493/82OYBsh9R34XudND9t909JEr71sbZPXGRwRjWemf4d6aS0UJxgvVsJf463la5p6n3gbS";
-window.WEBHOOK_TOPUP_LOGS      = "https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB";
+window.WEBHOOK_ORDER_PROSES = "https://discord.com/api/webhooks/1553218744803917856/uUaVtWriD4VYFF_e82Q2xGtvfoTCJ5PvU2UjcXVEeK1EoRvaBKh2dpNf0YD4-d5OBveg";
+window.WEBHOOK_ORDER_DONE = "https://discord.com/api/webhooks/1553277385795829770/CZA2wz3K99vCfKa5m0xBATsS4KKL-uJfAhKEN5X0pOwhUvGnWB-q6EV3bCzOzITQ3t5X";
+window.WEBHOOK_ORDER_FAIL = "https://discord.com/api/webhooks/1558876119137124493/82OYBsh9R34XudND9t909JEr71sbZPXGRwRjWemf4d6aS0UJxgvVsJf463la5p6n3gbS";
+window.WEBHOOK_TOPUP_LOGS = "https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB";
 window.WEBHOOK_TOPUP_LOGS_FAIL = "https://discord.com/api/webhooks/1558876882982797362/qJTAe6XIOf3Xz290AI6O71YOdox3nb4AYMx3FWypuNlbDjHthV6EihvG7DdLaRhjyIn_";
 window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 </script>
@@ -651,7 +637,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div style="font-size:13px;color:#a8a8a8;line-height:1.9">
           <b style="color:#e8e8e8">Web URL:</b> <a href="https://wafastoreonly-official.vercel.app" style="color:#4a90e2" target="_blank">wafastoreonly-official.vercel.app</a><br>
           <b style="color:#e8e8e8">Firebase:</b> wafastoreonly<br>
-          <b style="color:#e8e8e8">Version:</b> Admin Panel v4.2
+          <b style="color:#e8e8e8">Version:</b> Admin Panel v4.3
         </div>
       </div>
     </div>
@@ -664,7 +650,6 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
   <button class="close-btn" onclick="closeImageViewer(event)">✕</button>
   <img id="imgViewerImg" src="" alt="Gambar">
 </div>
-
 <script>
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
 function sensorUid(u){if(!u)return'****';return u.slice(0,6)+'...'+u.slice(-4)}
@@ -739,6 +724,7 @@ async function handleUrlAction(){
   window.history.replaceState({}, '', 'admin.html');
 }
 
+// ===== BOT AI =====
 let botFaqArray = [];
 const DEFAULT_BOT_PROMPT = `Kamu adalah "WafaBot", asisten customer service virtual dari WafaStoreOnly. Kamu ramah, sopan, helpful, dan menjawab dengan bahasa Indonesia santai.
 
@@ -825,6 +811,7 @@ async function saveBotConfig(){
 }
 window.saveBotConfig = saveBotConfig;
 
+// ===== DASHBOARD =====
 function loadDashboard(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'orders'), (snap)=>{
     const data = snap.val() || {}; const orders = Object.values(data);
@@ -849,6 +836,7 @@ function loadDashboard(){
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'chats'), (snap)=>{ const data = snap.val() || {}; document.getElementById('stChatUser').innerText = Object.keys(data).length; });
 }
 
+// ===== ORDERS =====
 function loadOrders(){
   const list = document.getElementById('listOrders');
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'orders'), (snap)=>{
@@ -882,23 +870,35 @@ window.lihatBukti = async (id)=>{
   w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${o.bukti}"></body></html>`);
 };
 
+// ===== ✅ SPOT C: PROSES SELESAI (tambah doneNotified: false) =====
 window.prosesSelesai = async (id)=>{
   try{
-    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), { status:'selesai', selesaiAt:Date.now() });
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), {
+      status:'selesai',
+      selesaiAt: Date.now(),
+      diprosesOleh: 'Admin Web',
+      doneNotified: false
+    });
     const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'orders/'+id));
     const o = snap.val();
     await window.wafaSet(window.wafaRef(window.wafaDB, 'logs/'+id), {
       id: id, nickname: o.nickname || 'User', username: o.username || '-',
       jumlah: o.jumlah || 0, date: o.date || '-', selesaiAt: Date.now(), status: 'selesai'
     });
-    toast('✅ Order diselesaikan!');
+    toast('✅ Order diselesaikan! Bot akan kirim log ke Discord.');
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
+// ===== ✅ SPOT D: PROSES BATAL (tambah failNotified: false) =====
 window.prosesBatal = async (id, alasan)=>{
   try{
-    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), { status:'batal', batalReason:alasan, batalAt:Date.now() });
-    toast('❌ Order dibatalkan');
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), {
+      status:'batal',
+      batalReason: alasan,
+      batalAt: Date.now(),
+      failNotified: false
+    });
+    toast('❌ Order dibatalkan. Bot akan kirim log ke Discord.');
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
@@ -907,6 +907,7 @@ window.hapusOrder = async (id)=>{
   try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'orders/'+id)); toast('🗑️ Order dihapus'); }catch(e){ alert('Gagal: '+e.message); }
 };
 
+// ===== TOPUP =====
 function loadTopups(){
   const list = document.getElementById('listTopup');
   window.wafaOnValue(window.wafaRef(window.wafaDB, 'topup_saldo'), (snap)=>{
@@ -932,6 +933,8 @@ window.lihatBuktiTopup = async (id)=>{
   const w = window.open('');
   w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${t.bukti}"></body></html>`);
 };
+
+// ===== ✅ SPOT A: APPROVE TOPUP (tambah doneNotified: false) =====
 window.approveTopup = async (id)=>{
   if(!confirm('Approve top up ini?')) return;
   try{
@@ -940,23 +943,36 @@ window.approveTopup = async (id)=>{
     const userSnap = await window.wafaGet(window.wafaRef(window.wafaDB, 'users/'+t.uid+'/saldo'));
     const saldoLama = userSnap.val() || 0; const saldoBaru = saldoLama + nominal;
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'users/'+t.uid), { saldo: saldoBaru });
-    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'topup_saldo/'+id), { status:'selesai', approvedAt:Date.now() });
-    toast(`✅ Saldo Rp${nominal.toLocaleString('id-ID')} ditambah!`);
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'topup_saldo/'+id), {
+      status:'selesai',
+      approvedAt: Date.now(),
+      approvedBy: 'Admin Web',
+      doneNotified: false
+    });
+    toast(`✅ Saldo Rp${nominal.toLocaleString('id-ID')} ditambah! Bot kirim log.`);
   }catch(e){ alert('Gagal: '+e.message); }
 };
+
+// ===== ✅ SPOT B: REJECT TOPUP (tambah failNotified: false) =====
 window.rejectTopup = async (id)=>{
   const alasan = prompt('Alasan tolak?', 'Bukti tidak valid');
   if(alasan === null) return;
-  try{ await window.wafaUpdate(window.wafaRef(window.wafaDB, 'topup_saldo/'+id), { status:'batal', batalReason:alasan, rejectedAt:Date.now() }); toast('❌ Ditolak'); }catch(e){ alert('Gagal: '+e.message); }
+  try{
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'topup_saldo/'+id), {
+      status:'batal',
+      batalReason: alasan,
+      rejectedAt: Date.now(),
+      failNotified: false
+    });
+    toast('❌ Ditolak. Bot kirim log.');
+  }catch(e){ alert('Gagal: '+e.message); }
 };
 window.hapusTopup = async (id)=>{
   if(!confirm('Hapus top up #'+id.toString().slice(-6)+'?')) return;
   try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'topup_saldo/'+id)); toast('🗑️ Dihapus'); }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ============================================
-// CHAT DM-STYLE ADMIN + HAPUS CHAT
-// ============================================
+// ===== CHAT DM STYLE =====
 let currentChatUid = null;
 let chatUnsubscribe = null;
 let chatReplyTo = null;
@@ -1026,7 +1042,6 @@ window.closeChat = ()=>{
   document.getElementById('chatActiveBox').style.display = 'none';
   document.querySelectorAll('.chat-list-item').forEach(el=>el.classList.remove('active'));
 };
-
 window.closeChatMobile = ()=>{
   document.getElementById('chatBackBtn').style.display = 'none';
   closeChat();
@@ -1195,11 +1210,7 @@ async function deleteMsgAdmin(msgId){
   }catch(e){ toast('❌ Gagal hapus: ' + e.message); }
 }
 
-// ===== HAPUS SELURUH CHAT USER =====
-window.confirmDeleteChat = function(uid){
-  confirmDeleteChatDialog(uid, false);
-};
-
+window.confirmDeleteChat = function(uid){ confirmDeleteChatDialog(uid, false); };
 window.confirmDeleteCurrentChat = function(){
   if(!currentChatUid){ toast('Pilih chat dulu'); return; }
   confirmDeleteChatDialog(currentChatUid, true);
@@ -1224,18 +1235,13 @@ function confirmDeleteChatDialog(uid, closeAfter){
   `;
   document.body.appendChild(overlay);
   overlay.querySelector('#cxlChatDel').onclick = ()=>overlay.remove();
-  overlay.querySelector('#cfmChatDel').onclick = async ()=>{
-    overlay.remove();
-    await deleteChatUser(uid, closeAfter);
-  };
+  overlay.querySelector('#cfmChatDel').onclick = async ()=>{ overlay.remove(); await deleteChatUser(uid, closeAfter); };
   overlay.onclick = (e)=>{ if(e.target === overlay) overlay.remove(); };
 }
 
 async function deleteChatUser(uid, closeAfter){
   try{
-    // Hapus chats/{uid}
     await window.wafaRemove(window.wafaRef(window.wafaDB, 'chats/' + uid));
-    // Hapus chat_meta/{uid} (biar bot bikin channel baru kalau user chat lagi)
     try{ await window.wafaRemove(window.wafaRef(window.wafaDB, 'chat_meta/' + uid)); }catch(e){}
     toast('🗑️ Chat dihapus');
     if(closeAfter) closeChat();
@@ -1576,5 +1582,3 @@ document.getElementById('globalSearch')?.addEventListener('input', (e)=>{
   document.querySelectorAll('.item-card, .cust-row, .chat-list-item, .game-card').forEach(el=>{ const txt = el.innerText.toLowerCase(); el.style.display = txt.includes(q) ? '' : 'none'; });
 });
 </script>
-</body>
-</html>
