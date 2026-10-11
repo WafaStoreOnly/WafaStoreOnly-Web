@@ -36,7 +36,7 @@ const auth = getAuth(app);
 window.wafaDB=db; window.wafaRef=ref; window.wafaSet=set; window.wafaOnValue=onValue; window.wafaGet=get; window.wafaUpdate=update;
 window.wafaAuth=auth;
 
-// ====== WEBHOOK TERPISAH ======
+// ====== WEBHOOK (DIMATIIN - notif sekarang via BOT Discord) ======
 window.WEBHOOK_TOPUP_PROSES    = "https://discord.com/api/webhooks/1553275076332359782/Ndn9EePBTCJe7EWV4esTErBZZwrLGbBMj9kybncr8urHVnq4-ydeCWxl4Dp7kQgC9O64";
 window.WEBHOOK_TOPUP_LOGS      = "https://discord.com/api/webhooks/1553275385666478120/snanzgqdkgovJomulzBGLueWdWX7Bnhp0ekS2reNuS8mLrPHLEMTrVS6nuMnE0t_0aXB";
 window.WEBHOOK_TOPUP_LOGS_FAIL = "https://discord.com/api/webhooks/1558876882982797362/qJTAe6XIOf3Xz290AI6O71YOdox3nb4AYMx3FWypuNlbDjHthV6EihvG7DdLaRhjyIn_";
@@ -100,7 +100,6 @@ onAuthStateChanged(auth, (user)=>{ if(user && !localStorage.getItem('wafa_uid'))
     <div style="font-size:10px;color:#8a8a8a;margin-top:8px;text-align:center">QRIS: AWA_NEWSTREAM / WafaStoreOnly</div>
     <button class="btn btn-primary" style="margin-top:12px" onclick="downloadQRIS()">📥 Download QRIS</button>
 
-    <!-- ====== UPLOAD BUKTI TF (label + input statis) ====== -->
     <label for="buktiDompetInput" onclick="return checkNominalDompet();" class="btn btn-yellow" style="margin-top:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;text-align:center;width:100%;padding:15px;border-radius:10px;border:none;font-weight:700;font-size:13px;background:#fbbf24;color:#000;font-family:inherit">📤 Upload Bukti TF</label>
     <input type="file" id="buktiDompetInput" accept="image/*" style="display:none" onchange="handleBuktiDompetFile(this)">
 
@@ -118,7 +117,6 @@ onAuthStateChanged(auth, (user)=>{ if(user && !localStorage.getItem('wafa_uid'))
 <script>
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let [a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
 
-// ====== CEK BUKTI VALID (skip OCR kalau gagal, biar WebView compatible) ======
 async function cekBuktiValid(file){
   let loading = document.createElement('div');
   loading.id = 'loadingDetect';
@@ -236,14 +234,12 @@ async function downloadQRIS(){
   } catch(e) { alert('❌ Gagal download: ' + e.message); }
 }
 
-// ====== VALIDASI NOMINAL (dipanggil dari label) ======
 function checkNominalDompet(){
   const nominal = parseInt(document.getElementById('nominalDompet').value) || 0;
   if(nominal < 10000){ alert('Minimal top up Rp10.000'); return false; }
   return true;
 }
 
-// ====== HANDLE FILE BUKTI TF DOMPET ======
 async function handleBuktiDompetFile(input){
   const file = input.files && input.files[0];
   if(!file){ input.value = ''; return; }
@@ -276,23 +272,15 @@ async function handleBuktiDompetFile(input){
       return;
     }
 
-    let emailSensor = sensorEmail(userData.email||'-');
-    const text = `💰 **TOP UP DOMPET BARU**\nID: #${dataId.toString().slice(-6)}\nNominal: Rp${nominal.toLocaleString('id-ID')}\nBuyer: ${emailSensor} (${userData.nickname||'-'})\nUID: ${uid}\nTanggal: ${data.date}\n${ocrSkipped ? '\n⚠️ **OCR SKIP — cek manual ya**\n' : ''}\n⏳ Menunggu approve admin`;
-
-    try{
-      fetch(r.result).then(res=>res.blob()).then(blob=>{
-        let form = new FormData();
-        form.append('payload_json', JSON.stringify({content: text}));
-        form.append('files[0]', blob, `bukti-dompet-${dataId}.jpg`);
-        fetch(window.WEBHOOK_TOPUP_PROSES + "?wait=true", { method:'POST', body:form })
-          .then(res=>res.json())
-          .then(d=>{
-            if(!d || !d.id) console.error('❌ Webhook TOPUP_PROSES gagal:', d);
-            else console.log('✅ Notif ke #proses-topup-dompet terkirim:', d.id);
-          })
-          .catch(err=>console.error('❌ Fetch error:', err));
-      });
-    }catch(e){}
+    // ❌ WEBHOOK DIMATIIN — notif Discord otomatis dari BOT (Railway)
+    // try{
+    //   fetch(r.result).then(res=>res.blob()).then(blob=>{
+    //     let form = new FormData();
+    //     form.append('payload_json', JSON.stringify({content: text}));
+    //     form.append('files[0]', blob, `bukti-dompet-${dataId}.jpg`);
+    //     fetch(window.WEBHOOK_TOPUP_PROSES + "?wait=true", { method:'POST', body:form });
+    //   });
+    // }catch(e){}
 
     alert(`✅ Bukti dompet Rp${nominal.toLocaleString('id-ID')} valid!\n\nAdmin cek mutasi ya. Saldo masuk setelah dikonfirmasi 🥰`);
     input.value = '';
@@ -300,7 +288,6 @@ async function handleBuktiDompetFile(input){
   r.readAsDataURL(file);
 }
 
-// Fungsi ini dikosongin — render riwayat sepenuhnya dari Firebase
 function renderRiwayat(){ /* intentionally empty */ }
 
 async function loadUser(){
@@ -353,7 +340,6 @@ renderDompet();
 loadUser();
 attachDompetListener();
 
-// Watch file input — kalau file picker nggak kebuka dalam 1.5 detik, munculin banner "buka di Chrome"
 window.addEventListener('load', ()=>{
   const el = document.getElementById('buktiDompetInput');
   if(el && typeof window.wafaWatchFileInput === 'function') window.wafaWatchFileInput(el);
