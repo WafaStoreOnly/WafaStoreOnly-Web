@@ -870,7 +870,7 @@ window.lihatBukti = async (id)=>{
   w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${o.bukti}"></body></html>`);
 };
 
-// ===== ✅ SPOT C: PROSES SELESAI (tambah doneNotified: false) =====
+// ===== PROSES SELESAI (webhook mati — notif via BOT) =====
 window.prosesSelesai = async (id)=>{
   try{
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), {
@@ -885,11 +885,12 @@ window.prosesSelesai = async (id)=>{
       id: id, nickname: o.nickname || 'User', username: o.username || '-',
       jumlah: o.jumlah || 0, date: o.date || '-', selesaiAt: Date.now(), status: 'selesai'
     });
+    // ❌ WEBHOOK DIMATIIN — notif Discord otomatis dari BOT
     toast('✅ Order diselesaikan! Bot akan kirim log ke Discord.');
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== ✅ SPOT D: PROSES BATAL (tambah failNotified: false) =====
+// ===== PROSES BATAL (webhook mati) =====
 window.prosesBatal = async (id, alasan)=>{
   try{
     await window.wafaUpdate(window.wafaRef(window.wafaDB, 'orders/'+id), {
@@ -898,6 +899,7 @@ window.prosesBatal = async (id, alasan)=>{
       batalAt: Date.now(),
       failNotified: false
     });
+    // ❌ WEBHOOK DIMATIIN — notif Discord otomatis dari BOT
     toast('❌ Order dibatalkan. Bot akan kirim log ke Discord.');
   }catch(e){ alert('Gagal: '+e.message); }
 };
@@ -934,7 +936,7 @@ window.lihatBuktiTopup = async (id)=>{
   w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${t.bukti}"></body></html>`);
 };
 
-// ===== ✅ SPOT A: APPROVE TOPUP (tambah doneNotified: false) =====
+// ===== APPROVE TOPUP (webhook mati) =====
 window.approveTopup = async (id)=>{
   if(!confirm('Approve top up ini?')) return;
   try{
@@ -949,11 +951,12 @@ window.approveTopup = async (id)=>{
       approvedBy: 'Admin Web',
       doneNotified: false
     });
+    // ❌ WEBHOOK DIMATIIN — notif Discord otomatis dari BOT
     toast(`✅ Saldo Rp${nominal.toLocaleString('id-ID')} ditambah! Bot kirim log.`);
   }catch(e){ alert('Gagal: '+e.message); }
 };
 
-// ===== ✅ SPOT B: REJECT TOPUP (tambah failNotified: false) =====
+// ===== REJECT TOPUP (webhook mati) =====
 window.rejectTopup = async (id)=>{
   const alasan = prompt('Alasan tolak?', 'Bukti tidak valid');
   if(alasan === null) return;
@@ -964,6 +967,7 @@ window.rejectTopup = async (id)=>{
       rejectedAt: Date.now(),
       failNotified: false
     });
+    // ❌ WEBHOOK DIMATIIN — notif Discord otomatis dari BOT
     toast('❌ Ditolak. Bot kirim log.');
   }catch(e){ alert('Gagal: '+e.message); }
 };
@@ -1582,3 +1586,5 @@ document.getElementById('globalSearch')?.addEventListener('input', (e)=>{
   document.querySelectorAll('.item-card, .cust-row, .chat-list-item, .game-card').forEach(el=>{ const txt = el.innerText.toLowerCase(); el.style.display = txt.includes(q) ? '' : 'none'; });
 });
 </script>
+</body>
+</html>
