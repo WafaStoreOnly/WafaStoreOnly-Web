@@ -8,14 +8,13 @@
 <link rel="stylesheet" href="./sidebar.css">
 <style>
 .profile-hero{background:#141414;border:1px solid #2a2a2a;border-radius:16px;padding:24px;text-align:center;margin-top:8px}
-.profile-pic{width:96px;height:96px;border-radius:50%;border:2px solid #2a2a2a;object-fit:cover;background:#1a1a1a}
+.profile-pic{width:96px;height:96px;border-radius:50%;border:2px solid #2a2a2a;object-fit:cover;background:#1a1a1a;transition:0.15s}
+.profile-pic-wrap{position:relative;display:inline-block;cursor:pointer;margin-bottom:4px}
+.profile-pic-wrap::after{content:'📷';position:absolute;bottom:4px;right:4px;width:28px;height:28px;background:#4a90e2;border-radius:50%;font-size:13px;display:flex;align-items:center;justify-content:center;border:3px solid #141414;box-shadow:0 2px 8px rgba(0,0,0,0.4);transition:0.15s}
+.profile-pic-wrap:hover::after{transform:scale(1.1)}
+.profile-pic-wrap:hover .profile-pic{border-color:#4a90e2}
 .profile-name{font-size:18px;font-weight:800;color:#e8e8e8;margin-top:14px}
 .profile-email{font-size:12px;color:#8a8a8a;margin-top:4px}
-.row{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px 14px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.row .lbl{font-size:10px;color:#5a5a5a;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
-.row .val{font-size:12px;font-weight:600;color:#e8e8e8;text-align:right;word-break:break-all}
-.row.locked .val{color:#5a5a5a}
-.row.locked::after{content:'🔒';margin-left:6px;opacity:0.5;font-size:12px}
 .btn-edit-foto{background:#1a1a1a;border:1px solid #2a2a2a;color:#e8e8e8;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;margin-top:14px;transition:0.15s;font-family:inherit}
 .btn-edit-foto:hover{border-color:#4a90e2;color:#4a90e2}
 .locked-input{position:relative}
@@ -24,13 +23,14 @@
 </style>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, set, onValue, get, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 const firebaseConfig = { apiKey: "AIzaSyDTkQVpME0XRQmk9Jo7eDQuf0OFY8stm_8", authDomain: "wafastoreonly.firebaseapp.com", databaseURL: "https://wafastoreonly-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "wafastoreonly", storageBucket: "wafastoreonly.firebasestorage.app", messagingSenderId: "208012194307", appId: "1:208012194307:web:551a540b0151333da69436" };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 window.wafaDB = db; window.wafaRef = ref; window.wafaGet = get; window.wafaUpdate = update; window.wafaSet = set;
+window.wafaOnValue = onValue; window.wafaRemove = remove;
 window.wafaAuth = auth;
 let uid = localStorage.getItem('wafa_uid');
 if(!uid){ window.location.href='login.html'; }
@@ -44,12 +44,14 @@ onAuthStateChanged(auth, (user)=>{ if(user && !localStorage.getItem('wafa_uid'))
   <p style="font-size:12px;color:#8a8a8a;margin-top:6px">Kelola data diri & akun kamu</p>
 
   <div class="profile-hero">
-    <img id="profileBigPic" class="profile-pic" src="https://ui-avatars.com/api/?name=Wafa&background=1a1a1a&color=e8e8e8" alt="foto">
+    <div class="profile-pic-wrap" onclick="document.getElementById('inputFotoAlbum').click()" title="Klik buat ganti foto">
+      <img id="profileBigPic" class="profile-pic" src="https://ui-avatars.com/api/?name=Wafa&background=1a1a1a&color=e8e8e8" alt="foto">
+    </div>
     <div class="profile-name" id="profileBigName">Loading...</div>
     <div class="profile-email" id="profileBigEmail">-</div>
     <button class="btn-edit-foto" onclick="document.getElementById('inputFotoAlbum').click()">📸 Ganti Foto dari Album</button>
     <input type="file" id="inputFotoAlbum" accept="image/*" style="display:none" onchange="gantiFotoProfile(this)">
-    <div style="font-size:10px;color:#5a5a5a;margin-top:10px">Max 2MB · dari galeri HP kamu</div>
+    <div style="font-size:10px;color:#5a5a5a;margin-top:10px">Max 2MB · auto-crop kotak 200×200</div>
   </div>
 
   <div class="ws-card">
@@ -130,33 +132,69 @@ if(window.wafaAuth){
         const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'users/' + user.uid));
         const d = snap.val();
         if(d){
-          if(d.nickname) document.getElementById('bigInputNama').value = d.nickname;
+          if(d.nickname){
+            document.getElementById('bigInputNama').value = d.nickname;
+            document.getElementById('profileBigName').innerText = d.nickname;
+          }
           if(d.birthDate || d.tanggalLahir) document.getElementById('bigInputTgl').value = d.birthDate || d.tanggalLahir;
-          if(d.photoBase64){ document.getElementById('profileBigPic').src = d.photoBase64; }
-          else if(d.photoURL){ document.getElementById('profileBigPic').src = d.photoURL; }
+          // PRIORITAS: avatar (field baru) → photoBase64 (field lama) → photoURL → Google photoURL
+          const fotoSrc = d.avatar || d.photoBase64 || d.photoURL;
+          if(fotoSrc) document.getElementById('profileBigPic').src = fotoSrc;
+          // Auto-migrasi field lama → baru (sekali aja)
+          if(d.photoBase64 && !d.avatar){
+            window.wafaUpdate(window.wafaRef(window.wafaDB, 'users/' + user.uid), { avatar: d.photoBase64 }).catch(()=>{});
+          }
         }
       }
     }catch(e){ console.log('Load user error:', e); }
   });
 }
 
+// ===== RESIZE GAMBAR (SAMA KAYAK SIDEBAR) =====
+function resizeImageProfil(file, maxSize){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        try{
+          const canvas = document.createElement('canvas');
+          canvas.width = maxSize; canvas.height = maxSize;
+          const ctx = canvas.getContext('2d');
+          const size = Math.min(img.width, img.height);
+          ctx.drawImage(img, (img.width - size)/2, (img.height - size)/2, size, size, 0, 0, maxSize, maxSize);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        }catch(err){ reject(err); }
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 async function gantiFotoProfile(input){
-  const file = input.files[0];
+  const file = input.files && input.files[0];
+  input.value = '';
   if(!file) return;
   if(file.size > 2*1024*1024){ alert('❌ Foto max 2MB ya!'); return; }
-  const reader = new FileReader();
-  reader.onload = async (e)=>{
-    const base64 = e.target.result;
+  if(typeof wsToast === 'function') wsToast('⏳ Upload foto...');
+  try{
+    const base64 = await resizeImageProfil(file, 200);
     document.getElementById('profileBigPic').src = base64;
     const uid = localStorage.getItem('wafa_uid') || (currentUser && currentUser.uid);
     if(!uid){ alert('UID ga ketemu, login ulang!'); return; }
-    try{
-      await window.wafaUpdate(window.wafaRef(window.wafaDB, 'users/' + uid), { photoBase64: base64, photoURL: base64 });
-      if(typeof wsToast === 'function') wsToast('✅ Foto profil berhasil diganti!');
-      else alert('✅ Foto berhasil diganti!');
-    }catch(err){ alert('❌ Gagal simpan: '+err.message); }
-  };
-  reader.readAsDataURL(file);
+    // Pakai field 'avatar' biar sinkron sama sidebar.js & admin panel
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'users/' + uid), {
+      avatar: base64,
+      avatarUpdatedAt: Date.now()
+    });
+    if(typeof wsToast === 'function') wsToast('✅ Foto profil berhasil diganti!');
+    else alert('✅ Foto berhasil diganti!');
+    // Refresh sidebar userbox biar langsung update
+    if(typeof wsLoadUser === 'function') wsLoadUser();
+  }catch(err){ alert('❌ Gagal simpan: '+err.message); }
 }
 
 async function simpanDataDiri(){
@@ -175,6 +213,7 @@ async function simpanDataDiri(){
     if(typeof wsToast === 'function') wsToast('✅ Data diri berhasil disimpan!');
     else alert('✅ Data diri tersimpan!');
     if(typeof wsLoadUser === 'function') wsLoadUser();
+    if(typeof wsRenderUserAvatar === 'function') wsRenderUserAvatar();
   }catch(e){ alert('❌ Gagal simpan: '+e.message); }
 }
 
