@@ -97,6 +97,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .chat-list-item{padding:12px 16px;cursor:pointer;transition:0.15s;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--border);position:relative}
 .chat-list-item:hover{background:var(--bg2)}
 .chat-list-item.active{background:rgba(74,144,226,0.1);border-left:3px solid var(--primary)}
+.chat-list-item .del-item{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.4);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:12px;cursor:pointer;padding:0;z-index:2;font-family:inherit}
+.chat-list-item:hover .del-item{display:flex}
+.chat-list-item .del-item:hover{background:var(--danger);color:#fff}
+.chat-list-item.has-del .meta{padding-right:32px}
 .chat-list-item .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;overflow:hidden}
 .chat-list-item .av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .chat-list-item .info{flex:1;min-width:0}
@@ -117,6 +121,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .chat-main-header .status{font-size:11px;color:var(--success);font-weight:600;margin-top:2px}
 .chat-main-header .close-btn{background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:6px 10px;border-radius:8px;font-family:inherit}
 .chat-main-header .close-btn:hover{background:var(--card-hover);color:var(--text)}
+.chat-main-header .del-main{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.4);color:#ef4444;font-size:14px;cursor:pointer;padding:6px 10px;border-radius:8px;font-family:inherit;font-weight:700;margin-right:4px}
+.chat-main-header .del-main:hover{background:var(--danger);color:#fff}
 .chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:2px;background:var(--bg)}
 .chat-messages::-webkit-scrollbar{width:5px}
 .chat-messages::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:4px}
@@ -393,6 +399,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
             <div class="chat-main-header">
               <div class="av" id="chatCsHeaderAv">🤖</div>
               <div class="info"><div class="name" id="chatCsBoxName">Chat CS</div><div class="status">Online</div></div>
+              <button class="del-main" onclick="confirmDeleteChatBox('cs')" title="Hapus chat ini">🗑️</button>
               <button class="close-btn" onclick="closeChatBox('cs')">✕</button>
             </div>
             <div class="chat-messages" id="chatCsMessages"></div>
@@ -413,7 +420,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 
     <div class="page" id="page-chatadmin" style="display:none">
       <div class="page-title">👤 Chat Admin</div>
-      <div class="page-sub">Pesan dari menu "Chat Admin" (manual, no auto-reply)</div>
+      <div class="page-sub">Pesan dari menu "Chat Admin" (manual + Discord channel)</div>
       <div class="chat-layout">
         <div class="chat-sidebar">
           <div class="chat-sidebar-header">
@@ -428,6 +435,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
             <div class="chat-main-header">
               <div class="av" id="chatAdminHeaderAv">👤</div>
               <div class="info"><div class="name" id="chatAdminBoxName">Chat Admin</div><div class="status">Online</div></div>
+              <button class="del-main" onclick="confirmDeleteChatBox('admin')" title="Hapus chat + channel Discord">🗑️</button>
               <button class="close-btn" onclick="closeChatBox('admin')">✕</button>
             </div>
             <div class="chat-messages" id="chatAdminMessages"></div>
@@ -455,7 +463,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       </div>
       <div class="card">
         <div class="card-title">Pengaturan Bot</div>
-        <div class="info-box"><b>ℹ️ Cara Kerja Bot:</b><br>1. Bot cek <b>FAQ</b> dulu berdasarkan keyword<br>2. Kalau gak ada yang cocok → bot kirim <b>Pesan Fallback</b> di bawah<br>3. Chat masuk ke tab <b>Chat CS Bot</b> biar bisa dibales manual juga</div>
+        <div class="info-box"><b>ℹ️ Cara Kerja Bot:</b><br>1. Bot cek <b>FAQ</b> dulu berdasarkan keyword<br>2. Kalau gak ada yang cocok → bot kirim <b>Pesan Fallback</b> di bawah<br>3. Chat masuk ke tab <b>Chat CS Bot</b> — <b>GA ADA channel Discord</b></div>
         <div class="input-group"><label>System Prompt (buat catatan)</label><textarea id="botSystemPrompt" style="min-height:180px;font-family:monospace;font-size:11px"></textarea></div>
         <div class="input-group"><label>Pesan Fallback (kalau gak ada FAQ yang cocok)</label><textarea id="botFallbackMsg" style="min-height:80px" placeholder="Contoh: Maaf kak, pertanyaannya belum ada di FAQ. Chat admin langsung ya 🙏"></textarea></div>
         <button class="btn btn-grey btn-sm" onclick="resetBotPrompt()">🔄 Reset ke Default</button>
@@ -699,7 +707,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div style="font-size:13px;color:#a8a8a8;line-height:1.9">
           <b style="color:#e8e8e8">Web URL:</b> <a href="https://wafastoreonly-official.vercel.app" style="color:#4a90e2" target="_blank">wafastoreonly-official.vercel.app</a><br>
           <b style="color:#e8e8e8">Firebase:</b> wafastoreonly<br>
-          <b style="color:#e8e8e8">Version:</b> Admin Panel v5.0 (CS + Admin Chat Split + Avatar)
+          <b style="color:#e8e8e8">Version:</b> Admin Panel v6.0 (CS/Admin Split + Delete + Avatar)
         </div>
       </div>
     </div>
@@ -728,6 +736,7 @@ function playNotifSound(){
   if(!soundEnabled)return;
   try{
     notifAudioCtx = notifAudioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    if(notifAudioCtx.state === 'suspended') notifAudioCtx.resume();
     const o=notifAudioCtx.createOscillator();
     const g=notifAudioCtx.createGain();
     o.connect(g); g.connect(notifAudioCtx.destination);
@@ -792,13 +801,13 @@ function initSidebarBadges(){
   window.wafaOnValue(window.wafaRef(window.wafaDB,'cs_chats'),(snap)=>{
     const data=snap.val()||{};
     let unread=0;
-    Object.values(data).forEach(msgs=>{ Object.values(msgs||{}).forEach(m=>{ if(m.from==='user'&&!m.read) unread++; }); });
+    Object.values(data).forEach(msgs=>{ Object.values(msgs||{}).forEach(m=>{ if(m.from==='user'&&!m.read&&!m.hiddenForUser) unread++; }); });
     updateBadge('badgeChatCs',unread);
   });
   window.wafaOnValue(window.wafaRef(window.wafaDB,'admin_chats'),(snap)=>{
     const data=snap.val()||{};
     let unread=0;
-    Object.values(data).forEach(msgs=>{ Object.values(msgs||{}).forEach(m=>{ if(m.from==='user'&&!m.read) unread++; }); });
+    Object.values(data).forEach(msgs=>{ Object.values(msgs||{}).forEach(m=>{ if(m.from==='user'&&!m.read&&!m.hiddenForUser) unread++; }); });
     updateBadge('badgeChatAdmin',unread);
   });
 }
@@ -854,7 +863,7 @@ ATURAN WAJIB:
 2. Di luar topik: "Maaf kak, saya cuma bisa bantu jawab pertanyaan seputar layanan WafaStoreOnly ya."
 3. Jawab SINGKAT max 3-4 kalimat.
 4. Ramah & sopan.`;
-const DEFAULT_FALLBACK_MSG = 'Maaf kak, pertanyaan ini kayaknya butuh admin langsung 🙏\n\nBiar cepet ditangani, admin bakal bales di chat ini kok. Tunggu bentar ya.\n\n_Kalau urgent, chat lagi sambil jelasin detailnya._';
+const DEFAULT_FALLBACK_MSG = 'Maaf kak, pertanyaan ini kayaknya butuh admin langsung 🙏\n\nBiar cepet ditangani, chat menu "Chat Admin" ya kak.\n\n_Kalau urgent, chat lagi sambil jelasin detailnya._';
 
 function loadBotConfig(){
   window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/bot_ai'),(snap)=>{
@@ -985,7 +994,7 @@ window.approveTopup=async(id)=>{if(!confirm('Approve top up ini?'))return;try{co
 window.rejectTopup=async(id)=>{const alasan=prompt('Alasan tolak?','Bukti tidak valid');if(alasan===null)return;try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'topup_saldo/'+id),{status:'batal',batalReason:alasan,rejectedAt:Date.now(),failNotified:false});toast('❌ Ditolak');}catch(e){alert('Gagal: '+e.message);}};
 window.hapusTopup=async(id)=>{if(!confirm('Hapus top up #'+id.toString().slice(-6)+'?'))return;try{await window.wafaRemove(window.wafaRef(window.wafaDB,'topup_saldo/'+id));toast('🗑️ Dihapus');}catch(e){alert('Gagal: '+e.message);}};
 
-// ===== CHAT CS + CHAT ADMIN (2 SEPARATE) =====
+// ===== CHAT CS + CHAT ADMIN =====
 let chatBoxState = {
   cs: { uid:null, unsub:null, reply:null, data:{}, userAvatar:null },
   admin: { uid:null, unsub:null, reply:null, data:{}, userAvatar:null }
@@ -993,6 +1002,7 @@ let chatBoxState = {
 
 function chatPathOf(type){ return type === 'cs' ? 'cs_chats' : 'admin_chats'; }
 function chatBoxPrefix(type){ return type === 'cs' ? 'chatCs' : 'chatAdmin'; }
+function chatMetaPath(type){ return type === 'cs' ? 'chat_cs_meta' : 'chat_admin_meta'; }
 
 function loadChatsFor(type){
   const base = chatPathOf(type);
@@ -1011,19 +1021,19 @@ function loadChatsFor(type){
     const sorted = uids.map(uid=>{
       const msgs = Object.values(data[uid]||{}).sort((a,b)=>(b.time||0)-(a.time||0));
       const last = msgs[0]||{};
-      const unread = msgs.filter(m => m.from === 'user' && !m.read).length;
+      const unread = msgs.filter(m => m.from === 'user' && !m.read && !m.hiddenForUser).length;
       return { uid, last, unread };
     }).sort((a,b)=>(b.last.time||0)-(a.last.time||0));
     const countEl = document.getElementById(countId);
     if(countEl) countEl.innerText = sorted.length + ' percakapan';
     sorted.forEach(item=>{
       const card = document.createElement('div');
-      card.className = 'chat-list-item';
+      card.className = 'chat-list-item has-del';
       card.onclick = ()=>openChatBox(type, item.uid);
       const time = item.last.time ? formatChatListTime(item.last.time) : '-';
       const preview = item.last.image ? '📸 Gambar' : (item.last.text||'(kosong)');
       const nickname = item.last.nickname || sensorEmail(item.last.email||'-');
-      card.innerHTML = `<div class="av">${type === 'cs' ? '🤖' : '👤'}</div><div class="info"><div class="name">${nickname}</div><div class="preview">${preview}</div></div><div class="meta"><div class="time">${time}</div>${item.unread > 0 ? `<div class="unread">${item.unread}</div>` : ''}</div>`;
+      card.innerHTML = `<div class="av">${type === 'cs' ? '🤖' : '👤'}</div><div class="info"><div class="name">${nickname}</div><div class="preview">${preview}</div></div><div class="meta"><div class="time">${time}</div>${item.unread > 0 ? `<div class="unread">${item.unread}</div>` : ''}</div><button class="del-item" title="Hapus chat" onclick="event.stopPropagation();confirmDeleteChatBox('${type}','${item.uid}')">🗑️</button>`;
       list.appendChild(card);
     });
   });
@@ -1045,6 +1055,8 @@ window.openChatBox = async function(type, uid){
   const hdrAv = document.getElementById(prefix + 'HeaderAv');
   if(hdrAv && u.avatar){
     hdrAv.innerHTML = `<img src="${u.avatar}" alt="user">`;
+  } else if(hdrAv){
+    hdrAv.innerHTML = type === 'cs' ? '🤖' : '👤';
   }
   if(st.unsub) st.unsub();
   const base = chatPathOf(type);
@@ -1063,6 +1075,41 @@ window.closeChatBox = function(type){
   const prefix = chatBoxPrefix(type);
   document.getElementById(prefix + 'Empty').style.display = 'flex';
   document.getElementById(prefix + 'ActiveBox').style.display = 'none';
+};
+
+// ===== HAPUS CHAT TOTAL (Firebase + Discord channel via flag) =====
+window.confirmDeleteChatBox = function(type, uid){
+  if(!uid){
+    const st = chatBoxState[type];
+    if(!st || !st.uid){ toast('Pilih chat dulu'); return; }
+    uid = st.uid;
+  }
+  const label = type === 'cs' ? 'CS Bot' : 'Admin';
+  const discordInfo = type === 'admin' ? '<br><br>Channel Discord & chat user <b style="color:#ef4444">juga ikut kehapus</b>.' : '<br><br>Chat user <b style="color:#ef4444">juga ikut kehapus</b>.';
+  const overlay = document.createElement('div');
+  overlay.className = 'confirm-overlay';
+  overlay.innerHTML = `<div class="confirm-box"><div style="font-size:36px;margin-bottom:8px">🗑️</div><div class="title">Hapus chat ${label}?</div><div class="desc">Semua pesan bakal dihapus <b style="color:#ef4444">permanen</b> dari Firebase.${discordInfo}</div><div class="btns"><button class="cancel" id="cxlDelBox">Batal</button><button class="danger" id="cfmDelBox">Hapus</button></div></div>`;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#cxlDelBox').onclick = ()=>overlay.remove();
+  overlay.querySelector('#cfmDelBox').onclick = async ()=>{ overlay.remove(); await deleteChatBoxFull(type, uid); };
+  overlay.onclick = (e)=>{ if(e.target === overlay) overlay.remove(); };
+};
+
+window.deleteChatBoxFull = async function(type, uid){
+  const base = chatPathOf(type);
+  const metaPath = chatMetaPath(type);
+  try{
+    await window.wafaRemove(window.wafaRef(window.wafaDB, base + '/' + uid));
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, metaPath + '/' + uid), {
+      deleteRequested: true,
+      deleteRequestedAt: Date.now()
+    });
+    const st = chatBoxState[type];
+    if(st && st.uid === uid) closeChatBox(type);
+    toast(type === 'admin'
+      ? '🗑️ Chat + channel Discord dihapus'
+      : '🗑️ Chat CS dihapus');
+  }catch(e){ alert('Gagal hapus: ' + e.message); }
 };
 
 window.sendReplyBox = async function(type){
