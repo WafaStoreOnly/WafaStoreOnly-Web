@@ -19,10 +19,14 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .sb-logo-info small{font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;font-weight:700}
 .sb-section{padding:10px 0}
 .sb-section-title{padding:10px 20px 6px;font-size:9px;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:1.5px}
-.sb-menu-item{display:flex;align-items:center;gap:10px;padding:11px 20px;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:0.15s;border-left:3px solid transparent;margin:0 8px;border-radius:8px}
+.sb-menu-item{display:flex;align-items:center;gap:10px;padding:11px 20px;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:0.15s;border-left:3px solid transparent;margin:0 8px;border-radius:8px;position:relative}
 .sb-menu-item:hover{background:var(--card);color:var(--text)}
 .sb-menu-item.active{background:var(--card);color:var(--primary);border-left-color:var(--primary)}
 .sb-menu-item .icon{font-size:15px;width:20px;text-align:center}
+.sb-badge{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--danger);color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;min-width:18px;text-align:center;line-height:1.4;box-shadow:0 0 8px rgba(239,68,68,0.6);animation:pulseBadge 2s infinite}
+.sb-badge.hidden{display:none}
+.sb-badge.cs{background:linear-gradient(135deg,#6b5ce7,#4a90e2);box-shadow:0 0 8px rgba(107,92,231,0.6)}
+@keyframes pulseBadge{0%,100%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.1)}}
 .sb-footer{margin-top:auto;padding:14px;border-top:1px solid var(--border)}
 .sb-user{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;text-align:center}
 .sb-user b{display:block;color:var(--text);font-weight:700;font-size:12px}
@@ -93,29 +97,26 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .chat-list-item{padding:12px 16px;cursor:pointer;transition:0.15s;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--border);position:relative}
 .chat-list-item:hover{background:var(--bg2)}
 .chat-list-item.active{background:rgba(74,144,226,0.1);border-left:3px solid var(--primary)}
-.chat-list-item .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.chat-list-item .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;overflow:hidden}
+.chat-list-item .av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .chat-list-item .info{flex:1;min-width:0}
 .chat-list-item .name{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chat-list-item .preview{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
 .chat-list-item .meta{text-align:right;flex-shrink:0}
 .chat-list-item .time{font-size:10px;color:var(--muted2)}
 .chat-list-item .unread{background:var(--danger);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center;margin-top:4px;display:inline-block}
-.chat-list-item .del-chat{position:absolute;right:6px;top:6px;width:24px;height:24px;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.4);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:11px;cursor:pointer;padding:0}
-.chat-list-item:hover .del-chat{display:flex}
-.chat-list-item .del-chat:hover{background:var(--danger);color:#fff}
 .chat-main{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .chat-main-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--muted2);text-align:center;padding:32px;flex-direction:column;gap:12px;font-size:13px}
 .chat-main-empty .big{font-size:64px;opacity:0.3;line-height:1}
 .chat-main-header{padding:12px 16px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;gap:12px;flex-shrink:0}
-.chat-main-header .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;position:relative}
+.chat-main-header .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;position:relative;overflow:hidden}
 .chat-main-header .av::after{content:'';position:absolute;bottom:1px;right:1px;width:10px;height:10px;background:#4ade80;border:2px solid var(--bg2);border-radius:50%}
+.chat-main-header .av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .chat-main-header .info{flex:1;min-width:0}
 .chat-main-header .name{font-size:14px;font-weight:800;color:var(--text)}
 .chat-main-header .status{font-size:11px;color:var(--success);font-weight:600;margin-top:2px}
 .chat-main-header .close-btn{background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:6px 10px;border-radius:8px;font-family:inherit}
 .chat-main-header .close-btn:hover{background:var(--card-hover);color:var(--text)}
-.chat-main-header .del-main{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.4);color:#ef4444;font-size:14px;cursor:pointer;padding:6px 12px;border-radius:8px;font-family:inherit;font-weight:700}
-.chat-main-header .del-main:hover{background:var(--danger);color:#fff}
 .chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:2px;background:var(--bg)}
 .chat-messages::-webkit-scrollbar{width:5px}
 .chat-messages::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:4px}
@@ -125,8 +126,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .msg-row.mine{justify-content:flex-end}
 .msg-row.theirs{justify-content:flex-start}
 .msg-row.grouped-top{margin-top:6px}
-.msg-avatar{width:26px;height:26px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;align-self:flex-end;margin-bottom:2px;border:1px solid var(--border)}
+.msg-avatar{width:26px;height:26px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;align-self:flex-end;margin-bottom:2px;border:1px solid var(--border);overflow:hidden}
 .msg-avatar.hidden{visibility:hidden}
+.msg-avatar.has-img{background:transparent;border:none}
+.msg-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .bubble{max-width:70%;padding:7px 11px 6px 11px;border-radius:16px;font-size:13px;line-height:1.4;word-wrap:break-word;white-space:pre-wrap;position:relative;box-shadow:0 1px 1px rgba(0,0,0,0.2);cursor:default}
 .bubble.mine{background:#4a90e2;color:#fff;border-bottom-right-radius:4px}
 .bubble.theirs{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px}
@@ -163,8 +166,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .icon-btn.attach:hover{background:var(--card-hover)}
 .icon-btn.send{background:var(--primary);color:#fff}
 .icon-btn.send:hover{background:#3a7bc8}
-.scroll-bottom{position:absolute;right:20px;bottom:130px;width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:16px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
-.scroll-bottom.show{display:flex}
 .img-viewer{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9999999;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px)}
 .img-viewer.show{display:flex}
 .img-viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px}
@@ -180,6 +181,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;overfl
 .confirm-box input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;margin-bottom:12px;outline:none}
 .cust-row{display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:12px;gap:10px}
 .cust-row b{font-size:13px;color:var(--text);font-weight:700}
+.cust-row .cust-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;overflow:hidden;border:1px solid var(--border)}
+.cust-row .cust-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .brand-preview{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;gap:16px;align-items:center;margin-bottom:16px}
 .brand-preview img{width:52px;height:52px;border-radius:50%;border:1px solid var(--border);object-fit:cover;background:var(--card)}
 .brand-preview b{font-size:15px;color:var(--text);font-weight:800}
@@ -294,10 +297,11 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
   <div class="sb-section">
     <div class="sb-section-title">Menu Utama</div>
     <div class="sb-menu-item active" data-menu="dashboard" onclick="switchPage('dashboard')"><span class="icon">📊</span> Dashboard</div>
-    <div class="sb-menu-item" data-menu="orders" onclick="switchPage('orders')"><span class="icon">📦</span> Orders</div>
-    <div class="sb-menu-item" data-menu="topup" onclick="switchPage('topup')"><span class="icon">💰</span> Top Up Dompet</div>
-    <div class="sb-menu-item" data-menu="chat" onclick="switchPage('chat')"><span class="icon">💬</span> Chat User</div>
-    <div class="sb-menu-item" data-menu="botai" onclick="switchPage('botai')"><span class="icon">🤖</span> Bot AI</div>
+    <div class="sb-menu-item" data-menu="orders" onclick="switchPage('orders')"><span class="icon">📦</span> Orders<span class="sb-badge hidden" id="badgeOrders">0</span></div>
+    <div class="sb-menu-item" data-menu="topup" onclick="switchPage('topup')"><span class="icon">💰</span> Top Up Dompet<span class="sb-badge hidden" id="badgeTopup">0</span></div>
+    <div class="sb-menu-item" data-menu="chatcs" onclick="switchPage('chatcs')"><span class="icon">🤖</span> Chat CS Bot<span class="sb-badge cs hidden" id="badgeChatCs">0</span></div>
+    <div class="sb-menu-item" data-menu="chatadmin" onclick="switchPage('chatadmin')"><span class="icon">👤</span> Chat Admin<span class="sb-badge hidden" id="badgeChatAdmin">0</span></div>
+    <div class="sb-menu-item" data-menu="botai" onclick="switchPage('botai')"><span class="icon">⚙️</span> Bot AI</div>
     <div class="sb-menu-item" data-menu="customers" onclick="switchPage('customers')"><span class="icon">👥</span> Customers</div>
   </div>
   <div class="sb-section">
@@ -347,7 +351,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
         <div class="stat-card"><div class="lbl">Revenue Hari Ini</div><div class="val" id="stRevenueToday">Rp0</div><div class="icon">💵</div></div>
         <div class="stat-card purple"><div class="lbl">Total User</div><div class="val" id="stTotalUser">0</div><div class="icon">👥</div></div>
         <div class="stat-card yellow"><div class="lbl">Topup Pending</div><div class="val" id="stTopupPending">0</div><div class="icon">💰</div></div>
-        <div class="stat-card blue"><div class="lbl">Chat User</div><div class="val" id="stChatUser">0</div><div class="icon">💬</div></div>
+        <div class="stat-card blue"><div class="lbl">Chat CS</div><div class="val" id="stChatUser">0</div><div class="icon">🤖</div></div>
       </div>
       <div class="card"><div class="card-title">Order Terbaru</div><div id="dashboardRecentOrders"></div></div>
     </div>
@@ -355,6 +359,14 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
     <div class="page" id="page-orders" style="display:none">
       <div class="page-title">Orders</div>
       <div class="page-sub">Kelola semua order Robux</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <button class="btn btn-sm btn-primary" onclick="filterOrders('all',this)">Semua</button>
+        <button class="btn btn-sm btn-grey" onclick="filterOrders('verifikasi',this)">⏳ Menunggu</button>
+        <button class="btn btn-sm btn-grey" onclick="filterOrders('proses',this)">⚡ Diproses</button>
+        <button class="btn btn-sm btn-grey" onclick="filterOrders('selesai',this)">✅ Selesai</button>
+        <button class="btn btn-sm btn-grey" onclick="filterOrders('batal',this)">❌ Batal</button>
+        <input type="text" id="searchOrders" placeholder="🔍 Cari username..." oninput="searchOrders()" style="flex:1;min-width:180px;padding:8px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:12px;font-family:inherit;outline:none">
+      </div>
       <div class="card"><div class="card-title">Semua Order</div><div id="listOrders"></div></div>
     </div>
 
@@ -364,47 +376,70 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       <div class="card"><div class="card-title">Top Up Requests</div><div id="listTopup"></div></div>
     </div>
 
-    <div class="page" id="page-chat" style="display:none">
-      <div class="page-title">Chat User</div>
-      <div class="page-sub">Bales chat dari user — bisa juga dari Discord</div>
+    <div class="page" id="page-chatcs" style="display:none">
+      <div class="page-title">🤖 Chat CS Bot</div>
+      <div class="page-sub">Pesan dari FAB (bot auto-reply FAQ + admin bisa bales manual)</div>
       <div class="chat-layout">
-        <div class="chat-sidebar" id="chatSidebar">
+        <div class="chat-sidebar">
           <div class="chat-sidebar-header">
-            <div class="title">💬 Semua Chat</div>
-            <div class="sub" id="chatCount">0 percakapan</div>
+            <div class="title">🤖 Semua Chat CS</div>
+            <div class="sub" id="chatCsCount">0 percakapan</div>
           </div>
-          <div class="chat-list" id="listChat"></div>
+          <div class="chat-list" id="listChatCs"></div>
         </div>
-        <div class="chat-main" id="chatMain">
-          <div class="chat-main-empty" id="chatEmpty">
-            <div class="big">💬</div>
-            Pilih salah satu chat di kiri buat mulai bales
-          </div>
-          <div id="chatActiveBox" style="display:none;flex-direction:column;height:100%;position:relative">
+        <div class="chat-main">
+          <div class="chat-main-empty" id="chatCsEmpty"><div class="big">🤖</div>Pilih chat CS di kiri</div>
+          <div id="chatCsActiveBox" style="display:none;flex-direction:column;height:100%">
             <div class="chat-main-header">
-              <button class="close-btn" id="chatBackBtn" style="display:none" onclick="closeChatMobile()">←</button>
-              <div class="av">👤</div>
-              <div class="info">
-                <div class="name" id="chatBoxName">Chat</div>
-                <div class="status" id="chatBoxStatus">Online</div>
-              </div>
-              <button class="del-main" id="chatDeleteBtn" onclick="confirmDeleteCurrentChat()" title="Hapus semua chat user ini">🗑️</button>
-              <button class="close-btn" onclick="closeChat()">✕</button>
+              <div class="av" id="chatCsHeaderAv">🤖</div>
+              <div class="info"><div class="name" id="chatCsBoxName">Chat CS</div><div class="status">Online</div></div>
+              <button class="close-btn" onclick="closeChatBox('cs')">✕</button>
             </div>
-            <div class="chat-messages" id="chatMessages"></div>
-            <button class="scroll-bottom" id="chatScrollBottom" onclick="chatScrollToBottom(true)">▼</button>
-            <div class="reply-bar" id="chatReplyBar">
-              <div class="reply-bar-content">
-                <div class="reply-bar-name" id="chatReplyName">@user</div>
-                <div class="reply-bar-text" id="chatReplyText">...</div>
-              </div>
-              <button class="reply-close" onclick="cancelReply()">✕</button>
+            <div class="chat-messages" id="chatCsMessages"></div>
+            <div class="reply-bar" id="chatCsReplyBar">
+              <div class="reply-bar-content"><div class="reply-bar-name" id="chatCsReplyName">@user</div><div class="reply-bar-text" id="chatCsReplyText">...</div></div>
+              <button class="reply-close" onclick="cancelReplyBox('cs')">✕</button>
             </div>
             <div class="chat-input">
-              <input type="file" id="chatImageInput" accept="image/*" style="display:none" onchange="sendChatImage(this)">
-              <button class="icon-btn attach" onclick="document.getElementById('chatImageInput').click()" title="Kirim gambar">📎</button>
-              <input type="text" id="chatText" placeholder="Ketik balasan..." onkeypress="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendReply()}">
-              <button class="icon-btn send" onclick="sendReply()" title="Kirim">➤</button>
+              <input type="file" id="chatCsImageInput" accept="image/*" style="display:none" onchange="sendChatImgBox('cs',this)">
+              <button class="icon-btn attach" onclick="document.getElementById('chatCsImageInput').click()">📎</button>
+              <input type="text" id="chatCsText" placeholder="Ketik balasan..." onkeypress="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendReplyBox('cs')}">
+              <button class="icon-btn send" onclick="sendReplyBox('cs')">➤</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-chatadmin" style="display:none">
+      <div class="page-title">👤 Chat Admin</div>
+      <div class="page-sub">Pesan dari menu "Chat Admin" (manual, no auto-reply)</div>
+      <div class="chat-layout">
+        <div class="chat-sidebar">
+          <div class="chat-sidebar-header">
+            <div class="title">👤 Semua Chat Admin</div>
+            <div class="sub" id="chatAdminCount">0 percakapan</div>
+          </div>
+          <div class="chat-list" id="listChatAdmin"></div>
+        </div>
+        <div class="chat-main">
+          <div class="chat-main-empty" id="chatAdminEmpty"><div class="big">👤</div>Pilih chat Admin di kiri</div>
+          <div id="chatAdminActiveBox" style="display:none;flex-direction:column;height:100%">
+            <div class="chat-main-header">
+              <div class="av" id="chatAdminHeaderAv">👤</div>
+              <div class="info"><div class="name" id="chatAdminBoxName">Chat Admin</div><div class="status">Online</div></div>
+              <button class="close-btn" onclick="closeChatBox('admin')">✕</button>
+            </div>
+            <div class="chat-messages" id="chatAdminMessages"></div>
+            <div class="reply-bar" id="chatAdminReplyBar">
+              <div class="reply-bar-content"><div class="reply-bar-name" id="chatAdminReplyName">@user</div><div class="reply-bar-text" id="chatAdminReplyText">...</div></div>
+              <button class="reply-close" onclick="cancelReplyBox('admin')">✕</button>
+            </div>
+            <div class="chat-input">
+              <input type="file" id="chatAdminImageInput" accept="image/*" style="display:none" onchange="sendChatImgBox('admin',this)">
+              <button class="icon-btn attach" onclick="document.getElementById('chatAdminImageInput').click()">📎</button>
+              <input type="text" id="chatAdminText" placeholder="Ketik balasan..." onkeypress="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendReplyBox('admin')}">
+              <button class="icon-btn send" onclick="sendReplyBox('admin')">➤</button>
             </div>
           </div>
         </div>
@@ -412,20 +447,17 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
     </div>
 
     <div class="page" id="page-botai" style="display:none">
-      <div class="page-title">🤖 Bot AI</div>
-      <div class="page-sub">Atur bot auto-reply untuk chat floating di kanan bawah web</div>
+      <div class="page-title">⚙️ Bot AI</div>
+      <div class="page-sub">Atur bot auto-reply FAQ untuk Chat CS Bot (FAB kanan bawah)</div>
       <div class="bot-status-banner">
         <div class="left"><div class="emoji">🤖</div><div><b id="botStatusTitle">Bot AI: Nonaktif</b><small id="botStatusDesc">Aktifkan bot biar bisa jawab otomatis pertanyaan user</small></div></div>
         <label class="switch"><input type="checkbox" id="botEnabledToggle" onchange="toggleBotMain()"><span class="slider"></span></label>
       </div>
       <div class="card">
-        <div class="card-title">Pengaturan AI</div>
-        <div class="info-box"><b>ℹ️ Cara Kerja Bot:</b><br>1. <b>FAQ First</b> — Cek keyword dulu<br>2. <b>AI Fallback</b> — Kirim ke Gemini AI<br>3. Chat tetap masuk ke tab Chat User</div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:16px">
-          <div><b style="font-size:13px;color:var(--text);display:block">Gemini AI Fallback</b><small style="font-size:11px;color:var(--muted2)">Butuh GEMINI_API_KEY di Vercel</small></div>
-          <label class="switch"><input type="checkbox" id="botAiToggle"><span class="slider"></span></label>
-        </div>
-        <div class="input-group"><label>System Prompt</label><textarea id="botSystemPrompt" style="min-height:300px;font-family:monospace;font-size:11px"></textarea></div>
+        <div class="card-title">Pengaturan Bot</div>
+        <div class="info-box"><b>ℹ️ Cara Kerja Bot:</b><br>1. Bot cek <b>FAQ</b> dulu berdasarkan keyword<br>2. Kalau gak ada yang cocok → bot kirim <b>Pesan Fallback</b> di bawah<br>3. Chat masuk ke tab <b>Chat CS Bot</b> biar bisa dibales manual juga</div>
+        <div class="input-group"><label>System Prompt (buat catatan)</label><textarea id="botSystemPrompt" style="min-height:180px;font-family:monospace;font-size:11px"></textarea></div>
+        <div class="input-group"><label>Pesan Fallback (kalau gak ada FAQ yang cocok)</label><textarea id="botFallbackMsg" style="min-height:80px" placeholder="Contoh: Maaf kak, pertanyaannya belum ada di FAQ. Chat admin langsung ya 🙏"></textarea></div>
         <button class="btn btn-grey btn-sm" onclick="resetBotPrompt()">🔄 Reset ke Default</button>
       </div>
       <div class="card">
@@ -453,7 +485,7 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 
     <div class="page" id="page-branding" style="display:none">
       <div class="page-title">Branding</div>
-      <div class="page-sub">Atur logo, nama brand, & banner web</div>
+      <div class="page-sub">Atur logo, nama brand, banner, & avatar admin</div>
       <div class="card">
         <div class="card-title">Brand Identity</div>
         <div class="brand-preview"><img id="previewLogo" src="./logo.png" alt="logo"><div><b id="previewBrandName">WafaStoreOnly</b><small id="previewTagline">Top Up Robux Cepat & Aman</small></div></div>
@@ -599,8 +631,23 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
       <div class="page-title">Announcement</div>
       <div class="page-sub">Atur pemberitahuan di beranda</div>
       <div class="card">
-        <div class="card-title">Status</div>
-        <div class="input-group"><label>Status</label><select id="inputAnnActive"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div>
+        <div class="card-title">Pengaturan Announcement</div>
+        <div class="input-group">
+          <label>Status</label>
+          <select id="inputAnnActive"><option value="true">Aktif</option><option value="false">Nonaktif</option></select>
+        </div>
+        <div class="input-group">
+          <label>Teks Announcement</label>
+          <textarea id="inputAnnText" placeholder="Contoh: Promo akhir bulan! Diskon 10% semua paket Robux 🎉" style="min-height:90px"></textarea>
+        </div>
+        <div class="input-group">
+          <label>Tipe Banner</label>
+          <select id="inputAnnType">
+            <option value="info">ℹ️ Info (biru)</option>
+            <option value="promo">🎉 Promo (ungu)</option>
+            <option value="warning">⚠️ Warning (kuning)</option>
+          </select>
+        </div>
         <button class="btn btn-success" onclick="saveAnnouncement()">💾 Simpan</button>
       </div>
     </div>
@@ -620,18 +667,39 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
     <div class="page" id="page-settings" style="display:none">
       <div class="page-title">Settings</div>
       <div class="page-sub">Pengaturan admin panel</div>
+
+      <div class="card">
+        <div class="card-title">Avatar Admin</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+          <div id="adminAvatarPreview" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#6b5ce7,#4a90e2);display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;border:2px solid var(--border);flex-shrink:0">👨‍💼</div>
+          <div style="flex:1;min-width:0">
+            <input type="file" id="adminAvatarFile" accept="image/*" style="display:none" onchange="uploadAdminAvatar(this)">
+            <label for="adminAvatarFile" class="upload-btn">📸 Upload Avatar</label>
+            <small style="display:block;font-size:11px;color:var(--muted2);margin-top:6px">Muncul di chat user sebagai identitas admin</small>
+          </div>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="removeAdminAvatar()">🗑️ Hapus Avatar</button>
+      </div>
+
       <div class="card">
         <div class="card-title">Akun Admin</div>
         <div class="input-group"><label>Email</label><input id="setEmail" disabled></div>
         <div class="input-group"><label>UID</label><input id="setUid" disabled></div>
         <button class="btn btn-danger" onclick="logoutAdmin()">🚪 Logout</button>
       </div>
+
+      <div class="card">
+        <div class="card-title">Preferensi</div>
+        <button class="btn btn-grey" id="btnSoundToggle" onclick="toggleSound()" style="width:100%;justify-content:center">🔔 Sound: ON</button>
+        <small style="display:block;font-size:11px;color:var(--muted2);margin-top:8px">Bunyi saat ada chat baru masuk</small>
+      </div>
+
       <div class="card">
         <div class="card-title">Info Sistem</div>
         <div style="font-size:13px;color:#a8a8a8;line-height:1.9">
           <b style="color:#e8e8e8">Web URL:</b> <a href="https://wafastoreonly-official.vercel.app" style="color:#4a90e2" target="_blank">wafastoreonly-official.vercel.app</a><br>
           <b style="color:#e8e8e8">Firebase:</b> wafastoreonly<br>
-          <b style="color:#e8e8e8">Version:</b> Admin Panel v4.5
+          <b style="color:#e8e8e8">Version:</b> Admin Panel v5.0 (CS + Admin Chat Split + Avatar)
         </div>
       </div>
     </div>
@@ -648,11 +716,38 @@ window.ADMIN_UIDS = ['5jLY5Gafn7VJvEIarXxDyfMf7v12'];
 <script>
 function sensorEmail(e){if(!e||!e.includes('@'))return'****';let[a,b]=e.split('@');return a.slice(0,3)+'****@'+b}
 function sensorUid(u){if(!u)return'****';return u.slice(0,6)+'...'+u.slice(-4)}
-function sensorPrivateServer(url){if(!url||url==='-')return'-';try{const m=url.match(/roblox\.com\/games\/(\d+)/i);if(m){const g=m[1];return`roblox.com/games/${g.slice(0,3)}***${g.slice(-2)}/...`;}if(url.length<=20)return url.slice(0,5)+'***';return url.slice(0,20)+'***'+url.slice(-5);}catch(e){return'***';}}
 function toggleSidebar(){document.getElementById('adminSidebar').classList.toggle('open');document.getElementById('sbOverlay').style.display=document.getElementById('adminSidebar').classList.contains('open')?'block':'none';}
 function closeSidebar(){document.getElementById('adminSidebar').classList.remove('open');document.getElementById('sbOverlay').style.display='none';}
 function checkAuthReady(){if(window.wafaAuth&&window.wafaDB&&window.wafaOnValue&&window.wafaGet){window.wafaAuth.onAuthStateChanged((user)=>{if(user&&window.ADMIN_UIDS.includes(user.uid)){initAdmin(user);}else{document.getElementById('adminLock').style.display='flex';document.getElementById('adminSidebar').style.display='none';document.getElementById('adminMain').style.display='none';}});}else{setTimeout(checkAuthReady,100);}}
 checkAuthReady();
+
+// ===== SOUND NOTIF =====
+let notifAudioCtx=null;
+let soundEnabled = localStorage.getItem('wafa_admin_sound') !== 'off';
+function playNotifSound(){
+  if(!soundEnabled)return;
+  try{
+    notifAudioCtx = notifAudioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o=notifAudioCtx.createOscillator();
+    const g=notifAudioCtx.createGain();
+    o.connect(g); g.connect(notifAudioCtx.destination);
+    o.type='sine';
+    o.frequency.setValueAtTime(880, notifAudioCtx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(1320, notifAudioCtx.currentTime+0.1);
+    g.gain.setValueAtTime(0.15, notifAudioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, notifAudioCtx.currentTime+0.35);
+    o.start();
+    o.stop(notifAudioCtx.currentTime+0.35);
+  }catch(e){}
+}
+window.toggleSound=function(){
+  soundEnabled = !soundEnabled;
+  localStorage.setItem('wafa_admin_sound', soundEnabled?'on':'off');
+  toast(soundEnabled?'🔔 Sound ON':'🔕 Sound OFF');
+  const btn=document.getElementById('btnSoundToggle');
+  if(btn) btn.innerText = soundEnabled?'🔔 Sound: ON':'🔕 Sound: OFF';
+};
+
 function initAdmin(user){
   document.getElementById('sbUserName').innerText=user.displayName||user.email.split('@')[0];
   document.getElementById('sbUserEmail').innerText=user.email;
@@ -660,10 +755,15 @@ function initAdmin(user){
   document.getElementById('setEmail').value=user.email;
   document.getElementById('setUid').value=user.uid;
   document.getElementById('sbLogo').src=user.photoURL||'./logo.png';
+  const soundBtn = document.getElementById('btnSoundToggle');
+  if(soundBtn) soundBtn.innerText = soundEnabled?'🔔 Sound: ON':'🔕 Sound: OFF';
   loadDashboard();loadOrders();loadTopups();loadChats();loadCustomers();
   loadBranding();loadGames();loadWelcome();loadSyarat();loadAnnouncement();
   loadTheme();loadHarga();loadVouchers();loadPopup();loadKeterangan();
   loadBotConfig();
+  initSidebarBadges();
+  initChatNotifSound();
+  loadAdminAvatarPanel();
   setTimeout(handleUrlAction,1000);
 }
 function switchPage(menu){document.querySelectorAll('.page').forEach(p=>p.style.display='none');document.getElementById('page-'+menu).style.display='block';document.querySelectorAll('.sb-menu-item').forEach(i=>i.classList.remove('active'));const el=document.querySelector(`.sb-menu-item[data-menu="${menu}"]`);if(el)el.classList.add('active');closeSidebar();}
@@ -671,38 +771,80 @@ function toast(msg){let t=document.getElementById('admToast');t.innerText=msg;t.
 function logoutAdmin(){if(!confirm('Logout dari admin panel?'))return;localStorage.removeItem('wafa_uid');window.wafaAuth.signOut().then(()=>{location.href='login.html';}).catch(()=>{location.href='login.html';});}
 async function handleUrlAction(){const urlParams=new URLSearchParams(window.location.search);const actionId=urlParams.get('id');const action=urlParams.get('action');if(!actionId||!action)return;const idNum=parseInt(actionId);if(action==='selesai'){if(confirm(`Konfirmasi SELESAI untuk Order #${actionId.slice(-6)}?`)){await prosesSelesai(idNum);toast('✅ Order diselesaikan!');}}else if(action==='batal'){const alasan=prompt('Alasan batal?','Dibatalkan admin');if(alasan!==null){await prosesBatal(idNum,alasan);toast('❌ Order dibatalkan');}}window.history.replaceState({},'','admin.html');}
 
+// ===== SIDEBAR BADGE =====
+function updateBadge(id, count){
+  const el=document.getElementById(id);
+  if(!el)return;
+  if(count>0){el.innerText=count>99?'99+':count;el.classList.remove('hidden');}
+  else el.classList.add('hidden');
+}
+function initSidebarBadges(){
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'orders'),(snap)=>{
+    const data=snap.val()||{};
+    const count=Object.values(data).filter(o=>o.status==='verifikasi'||o.status==='proses').length;
+    updateBadge('badgeOrders',count);
+  });
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'topup_saldo'),(snap)=>{
+    const data=snap.val()||{};
+    const count=Object.values(data).filter(t=>t.status==='verifikasi'||t.status==='pending').length;
+    updateBadge('badgeTopup',count);
+  });
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'cs_chats'),(snap)=>{
+    const data=snap.val()||{};
+    let unread=0;
+    Object.values(data).forEach(msgs=>{ Object.values(msgs||{}).forEach(m=>{ if(m.from==='user'&&!m.read) unread++; }); });
+    updateBadge('badgeChatCs',unread);
+  });
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'admin_chats'),(snap)=>{
+    const data=snap.val()||{};
+    let unread=0;
+    Object.values(data).forEach(msgs=>{ Object.values(msgs||{}).forEach(m=>{ if(m.from==='user'&&!m.read) unread++; }); });
+    updateBadge('badgeChatAdmin',unread);
+  });
+}
+
+// ===== SOUND NOTIF CHAT MASUK =====
+function initChatNotifSound(){
+  let lastCs = 0, lastAdmin = 0;
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'cs_chats'),(snap)=>{
+    const data = snap.val()||{};
+    let count = 0, hasNew = false;
+    Object.values(data).forEach(msgs=>{ Object.keys(msgs||{}).forEach(k=>{ count++; if(msgs[k].from==='user'&&!msgs[k].read) hasNew=true; }); });
+    if(lastCs > 0 && count > lastCs && hasNew && document.hidden) playNotifSound();
+    lastCs = count;
+  });
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'admin_chats'),(snap)=>{
+    const data = snap.val()||{};
+    let count = 0, hasNew = false;
+    Object.values(data).forEach(msgs=>{ Object.keys(msgs||{}).forEach(k=>{ count++; if(msgs[k].from==='user'&&!msgs[k].read) hasNew=true; }); });
+    if(lastAdmin > 0 && count > lastAdmin && hasNew && document.hidden) playNotifSound();
+    lastAdmin = count;
+  });
+}
+
 window.debugInfo = async function(){
   let info = '=== DEBUG INFO ===\n\n';
   if(window.wafaAuth && window.wafaAuth.currentUser){
     info += '✅ Firebase Auth: LOGGED IN\n';
     info += '   UID: ' + window.wafaAuth.currentUser.uid + '\n';
     info += '   Email: ' + (window.wafaAuth.currentUser.email || '-') + '\n';
-  } else {
-    info += '❌ Firebase Auth: NOT LOGGED IN\n';
-  }
+  } else { info += '❌ Firebase Auth: NOT LOGGED IN\n'; }
   info += '\n';
   const lsUid = localStorage.getItem('wafa_uid');
   info += '📦 localStorage.wafa_uid: ' + (lsUid || 'NULL') + '\n\n';
-  try {
-    const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'chats'));
-    const data = snap.val();
-    if(data){
-      const count = Object.keys(data).length;
-      info += '✅ Baca chats/: BERHASIL (' + count + ' user)\n';
-    } else { info += '⚠️ Baca chats/: NULL\n'; }
-  } catch(e){ info += '❌ Baca chats/: ERROR\n   ' + e.message + '\n'; }
-  info += '\n';
-  try {
-    const snap = await window.wafaGet(window.wafaRef(window.wafaDB, 'admins'));
-    const data = snap.val();
-    if(data){ info += '✅ Baca admins/: BERHASIL\n   UIDs: ' + Object.keys(data).join(', ') + '\n'; }
-    else { info += '⚠️ Baca admins/: NULL\n'; }
-  } catch(e){ info += '❌ Baca admins/: ERROR\n   ' + e.message + '\n'; }
+  for(const path of ['cs_chats','admin_chats','users','orders','topup_saldo']){
+    try {
+      const snap = await window.wafaGet(window.wafaRef(window.wafaDB, path));
+      const data = snap.val();
+      if(data){ info += `✅ ${path}/: OK (${Object.keys(data).length} keys)\n`; }
+      else { info += `⚠️ ${path}/: NULL\n`; }
+    } catch(e){ info += `❌ ${path}/: ${e.message}\n`; }
+  }
   alert(info);
 };
 
 let botFaqArray = [];
-const DEFAULT_BOT_PROMPT = `Kamu adalah "CS Admin", asisten customer service virtual dari WafaStoreOnly. Kamu ramah, sopan, helpful, dan menjawab dengan bahasa Indonesia santai.
+const DEFAULT_BOT_PROMPT = `Kamu adalah "CS Bot", asisten customer service virtual dari WafaStoreOnly. Kamu ramah, sopan, helpful, dan menjawab dengan bahasa Indonesia santai.
 
 TENTANG WAFASTOREONLY:
 Toko online yang menjual layanan top up Robux (Roblox).
@@ -711,9 +853,20 @@ ATURAN WAJIB:
 1. Jawab HANYA pertanyaan seputar WafaStoreOnly & Robux.
 2. Di luar topik: "Maaf kak, saya cuma bisa bantu jawab pertanyaan seputar layanan WafaStoreOnly ya."
 3. Jawab SINGKAT max 3-4 kalimat.
-4. Jangan pakai markdown.
-5. Ramah & sopan.`;
-function loadBotConfig(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/bot_ai'),(snap)=>{const d=snap.val()||{};document.getElementById('botEnabledToggle').checked=d.enabled===true;document.getElementById('botAiToggle').checked=d.aiEnabled===true;document.getElementById('botSystemPrompt').value=d.systemPrompt||DEFAULT_BOT_PROMPT;botFaqArray=Array.isArray(d.faq)?d.faq:[];updateBotStatusUI();renderFaqList();});}
+4. Ramah & sopan.`;
+const DEFAULT_FALLBACK_MSG = 'Maaf kak, pertanyaan ini kayaknya butuh admin langsung 🙏\n\nBiar cepet ditangani, admin bakal bales di chat ini kok. Tunggu bentar ya.\n\n_Kalau urgent, chat lagi sambil jelasin detailnya._';
+
+function loadBotConfig(){
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/bot_ai'),(snap)=>{
+    const d=snap.val()||{};
+    document.getElementById('botEnabledToggle').checked=d.enabled===true;
+    document.getElementById('botSystemPrompt').value=d.systemPrompt||DEFAULT_BOT_PROMPT;
+    document.getElementById('botFallbackMsg').value=d.fallbackMsg||DEFAULT_FALLBACK_MSG;
+    botFaqArray=Array.isArray(d.faq)?d.faq:[];
+    updateBotStatusUI();
+    renderFaqList();
+  });
+}
 function updateBotStatusUI(){const enabled=document.getElementById('botEnabledToggle').checked;const titleEl=document.getElementById('botStatusTitle');const descEl=document.getElementById('botStatusDesc');if(enabled){titleEl.innerHTML='Bot AI: <span style="color:#4ade80">Aktif</span>';descEl.innerText='Bot siap jawab otomatis 24 jam';}else{titleEl.innerHTML='Bot AI: <span style="color:#ef4444">Nonaktif</span>';descEl.innerText='Aktifkan bot biar bisa jawab otomatis';}}
 function toggleBotMain(){updateBotStatusUI();}
 function renderFaqList(){const list=document.getElementById('faqList');if(!list)return;if(botFaqArray.length===0){list.innerHTML='<div style="text-align:center;color:#5a5a5a;font-size:12px;padding:20px">Belum ada FAQ. Klik Update FAQ Default (v2) buat auto-isi.</div>';return;}list.innerHTML='';botFaqArray.forEach((faq,idx)=>{const div=document.createElement('div');div.className='faq-item';div.innerHTML=`<div class="faq-head"><b>FAQ #${idx+1}</b><button class="faq-del" onclick="deleteFaqItem(${idx})">🗑️ Hapus</button></div><div class="input-group"><label>Keywords</label><input type="text" value="${escapeHtml(faq.keywords||'')}" onchange="updateFaqField(${idx},'keywords',this.value)"></div><div class="input-group"><label>Jawaban</label><textarea style="min-height:80px" onchange="updateFaqField(${idx},'answer',this.value)">${escapeHtml(faq.answer||'')}</textarea></div>`;list.appendChild(div);});}
@@ -732,13 +885,13 @@ window.loadFAQv2=async function(){
     {keywords:'cara order, gimana order, cara beli, order gimana, cara top up, cara pesan',answer:'Cara order gampang kak:\n1. Login/Daftar akun dulu\n2. Buka menu "Top Up Game" di sidebar\n3. Pilih metode: Username / Gamepass / Gift In Game\n4. Masukin username Roblox kamu\n5. Pilih paket atau jumlah custom\n6. Bayar & upload bukti TF\n7. Tunggu admin proses ✅\n\nAda kendala? Chat admin ya!'},
     {keywords:'jual apa, produk apa, layanan apa, jualan apa',answer:'WafaStoreOnly saat ini cuma jual Robux Roblox kak 🎮\n\nGame lain belum tersedia. Tersedia 3 metode:\n• Via Username (5-10 menit)\n• Via Gamepass (5-7 hari)\n• Gift In Game (5-10 menit)\n\nCek menu Top Up Game buat detailnya.'},
     {keywords:'mlbb, mobile legends, top up mlbb, diamond mlbb, ml',answer:'Maaf kak, top up Mobile Legends (MLBB) belum tersedia 🙏\n\nWafaStoreOnly saat ini cuma support Roblox aja.\n\n_Kalau mau request biar bisa top up MLBB juga, chat admin ya kak!_ 😊'},
-    {keywords:'pubg, top up pubg, uc pubg, pubg mobile',answer:'Maaf kak, top up PUBG Mobile belum tersedia 🙏\n\nWafaStoreOnly saat ini cuma support Roblox aja.\n\n_Kalau mau request game ini, chat admin ya kak!_ 😊'},
-    {keywords:'free fire, ff, top up ff, diamond ff',answer:'Maaf kak, top up Free Fire belum tersedia 🙏\n\nWafaStoreOnly saat ini cuma support Roblox aja.\n\n_Kalau mau request FF, chat admin ya kak!_ 😊'},
-    {keywords:'genshin, top up genshin, genesis crystal, gi',answer:'Maaf kak, top up Genshin Impact belum tersedia 🙏\n\nWafaStoreOnly saat ini cuma support Roblox aja.\n\n_Kalau mau request Genshin, chat admin ya kak!_ 😊'},
-    {keywords:'valorant, top up valorant, vp valorant, vp',answer:'Maaf kak, top up Valorant belum tersedia 🙏\n\nWafaStoreOnly saat ini cuma support Roblox aja.\n\n_Kalau mau request Valorant, chat admin ya kak!_ 😊'},
-    {keywords:'game lain, top up game lain, game apa aja, game tersedia, support game',answer:'WafaStoreOnly saat ini cuma support Roblox kak 🎮\n\nGame lain (MLBB, PUBG, FF, Genshin, Valorant, dll) belum tersedia.\n\n_Kalau mau request biar bisa top up game lain, chat admin ya!_ 🙏'},
+    {keywords:'pubg, top up pubg, uc pubg, pubg mobile',answer:'Maaf kak, top up PUBG Mobile belum tersedia 🙏\n\nWafaStoreOnly saat ini cuma support Roblox aja.'},
+    {keywords:'free fire, ff, top up ff, diamond ff',answer:'Maaf kak, top up Free Fire belum tersedia 🙏\n\nWafaStoreOnly saat ini cuma support Roblox aja.'},
+    {keywords:'genshin, top up genshin, genesis crystal, gi',answer:'Maaf kak, top up Genshin Impact belum tersedia 🙏\n\nWafaStoreOnly saat ini cuma support Roblox aja.'},
+    {keywords:'valorant, top up valorant, vp valorant, vp',answer:'Maaf kak, top up Valorant belum tersedia 🙏\n\nWafaStoreOnly saat ini cuma support Roblox aja.'},
+    {keywords:'game lain, top up game lain, game apa aja, game tersedia, support game',answer:'WafaStoreOnly saat ini cuma support Roblox kak 🎮\n\nGame lain (MLBB, PUBG, FF, Genshin, Valorant, dll) belum tersedia.'},
     {keywords:'kapan tersedia, kapan ada, kapan rilis, kapan buka, kapan ready',answer:'Untuk game lain selain Roblox belum ada tanggal pastinya kak 🙏\n\nKalau ada update, admin bakal share di Discord/IG.'},
-    {keywords:'request game, mau top up, minta top up, bisa tambah game',answer:'Bisa banget request kak! 🎮\n\nKetik game yang mau kamu request di chat ini, atau langsung chat admin.\n\n_Request dari user bakal jadi pertimbangan admin!_ 🙏'},
+    {keywords:'request game, mau top up, minta top up, bisa tambah game',answer:'Bisa banget request kak! 🎮\n\nKetik game yang mau kamu request di chat ini, atau langsung chat admin.'},
     {keywords:'metode pembayaran, bayar pake apa, cara bayar, payment, pembayaran, bisa bayar pake',answer:'Pembayaran bisa pake:\n• 💰 Saldo Dompet Web\n• 📱 QRIS (semua bank/e-wallet)\n• 💙 DANA\n• 💚 GoPay\n• 🏦 Seabank\n\nPilih di halaman pembayaran ya kak 😊'},
     {keywords:'harga, berapa harga, price, berapa duit, berapa mahal',answer:'Harga Robux di WafaStoreOnly:\n• Via Username: mulai Rp16.000/100 Robux\n• Via Gamepass: lebih murah\n• Gift In Game: lebih murah\n\nHarga detail ada di halaman order 😊'},
     {keywords:'berapa lama, berapa menit, kapan masuk, proses berapa lama, cepat ga, lambat ga',answer:'Waktu proses top up:\n• Via Username: 5-10 menit ⚡\n• Via Gamepass: 5-7 hari\n• Gift In Game: 5-10 menit ⚡'},
@@ -767,24 +920,56 @@ window.loadFAQv2=async function(){
     botFaqArray = FAQ_BARU;
     renderFaqList();
     toast('✅ '+FAQ_BARU.length+' FAQ baru tersimpan!');
-    console.log('✅ FAQ v2 tersimpan:',FAQ_BARU.length,'item');
   }catch(e){ alert('❌ GAGAL: '+e.message); }
 };
-function resetBotPrompt(){if(!confirm('Reset ke default?'))return;document.getElementById('botSystemPrompt').value=DEFAULT_BOT_PROMPT;toast('✅ Direset');}
+function resetBotPrompt(){if(!confirm('Reset ke default?'))return;document.getElementById('botSystemPrompt').value=DEFAULT_BOT_PROMPT;document.getElementById('botFallbackMsg').value=DEFAULT_FALLBACK_MSG;toast('✅ Direset');}
 window.resetBotPrompt=resetBotPrompt;
-async function saveBotConfig(){const enabled=document.getElementById('botEnabledToggle').checked;const aiEnabled=document.getElementById('botAiToggle').checked;const systemPrompt=document.getElementById('botSystemPrompt').value.trim();const cleanFaq=botFaqArray.filter(f=>f.keywords&&f.keywords.trim()&&f.answer&&f.answer.trim());const data={enabled,aiEnabled,systemPrompt,faq:cleanFaq,updatedAt:Date.now()};try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/bot_ai'),data);toast('✅ Bot disimpan!');}catch(e){alert('Gagal: '+e.message);}}
+async function saveBotConfig(){
+  const enabled=document.getElementById('botEnabledToggle').checked;
+  const systemPrompt=document.getElementById('botSystemPrompt').value.trim();
+  const fallbackMsg=document.getElementById('botFallbackMsg').value.trim();
+  const cleanFaq=botFaqArray.filter(f=>f.keywords&&f.keywords.trim()&&f.answer&&f.answer.trim());
+  const data={enabled,systemPrompt,fallbackMsg,faq:cleanFaq,updatedAt:Date.now()};
+  try{
+    await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/bot_ai'),data);
+    try{ await window.wafaRemove(window.wafaRef(window.wafaDB,'settings/bot_ai/aiEnabled')); }catch(e){}
+    toast('✅ Bot disimpan!');
+  }catch(e){alert('Gagal: '+e.message);}
+}
 window.saveBotConfig=saveBotConfig;
 
 function loadDashboard(){
   window.wafaOnValue(window.wafaRef(window.wafaDB,'orders'),(snap)=>{const data=snap.val()||{};const orders=Object.values(data);let aktif=0,totalOrder=orders.length,revenueToday=0;const today=new Date().toLocaleDateString('id-ID');orders.forEach(o=>{if(o.status==='verifikasi'||o.status==='proses')aktif++;if(o.date&&o.date.includes(today.split('/')[0]))revenueToday+=(o.total||0);});document.getElementById('stTotalOrder').innerText=totalOrder;document.getElementById('stOrderAktif').innerText=aktif;document.getElementById('stRevenueToday').innerText='Rp'+revenueToday.toLocaleString('id-ID');const recent=orders.sort((a,b)=>b.id-a.id).slice(0,5);const el=document.getElementById('dashboardRecentOrders');el.innerHTML='';if(recent.length===0){el.innerHTML='<div style="color:#5a5a5a;font-size:13px;text-align:center;padding:24px">Belum ada order</div>';return;}recent.forEach(o=>{const cls=o.status=='verifikasi'?'verif':o.status=='proses'?'proses':o.status=='selesai'?'done':'batal';const d=document.createElement('div');d.className='item-card '+cls;d.innerHTML=`<div class="item-head"><b>📦 #${o.id.toString().slice(-6)}</b><span class="badge ${cls}">${(o.status||'').toUpperCase()}</span></div><div class="item-body">Username: <b>${o.username||'-'}</b> • ${o.jumlah||0} Robux<br>Total: <b style="color:#4ade80">Rp${(o.total||0).toLocaleString('id-ID')}</b> • ${o.date||'-'}</div>`;el.appendChild(d);});});
   window.wafaOnValue(window.wafaRef(window.wafaDB,'users'),(snap)=>{const data=snap.val()||{};document.getElementById('stTotalUser').innerText=Object.keys(data).length;});
   window.wafaOnValue(window.wafaRef(window.wafaDB,'topup_saldo'),(snap)=>{const data=snap.val()||{};const pending=Object.values(data).filter(t=>t.status==='verifikasi'||t.status==='pending').length;document.getElementById('stTopupPending').innerText=pending;});
-  window.wafaOnValue(window.wafaRef(window.wafaDB,'chats'),(snap)=>{const data=snap.val()||{};document.getElementById('stChatUser').innerText=Object.keys(data).length;});
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'cs_chats'),(snap)=>{const data=snap.val()||{};document.getElementById('stChatUser').innerText=Object.keys(data).length;});
+}
+
+// ===== ORDERS + FILTER =====
+let orderFilterStatus='all', orderSearchQuery='';
+window.filterOrders=function(status,btn){
+  orderFilterStatus=status;
+  document.querySelectorAll('#page-orders .btn-sm').forEach(b=>{b.className='btn btn-sm btn-grey';});
+  btn.className='btn btn-sm btn-primary';
+  applyOrderFilter();
+};
+window.searchOrders=function(){
+  orderSearchQuery = (document.getElementById('searchOrders').value||'').toLowerCase().trim();
+  applyOrderFilter();
+};
+function applyOrderFilter(){
+  document.querySelectorAll('#listOrders .item-card').forEach(card=>{
+    const status = card.dataset.status||'';
+    const text = card.innerText.toLowerCase();
+    const okStatus = orderFilterStatus==='all' || status===orderFilterStatus;
+    const okSearch = !orderSearchQuery || text.includes(orderSearchQuery);
+    card.style.display = (okStatus && okSearch) ? '' : 'none';
+  });
 }
 
 function loadOrders(){
   const list=document.getElementById('listOrders');
-  window.wafaOnValue(window.wafaRef(window.wafaDB,'orders'),(snap)=>{const data=snap.val();list.innerHTML='';if(!data){list.innerHTML='<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada order</div>';return;}const orders=Object.values(data).sort((a,b)=>b.id-a.id);orders.slice(0,50).forEach(o=>{const cls=o.status=='verifikasi'?'verif':o.status=='proses'?'proses':o.status=='selesai'?'done':'batal';const card=document.createElement('div');card.className='item-card '+cls;let extra='';if(o.method=='gamepass'&&o.gamepassLink)extra+=`<br>🔗 Gamepass: <b style="word-break:break-all;font-size:11px">${o.gamepassLink}</b>`;if(o.method=='gift'&&o.item)extra+=`<br>🎁 Item: <b>${o.item}</b>`;if(o.metodeBayar=='saldo')extra+=`<br>💳 <b style="color:#4ade80">Via Saldo Web</b>`;if(o.voucherCode)extra+=`<br>🎟️ Voucher: <b style="color:#4ade80">${o.voucherCode}</b>`;if(o.ocrSkipped)extra+=`<br>⚠️ <b style="color:#fbbf24">OCR Skip</b>`;let buktiBtn=o.bukti?`<button class="btn btn-primary btn-sm" onclick="lihatBukti('${o.id}')">🖼️ Bukti</button>`:'';let actionBtns='';if(o.status==='verifikasi'||o.status==='proses'){actionBtns=`<button class="btn btn-success btn-sm" onclick="prosesSelesai(${o.id})">✅ Selesai</button><button class="btn btn-danger btn-sm" onclick="prosesBatal(${o.id},'Dibatalkan admin')">❌ Batal</button>`;}else{actionBtns=`<button class="btn btn-danger btn-sm" onclick="hapusOrder(${o.id})">🗑️ Hapus</button>`;}card.innerHTML=`<div class="item-head"><div><b>📦 Order #${o.id.toString().slice(-6)}</b><div style="font-size:11px;color:#5a5a5a;margin-top:4px">${o.date||'-'}</div></div><span class="badge ${cls}">${(o.status||'').toUpperCase()}</span></div><div class="item-body">👤 <b>${o.username||'-'}</b> • 📊 <b>${o.jumlah||0} Robux</b><br>💰 <b style="color:#4ade80">Rp${(o.total||0).toLocaleString('id-ID')}</b> • 🔧 ${o.method||'-'}<br>📧 <b>${sensorEmail(o.email||'-')}</b> (${o.nickname||'-'})${extra}</div><div class="item-actions">${buktiBtn}${actionBtns}</div>`;list.appendChild(card);});});
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'orders'),(snap)=>{const data=snap.val();list.innerHTML='';if(!data){list.innerHTML='<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada order</div>';return;}const orders=Object.values(data).sort((a,b)=>b.id-a.id);orders.slice(0,50).forEach(o=>{const cls=o.status=='verifikasi'?'verif':o.status=='proses'?'proses':o.status=='selesai'?'done':'batal';const card=document.createElement('div');card.className='item-card '+cls;card.dataset.status=o.status||'';let extra='';if(o.method=='gamepass'&&o.gamepassLink)extra+=`<br>🔗 Gamepass: <b style="word-break:break-all;font-size:11px">${o.gamepassLink}</b>`;if(o.method=='gift'&&o.item)extra+=`<br>🎁 Item: <b>${o.item}</b>`;if(o.metodeBayar=='saldo')extra+=`<br>💳 <b style="color:#4ade80">Via Saldo Web</b>`;if(o.voucherCode)extra+=`<br>🎟️ Voucher: <b style="color:#4ade80">${o.voucherCode}</b>`;if(o.ocrSkipped)extra+=`<br>⚠️ <b style="color:#fbbf24">OCR Skip</b>`;let buktiBtn=o.bukti?`<button class="btn btn-primary btn-sm" onclick="lihatBukti('${o.id}')">🖼️ Bukti</button>`:'';let actionBtns='';if(o.status==='verifikasi'||o.status==='proses'){actionBtns=`<button class="btn btn-success btn-sm" onclick="prosesSelesai(${o.id})">✅ Selesai</button><button class="btn btn-danger btn-sm" onclick="prosesBatal(${o.id},'Dibatalkan admin')">❌ Batal</button>`;}else{actionBtns=`<button class="btn btn-danger btn-sm" onclick="hapusOrder(${o.id})">🗑️ Hapus</button>`;}card.innerHTML=`<div class="item-head"><div><b>📦 Order #${o.id.toString().slice(-6)}</b><div style="font-size:11px;color:#5a5a5a;margin-top:4px">${o.date||'-'}</div></div><span class="badge ${cls}">${(o.status||'').toUpperCase()}</span></div><div class="item-body">👤 <b>${o.username||'-'}</b> • 📊 <b>${o.jumlah||0} Robux</b><br>💰 <b style="color:#4ade80">Rp${(o.total||0).toLocaleString('id-ID')}</b> • 🔧 ${o.method||'-'}<br>📧 <b>${sensorEmail(o.email||'-')}</b> (${o.nickname||'-'})${extra}</div><div class="item-actions">${buktiBtn}${actionBtns}</div>`;list.appendChild(card);});applyOrderFilter();});
 }
 window.lihatBukti=async(id)=>{const snap=await window.wafaGet(window.wafaRef(window.wafaDB,'orders/'+id));const o=snap.val();if(!o||!o.bukti){alert('Bukti tidak ada');return;}const w=window.open('');w.document.write(`<html><head><title>Bukti TF</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;min-height:100vh}img{max-width:100%;max-height:100vh}</style></head><body><img src="${o.bukti}"></body></html>`);};
 window.prosesSelesai=async(id)=>{try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'orders/'+id),{status:'selesai',selesaiAt:Date.now(),diprosesOleh:'Admin Web',doneNotified:false});const snap=await window.wafaGet(window.wafaRef(window.wafaDB,'orders/'+id));const o=snap.val();await window.wafaSet(window.wafaRef(window.wafaDB,'logs/'+id),{id:id,nickname:o.nickname||'User',username:o.username||'-',jumlah:o.jumlah||0,date:o.date||'-',selesaiAt:Date.now(),status:'selesai'});toast('✅ Order diselesaikan!');}catch(e){alert('Gagal: '+e.message);}};
@@ -800,176 +985,217 @@ window.approveTopup=async(id)=>{if(!confirm('Approve top up ini?'))return;try{co
 window.rejectTopup=async(id)=>{const alasan=prompt('Alasan tolak?','Bukti tidak valid');if(alasan===null)return;try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'topup_saldo/'+id),{status:'batal',batalReason:alasan,rejectedAt:Date.now(),failNotified:false});toast('❌ Ditolak');}catch(e){alert('Gagal: '+e.message);}};
 window.hapusTopup=async(id)=>{if(!confirm('Hapus top up #'+id.toString().slice(-6)+'?'))return;try{await window.wafaRemove(window.wafaRef(window.wafaDB,'topup_saldo/'+id));toast('🗑️ Dihapus');}catch(e){alert('Gagal: '+e.message);}};
 
-let currentChatUid=null,chatUnsubscribe=null,chatReplyTo=null,chatCurrentData={};
-function loadChats(){
-  const list=document.getElementById('listChat');
-  window.wafaOnValue(window.wafaRef(window.wafaDB,'chats'),(snap)=>{const data=snap.val();list.innerHTML='';if(!data){list.innerHTML='<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada chat</div>';return;}const uids=Object.keys(data);const sorted=uids.map(uid=>{const msgs=Object.values(data[uid]||{}).sort((a,b)=>(b.time||0)-(a.time||0));const last=msgs[0]||{};const unread=msgs.filter(m=>m.from==='user'&&!m.read).length;return{uid,last,unread,count:msgs.length};}).sort((a,b)=>(b.last.time||0)-(a.last.time||0));document.getElementById('chatCount').innerText=sorted.length+' percakapan';sorted.forEach(item=>{const card=document.createElement('div');card.className='chat-list-item';if(item.uid===currentChatUid)card.classList.add('active');card.onclick=()=>openChat(item.uid);const time=item.last.time?formatChatListTime(item.last.time):'-';const preview=item.last.image?'📸 Gambar':(item.last.text||'(kosong)');card.innerHTML=`<button class="del-chat" onclick="event.stopPropagation();confirmDeleteChat('${item.uid}')" title="Hapus chat ini">🗑️</button><div class="av">👤</div><div class="info"><div class="name">${item.last.nickname||sensorEmail(item.last.email||'-')}</div><div class="preview">${preview}</div></div><div class="meta"><div class="time">${time}</div>${item.unread>0?`<div class="unread">${item.unread}</div>`:''}</div>`;list.appendChild(card);});});
+// ===== CHAT CS + CHAT ADMIN (2 SEPARATE) =====
+let chatBoxState = {
+  cs: { uid:null, unsub:null, reply:null, data:{}, userAvatar:null },
+  admin: { uid:null, unsub:null, reply:null, data:{}, userAvatar:null }
+};
+
+function chatPathOf(type){ return type === 'cs' ? 'cs_chats' : 'admin_chats'; }
+function chatBoxPrefix(type){ return type === 'cs' ? 'chatCs' : 'chatAdmin'; }
+
+function loadChatsFor(type){
+  const base = chatPathOf(type);
+  const listId = type === 'cs' ? 'listChatCs' : 'listChatAdmin';
+  const countId = type === 'cs' ? 'chatCsCount' : 'chatAdminCount';
+  const list = document.getElementById(listId);
+  if(!list) return;
+  window.wafaOnValue(window.wafaRef(window.wafaDB, base), (snap)=>{
+    const data = snap.val();
+    list.innerHTML = '';
+    if(!data){
+      list.innerHTML = `<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada chat ${type === 'cs' ? 'CS' : 'Admin'}</div>`;
+      return;
+    }
+    const uids = Object.keys(data);
+    const sorted = uids.map(uid=>{
+      const msgs = Object.values(data[uid]||{}).sort((a,b)=>(b.time||0)-(a.time||0));
+      const last = msgs[0]||{};
+      const unread = msgs.filter(m => m.from === 'user' && !m.read).length;
+      return { uid, last, unread };
+    }).sort((a,b)=>(b.last.time||0)-(a.last.time||0));
+    const countEl = document.getElementById(countId);
+    if(countEl) countEl.innerText = sorted.length + ' percakapan';
+    sorted.forEach(item=>{
+      const card = document.createElement('div');
+      card.className = 'chat-list-item';
+      card.onclick = ()=>openChatBox(type, item.uid);
+      const time = item.last.time ? formatChatListTime(item.last.time) : '-';
+      const preview = item.last.image ? '📸 Gambar' : (item.last.text||'(kosong)');
+      const nickname = item.last.nickname || sensorEmail(item.last.email||'-');
+      card.innerHTML = `<div class="av">${type === 'cs' ? '🤖' : '👤'}</div><div class="info"><div class="name">${nickname}</div><div class="preview">${preview}</div></div><div class="meta"><div class="time">${time}</div>${item.unread > 0 ? `<div class="unread">${item.unread}</div>` : ''}</div>`;
+      list.appendChild(card);
+    });
+  });
 }
+function loadChats(){ loadChatsFor('cs'); loadChatsFor('admin'); }
+
 function formatChatListTime(ts){const d=new Date(ts);const now=new Date();const diff=now-d;if(diff<86400000)return d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});if(diff<604800000)return['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()];return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit'});}
-window.openChat=async(uid)=>{currentChatUid=uid;document.getElementById('chatEmpty').style.display='none';document.getElementById('chatActiveBox').style.display='flex';const backBtn=document.getElementById('chatBackBtn');if(window.innerWidth<=900&&backBtn)backBtn.style.display='block';document.querySelectorAll('.chat-list-item').forEach(el=>el.classList.remove('active'));const userSnap=await window.wafaGet(window.wafaRef(window.wafaDB,'users/'+uid));const u=userSnap.val()||{};document.getElementById('chatBoxName').innerText=`${u.nickname||'User'} (${sensorEmail(u.email||'-')})`;document.getElementById('chatBoxStatus').innerText='Online';if(chatUnsubscribe)chatUnsubscribe();chatUnsubscribe=window.wafaOnValue(window.wafaRef(window.wafaDB,'chats/'+uid),(snap)=>{const data=snap.val()||{};chatCurrentData=data;renderChatMessages(data);});};
-window.closeChat=()=>{currentChatUid=null;if(chatUnsubscribe){chatUnsubscribe();chatUnsubscribe=null;}document.getElementById('chatEmpty').style.display='flex';document.getElementById('chatActiveBox').style.display='none';document.querySelectorAll('.chat-list-item').forEach(el=>el.classList.remove('active'));};
-window.closeChatMobile=()=>{document.getElementById('chatBackBtn').style.display='none';closeChat();};
+
+window.openChatBox = async function(type, uid){
+  const st = chatBoxState[type];
+  st.uid = uid;
+  const prefix = chatBoxPrefix(type);
+  document.getElementById(prefix + 'Empty').style.display = 'none';
+  document.getElementById(prefix + 'ActiveBox').style.display = 'flex';
+  const userSnap = await window.wafaGet(window.wafaRef(window.wafaDB, 'users/' + uid));
+  const u = userSnap.val() || {};
+  st.userAvatar = u.avatar || null;
+  document.getElementById(prefix + 'BoxName').innerText = `${u.nickname || 'User'} (${sensorEmail(u.email || '-')})`;
+  const hdrAv = document.getElementById(prefix + 'HeaderAv');
+  if(hdrAv && u.avatar){
+    hdrAv.innerHTML = `<img src="${u.avatar}" alt="user">`;
+  }
+  if(st.unsub) st.unsub();
+  const base = chatPathOf(type);
+  st.unsub = window.wafaOnValue(window.wafaRef(window.wafaDB, base + '/' + uid), (snap)=>{
+    const data = snap.val() || {};
+    st.data = data;
+    renderChatMessagesBox(type, data);
+  });
+};
+
+window.closeChatBox = function(type){
+  const st = chatBoxState[type];
+  if(st.unsub){ st.unsub(); st.unsub = null; }
+  st.uid = null;
+  st.userAvatar = null;
+  const prefix = chatBoxPrefix(type);
+  document.getElementById(prefix + 'Empty').style.display = 'flex';
+  document.getElementById(prefix + 'ActiveBox').style.display = 'none';
+};
+
+window.sendReplyBox = async function(type){
+  const st = chatBoxState[type];
+  if(!st.uid){ toast('Pilih chat dulu'); return; }
+  const prefix = chatBoxPrefix(type);
+  const inp = document.getElementById(prefix + 'Text');
+  const t = inp.value.trim();
+  if(!t) return;
+  const msgId = Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  const msgData = { from: 'admin', text: t, time: Date.now(), read: false };
+  if(st.reply) msgData.replyTo = st.reply;
+  try{
+    const base = chatPathOf(type);
+    await window.wafaSet(window.wafaRef(window.wafaDB, base + '/' + st.uid + '/' + msgId), msgData);
+    inp.value = '';
+    cancelReplyBox(type);
+  }catch(e){ alert('Gagal kirim: ' + e.message); }
+};
+
+window.cancelReplyBox = function(type){
+  const st = chatBoxState[type];
+  st.reply = null;
+  const prefix = chatBoxPrefix(type);
+  const bar = document.getElementById(prefix + 'ReplyBar');
+  if(bar) bar.classList.remove('show');
+};
+
+window.sendChatImgBox = async function(type, input){
+  const file = input.files && input.files[0];
+  input.value = '';
+  const st = chatBoxState[type];
+  if(!file || !st.uid) return;
+  if(file.size > 2*1024*1024){ toast('❌ Gambar max 2MB'); return; }
+  const reader = new FileReader();
+  reader.onload = async ()=>{
+    const msgId = Date.now() + '_' + Math.random().toString(36).slice(2,7);
+    const msgData = { from: 'admin', text: '', image: reader.result, time: Date.now(), read: false };
+    if(st.reply){ msgData.replyTo = st.reply; cancelReplyBox(type); }
+    try{
+      const base = chatPathOf(type);
+      await window.wafaSet(window.wafaRef(window.wafaDB, base + '/' + st.uid + '/' + msgId), msgData);
+      toast('📤 Gambar terkirim');
+    }catch(e){ toast('❌ Gagal kirim'); }
+  };
+  reader.readAsDataURL(file);
+};
+
 function chatFormatDate(ts){if(!ts)return'';const d=new Date(ts);const now=new Date();const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());const msgDay=new Date(d.getFullYear(),d.getMonth(),d.getDate());const diff=Math.round((today-msgDay)/(1000*60*60*24));if(diff===0)return'Hari ini';if(diff===1)return'Kemarin';const days=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];const months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;}
 function chatFormatTime(ts){if(!ts)return'';return new Date(ts).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});}
 function chatGroupByDate(msgs){const groups=[];let cur=null;msgs.forEach(m=>{const day=m.time?new Date(m.time).toDateString():'unknown';if(day!==cur){groups.push({type:'date',date:m.time});cur=day;}groups.push({type:'msg',data:m});});return groups;}
 function chatEscape(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function renderChatMessages(data){
-  const box=document.getElementById('chatMessages');if(!box)return;
-  const msgs=Object.entries(data).map(([k,v])=>({...v,_id:k})).sort((a,b)=>(a.time||0)-(b.time||0));
-  const wasNearBottom=(box.scrollHeight-box.scrollTop-box.clientHeight)<100;
-  box.innerHTML='';
-  if(msgs.length===0){box.innerHTML='<div style="text-align:center;color:#5a5a5a;font-size:12px;padding:24px">Belum ada pesan</div>';return;}
-  const groups=chatGroupByDate(msgs);let prevFrom=null,prevTime=0;
+
+function renderChatMessagesBox(type, data){
+  const prefix = chatBoxPrefix(type);
+  const box = document.getElementById(prefix + 'Messages');
+  if(!box) return;
+  const msgs = Object.entries(data).map(([k,v])=>({...v,_id:k})).sort((a,b)=>(a.time||0)-(b.time||0));
+  const wasNearBottom = (box.scrollHeight - box.scrollTop - box.clientHeight) < 100;
+  box.innerHTML = '';
+  if(msgs.length === 0){ box.innerHTML = '<div style="text-align:center;color:#5a5a5a;font-size:12px;padding:24px">Belum ada pesan</div>'; return; }
+  const groups = chatGroupByDate(msgs);
+  let prevFrom = null, prevTime = 0;
+  const st = chatBoxState[type];
   groups.forEach(g=>{
-    if(g.type==='date'){const sep=document.createElement('div');sep.className='date-sep';sep.innerHTML=`<span>${chatFormatDate(g.date)}</span>`;box.appendChild(sep);prevFrom=null;prevTime=0;return;}
-    const m=g.data;
-    const from=m.from==='admin'?'mine':(m.from==='bot')?'bot':'theirs';
-    const isMine=from==='mine';const isBot=from==='bot';
-    const grouped=(prevFrom===from)&&(m.time-prevTime<120000);prevFrom=from;prevTime=m.time;
-    const row=document.createElement('div');row.className='msg-row '+(isMine?'mine':'theirs');if(!grouped)row.classList.add('grouped-top');
-    if(!isMine){const av=document.createElement('div');av.className='msg-avatar'+(grouped?' hidden':'');av.textContent=isBot?'🤖':'👤';row.appendChild(av);}
-    const bubble=document.createElement('div');bubble.className='bubble '+(isMine?'mine':(isBot?'bot':'theirs'));bubble.dataset.id=m._id;
-    if(m.replyTo){const rp=document.createElement('div');rp.className='reply-preview';const replyName=m.replyTo.from==='admin'?'Kamu':(m.replyTo.from==='bot'?'CS Admin':'User');rp.innerHTML=`<div class="reply-name">↩ ${chatEscape(replyName)}</div><div class="reply-text">${chatEscape(m.replyTo.text||'[Gambar]')}</div>`;bubble.appendChild(rp);}
-    if(isBot){const lbl=document.createElement('div');lbl.style.cssText='font-size:10px;font-weight:800;color:rgba(255,255,255,0.95);margin-bottom:4px;letter-spacing:0.3px';lbl.textContent='🤖 CS Admin • pesan otomatis';bubble.appendChild(lbl);}
-    if(m.hiddenForUser){const del=document.createElement('div');del.className='msg-deleted';del.style.fontSize='11px';del.style.marginBottom='4px';del.textContent='🚫 User hapus pesan ini';bubble.appendChild(del);}
-    if(m.image){const img=document.createElement('img');img.src=m.image;img.onclick=(e)=>{e.stopPropagation();openImageViewer(m.image);};bubble.appendChild(img);if(m.text){const t=document.createElement('div');t.textContent=m.text;bubble.appendChild(t);}}
-    else{bubble.appendChild(document.createTextNode(m.text||''));}
-    const footer=document.createElement('div');footer.className='bubble-footer';
-    let editedTag=m.edited?` <span style="opacity:0.6;font-style:italic">(diedit${m.editedBy==='admin'?' admin':''})</span>`:'';
-    const tickHtml=isMine?`<span class="read-tick${m.read?' read':''}">${m.read?'✓✓':'✓'}</span>`:'';
-    footer.innerHTML=`<span>${chatFormatTime(m.time)}${editedTag}</span>${tickHtml}`;
+    if(g.type === 'date'){ const sep = document.createElement('div'); sep.className = 'date-sep'; sep.innerHTML = `<span>${chatFormatDate(g.date)}</span>`; box.appendChild(sep); prevFrom = null; prevTime = 0; return; }
+    const m = g.data;
+    const isMine = m.from === 'admin';
+    const isBot = m.from === 'bot';
+    const from = isMine ? 'mine' : (isBot ? 'bot' : 'theirs');
+    const grouped = (prevFrom === from) && (m.time - prevTime < 120000);
+    prevFrom = from; prevTime = m.time;
+    const row = document.createElement('div');
+    row.className = 'msg-row ' + (isMine ? 'mine' : 'theirs');
+    if(!grouped) row.classList.add('grouped-top');
+    if(!isMine){
+      const av = document.createElement('div');
+      av.className = 'msg-avatar' + (grouped ? ' hidden' : '');
+      if(isBot){
+        av.textContent = '🤖';
+      } else {
+        if(st && st.userAvatar){
+          av.classList.add('has-img');
+          av.innerHTML = `<img src="${st.userAvatar}" alt="user">`;
+        } else {
+          av.textContent = '👤';
+        }
+      }
+      row.appendChild(av);
+    }
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble ' + (isMine ? 'mine' : (isBot ? 'bot' : 'theirs'));
+    bubble.dataset.id = m._id;
+    if(m.replyTo){
+      const rp = document.createElement('div');
+      rp.className = 'reply-preview';
+      const rn = m.replyTo.from === 'admin' ? 'Kamu' : (m.replyTo.from === 'bot' ? 'CS Bot' : 'User');
+      rp.innerHTML = `<div class="reply-name">↩ ${chatEscape(rn)}</div><div class="reply-text">${chatEscape(m.replyTo.text || '[Gambar]')}</div>`;
+      bubble.appendChild(rp);
+    }
+    if(isBot){
+      const lbl = document.createElement('div');
+      lbl.style.cssText = 'font-size:10px;font-weight:800;color:rgba(255,255,255,0.95);margin-bottom:4px';
+      lbl.textContent = '🤖 CS Bot • pesan otomatis';
+      bubble.appendChild(lbl);
+    }
+    if(m.hiddenForUser){
+      const del = document.createElement('div');
+      del.className = 'msg-deleted';
+      del.style.fontSize = '11px';
+      del.style.marginBottom = '4px';
+      del.textContent = '🚫 User hapus pesan ini';
+      bubble.appendChild(del);
+    }
+    if(m.image){ const img = document.createElement('img'); img.src = m.image; img.onclick = (e)=>{ e.stopPropagation(); openImageViewer(m.image); }; bubble.appendChild(img); if(m.text){ const t = document.createElement('div'); t.textContent = m.text; bubble.appendChild(t); } }
+    else { bubble.appendChild(document.createTextNode(m.text || '')); }
+    const footer = document.createElement('div');
+    footer.className = 'bubble-footer';
+    const editedTag = m.edited ? ` <span style="opacity:0.6;font-style:italic">(diedit)</span>` : '';
+    const tickHtml = isMine ? `<span class="read-tick${m.read ? ' read' : ''}">${m.read ? '✓✓' : '✓'}</span>` : '';
+    footer.innerHTML = `<span>${chatFormatTime(m.time)}${editedTag}</span>${tickHtml}`;
     bubble.appendChild(footer);
-    attachMsgActions(bubble,m);
-    row.appendChild(bubble);box.appendChild(row);
+    row.appendChild(bubble); box.appendChild(row);
   });
-  if(wasNearBottom)chatScrollToBottom(true);updateChatScrollBtn();
+  if(wasNearBottom) box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
 }
-function attachMsgActions(bubble,msg){
-  let pressTimer=null,longPressed=false;
-  const startPress=()=>{longPressed=false;pressTimer=setTimeout(()=>{longPressed=true;showMsgMenu(bubble,msg);},500);};
-  const cancelPress=()=>{if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}};
-  bubble.addEventListener('touchstart',startPress,{passive:true});
-  bubble.addEventListener('touchend',(e)=>{cancelPress();if(longPressed)e.preventDefault();});
-  bubble.addEventListener('touchmove',cancelPress,{passive:true});
-  bubble.addEventListener('touchcancel',cancelPress);
-  bubble.addEventListener('contextmenu',(e)=>{e.preventDefault();showMsgMenu(bubble,msg);});
-}
-function showMsgMenu(bubbleEl,msg){
-  document.querySelectorAll('.msg-menu').forEach(m=>m.remove());
-  const menu=document.createElement('div');menu.className='msg-menu';
-  let buttons='';
-  if(msg.text&&!msg.hiddenForUser)buttons+=`<button data-action="copy">📋 Copy</button>`;
-  if(!msg.hiddenForUser){
-    buttons+=`<button data-action="edit">✏️ Edit</button>`;
-    buttons+=`<button data-action="delete" class="danger">🗑️ Hapus</button>`;
-  }
-  menu.innerHTML=buttons;document.body.appendChild(menu);
-  const rect=bubbleEl.getBoundingClientRect();const menuRect=menu.getBoundingClientRect();
-  let left=rect.left;let top=rect.top-menuRect.height-8;
-  if(top<10)top=rect.bottom+8;
-  if(left+menuRect.width>window.innerWidth-10)left=window.innerWidth-menuRect.width-10;
-  if(left<10)left=10;
-  menu.style.left=left+'px';menu.style.top=top+'px';
-  menu.querySelectorAll('button').forEach(btn=>{
-    btn.onclick=(e)=>{
-      e.stopPropagation();const action=btn.dataset.action;menu.remove();
-      if(action==='copy')copyMsg(msg.text);
-      else if(action==='edit')editMsgAdmin(msg._id,msg.text||'');
-      else if(action==='delete')confirmDeleteMsg(msg._id);
-    };
-  });
-  setTimeout(()=>{const close=(e)=>{if(!menu.contains(e.target)){menu.remove();document.removeEventListener('click',close);document.removeEventListener('touchstart',close);}};document.addEventListener('click',close);document.addEventListener('touchstart',close);},50);
-}
-function copyMsg(text){if(!text)return;navigator.clipboard.writeText(text).then(()=>toast('📋 Disalin')).catch(()=>toast('❌ Gagal'));}
-function editMsgAdmin(msgId,oldText){
-  const overlay=document.createElement('div');overlay.className='confirm-overlay';
-  overlay.innerHTML=`<div class="confirm-box"><div class="title">✏️ Edit Pesan</div><div class="desc">Admin bisa edit kapan aja.</div><input type="text" id="editInput" value="${chatEscape(oldText).replace(/"/g,'&quot;')}"><div class="btns"><button class="cancel" id="cxlEdit">Batal</button><button class="danger" id="cfmEdit" style="background:var(--primary)">Simpan</button></div></div>`;
-  document.body.appendChild(overlay);
-  const inp=overlay.querySelector('#editInput');inp.focus();
-  overlay.querySelector('#cxlEdit').onclick=()=>overlay.remove();
-  overlay.querySelector('#cfmEdit').onclick=async()=>{
-    const newText=inp.value.trim();
-    if(!newText){toast('Isi teks dulu');return;}
-    overlay.remove();
-    if(!currentChatUid){toast('Pilih chat dulu');return;}
-    try{
-      const snap=await window.wafaGet(window.wafaRef(window.wafaDB,`chats/${currentChatUid}/${msgId}`));
-      const orig=snap.val()||{};
-      await window.wafaUpdate(window.wafaRef(window.wafaDB,`chats/${currentChatUid}/${msgId}`),{
-        text:newText,edited:true,editedAt:Date.now(),editedBy:'admin',
-        originalText:orig.originalText||orig.text||''
-      });
-      toast('✏️ Pesan diedit');
-    }catch(e){toast('❌ Gagal edit: '+e.message);}
-  };
-  overlay.onclick=(e)=>{if(e.target===overlay)overlay.remove();};
-}
-function confirmDeleteMsg(msgId){
-  const overlay=document.createElement('div');overlay.className='confirm-overlay';
-  overlay.innerHTML=`<div class="confirm-box"><div class="title">Hapus pesan?</div><div class="desc">Pesan bakal <b style="color:#ef4444">dihapus permanen</b> dari Firebase.</div><div class="btns"><button class="cancel" id="cxlDel">Batal</button><button class="danger" id="cfmDel">Hapus</button></div></div>`;
-  document.body.appendChild(overlay);
-  overlay.querySelector('#cxlDel').onclick=()=>overlay.remove();
-  overlay.querySelector('#cfmDel').onclick=async()=>{overlay.remove();await deleteMsgAdmin(msgId);};
-  overlay.onclick=(e)=>{if(e.target===overlay)overlay.remove();};
-}
-async function deleteMsgAdmin(msgId){
-  if(!currentChatUid){toast('Pilih chat dulu');return;}
-  try{
-    await window.wafaRemove(window.wafaRef(window.wafaDB,`chats/${currentChatUid}/${msgId}`));
-    toast('🗑️ Pesan dihapus permanen');
-  }catch(e){toast('❌ Gagal: '+e.message);}
-}
-window.confirmDeleteChat=function(uid){confirmDeleteChatDialog(uid,false);};
-window.confirmDeleteCurrentChat=function(){if(!currentChatUid){toast('Pilih chat dulu');return;}confirmDeleteChatDialog(currentChatUid,true);};
-function confirmDeleteChatDialog(uid,closeAfter){
-  const overlay=document.createElement('div');overlay.className='confirm-overlay';
-  overlay.innerHTML=`<div class="confirm-box"><div style="font-size:36px;margin-bottom:8px">🗑️</div><div class="title">Hapus seluruh chat?</div><div class="desc">Semua pesan user ini bakal dihapus <b style="color:#ef4444">permanen</b>.</div><div class="btns"><button class="cancel" id="cxlChatDel">Batal</button><button class="danger" id="cfmChatDel">Hapus</button></div></div>`;
-  document.body.appendChild(overlay);
-  overlay.querySelector('#cxlChatDel').onclick=()=>overlay.remove();
-  overlay.querySelector('#cfmChatDel').onclick=async()=>{overlay.remove();await deleteChatUser(uid,closeAfter);};
-  overlay.onclick=(e)=>{if(e.target===overlay)overlay.remove();};
-}
-async function deleteChatUser(uid,closeAfter){
-  try{
-    await window.wafaRemove(window.wafaRef(window.wafaDB,'chats/'+uid));
-    try{await window.wafaRemove(window.wafaRef(window.wafaDB,'chat_meta/'+uid));}catch(e){}
-    toast('🗑️ Chat dihapus permanen');
-    if(closeAfter)closeChat();
-  }catch(e){alert('Gagal hapus chat: '+e.message);}
-}
-window.sendReply=async()=>{
-  if(!currentChatUid){toast('Pilih chat dulu');return;}
-  const inp=document.getElementById('chatText');const t=inp.value.trim();if(!t)return;
-  const msgId=Date.now()+'_'+Math.random().toString(36).slice(2,7);
-  const msgData={from:'admin',text:t,time:Date.now(),read:false};
-  if(chatReplyTo)msgData.replyTo=chatReplyTo;
-  try{
-    await window.wafaSet(window.wafaRef(window.wafaDB,'chats/'+currentChatUid+'/'+msgId),msgData);
-    inp.value='';cancelReply();chatScrollToBottom(true);
-  }catch(e){alert('Gagal kirim: '+e.message);}
-};
-async function sendChatImage(input){
-  const file=input.files&&input.files[0];input.value='';
-  if(!file||!currentChatUid)return;
-  if(file.size>2*1024*1024){toast('❌ Gambar max 2MB');return;}
-  const reader=new FileReader();
-  reader.onload=async()=>{
-    const msgId=Date.now()+'_'+Math.random().toString(36).slice(2,7);
-    const msgData={from:'admin',text:'',image:reader.result,time:Date.now(),read:false};
-    if(chatReplyTo){msgData.replyTo=chatReplyTo;cancelReply();}
-    try{await window.wafaSet(window.wafaRef(window.wafaDB,'chats/'+currentChatUid+'/'+msgId),msgData);toast('📤 Gambar terkirim');chatScrollToBottom(true);}catch(e){toast('❌ Gagal kirim');}
-  };
-  reader.readAsDataURL(file);
-}
-function chatScrollToBottom(smooth){const box=document.getElementById('chatMessages');if(!box)return;box.scrollTo({top:box.scrollHeight,behavior:smooth?'smooth':'auto'});updateChatScrollBtn();}
-function updateChatScrollBtn(){const box=document.getElementById('chatMessages');const btn=document.getElementById('chatScrollBottom');if(!box||!btn)return;const dist=box.scrollHeight-box.scrollTop-box.clientHeight;if(dist>200)btn.classList.add('show');else btn.classList.remove('show');}
-document.addEventListener('DOMContentLoaded',()=>{const box=document.getElementById('chatMessages');if(box)box.addEventListener('scroll',updateChatScrollBtn);});
+
 function openImageViewer(src){const v=document.getElementById('imgViewer');const i=document.getElementById('imgViewerImg');if(!v||!i)return;i.src=src;v.classList.add('show');}
 function closeImageViewer(e){if(e&&e.target&&e.target.tagName==='IMG')return;document.getElementById('imgViewer').classList.remove('show');}
 
 function loadCustomers(){
   const list=document.getElementById('listCustomers');
-  window.wafaOnValue(window.wafaRef(window.wafaDB,'users'),(snap)=>{const data=snap.val();list.innerHTML='';if(!data){list.innerHTML='<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada user</div>';return;}const users=Object.entries(data).map(([uid,u])=>({...u,uid}));users.forEach(u=>{const row=document.createElement('div');row.className='cust-row';row.innerHTML=`<div><b>${u.nickname||u.name||'User'}</b><br><span style="font-size:11px;color:#8a8a8a">${sensorEmail(u.email||'-')} • ${sensorUid(u.uid)}</span></div><div style="text-align:right"><b style="color:#4ade80">Rp${(u.saldo||0).toLocaleString('id-ID')}</b><br><button class="btn btn-primary btn-sm" onclick="editSaldo('${u.uid}',${u.saldo||0})" style="margin-top:6px">Edit</button></div>`;list.appendChild(row);});});
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'users'),(snap)=>{const data=snap.val();list.innerHTML='';if(!data){list.innerHTML='<div style="text-align:center;color:#5a5a5a;padding:24px;font-size:13px">Belum ada user</div>';return;}const users=Object.entries(data).map(([uid,u])=>({...u,uid}));users.forEach(u=>{const row=document.createElement('div');row.className='cust-row';const avHtml = u.avatar ? `<img src="${u.avatar}" alt="av">` : '👤';row.innerHTML=`<div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1"><div class="cust-avatar">${avHtml}</div><div style="min-width:0;flex:1"><b>${u.nickname||u.name||'User'}</b><br><span style="font-size:11px;color:#8a8a8a">${sensorEmail(u.email||'-')} • ${sensorUid(u.uid)}</span></div></div><div style="text-align:right;flex-shrink:0"><b style="color:#4ade80">Rp${(u.saldo||0).toLocaleString('id-ID')}</b><br><button class="btn btn-primary btn-sm" onclick="editSaldo('${u.uid}',${u.saldo||0})" style="margin-top:6px">Edit</button></div>`;list.appendChild(row);});});
 }
 window.editSaldo=async(uid,saldoLama)=>{const input=prompt(`Edit saldo user.\n\nSaldo sekarang: Rp${saldoLama.toLocaleString('id-ID')}\n\nMasukkan saldo baru:`,saldoLama);if(input===null)return;const saldoBaru=parseInt(input)||0;if(saldoBaru<0){alert('Saldo ga boleh negatif');return;}try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'users/'+uid),{saldo:saldoBaru});toast(`✅ Saldo diupdate`);}catch(e){alert('Gagal: '+e.message);}};
 
@@ -979,6 +1205,67 @@ window.uploadLogo=(input)=>{const file=input.files[0];if(!file)return;if(file.si
 window.uploadBanner=(input)=>{const file=input.files[0];if(!file)return;if(file.size>500*1024){alert('❌ Max 500KB');input.value='';return;}const reader=new FileReader();reader.onload=(e)=>{bannerBase64=e.target.result;document.getElementById('bannerPreview').style.backgroundImage=`url('${bannerBase64}')`;document.getElementById('bannerPreview').innerText='';document.getElementById('bannerFileName').innerText='✅ '+file.name;};reader.readAsDataURL(file);};
 window.saveBranding=async()=>{const brandName=document.getElementById('inputBrandName').value.trim();const tagline=document.getElementById('inputTagline').value.trim();if(!brandName){alert('Isi nama brand!');return;}try{const data={brandName,tagline,updatedAt:Date.now()};if(logoBase64)data.logo=logoBase64;await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/branding'),data);logoBase64=null;toast('✅ Disimpan!');}catch(e){alert('Gagal: '+e.message);}};
 window.saveBanner=async()=>{if(!bannerBase64){alert('Upload dulu!');return;}try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/branding'),{banner:bannerBase64,updatedAt:Date.now()});bannerBase64=null;toast('✅ Banner disimpan!');}catch(e){alert('Gagal: '+e.message);}};
+
+// ===== ADMIN AVATAR =====
+window._adminAvatarData = null;
+function resizeImageAdmin(file, maxSize){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        try{
+          const canvas = document.createElement('canvas');
+          canvas.width = maxSize; canvas.height = maxSize;
+          const ctx = canvas.getContext('2d');
+          const size = Math.min(img.width, img.height);
+          ctx.drawImage(img, (img.width - size)/2, (img.height - size)/2, size, size, 0, 0, maxSize, maxSize);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        }catch(err){ reject(err); }
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+window.uploadAdminAvatar = async function(input){
+  const file = input.files && input.files[0];
+  input.value = '';
+  if(!file) return;
+  if(file.size > 2*1024*1024){ alert('❌ Max 2MB'); return; }
+  toast('⏳ Upload avatar...');
+  try{
+    const dataUrl = await resizeImageAdmin(file, 200);
+    await window.wafaUpdate(window.wafaRef(window.wafaDB, 'settings/branding'), { adminAvatar: dataUrl, avatarUpdatedAt: Date.now() });
+    window._adminAvatarData = dataUrl;
+    const el = document.getElementById('adminAvatarPreview');
+    if(el) el.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    toast('✅ Avatar admin diupdate');
+  }catch(e){ alert('Gagal: ' + e.message); }
+};
+window.removeAdminAvatar = async function(){
+  if(!confirm('Hapus avatar admin?')) return;
+  try{
+    await window.wafaRemove(window.wafaRef(window.wafaDB, 'settings/branding/adminAvatar'));
+    window._adminAvatarData = null;
+    const el = document.getElementById('adminAvatarPreview');
+    if(el) el.innerHTML = '👨‍💼';
+    toast('🗑️ Avatar dihapus');
+  }catch(e){ alert('Gagal: ' + e.message); }
+};
+function loadAdminAvatarPanel(){
+  if(!window.wafaDB || !window.wafaOnValue){ setTimeout(loadAdminAvatarPanel, 500); return; }
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'settings/branding/adminAvatar'), (snap)=>{
+    const av = snap.val();
+    window._adminAvatarData = av || null;
+    const el = document.getElementById('adminAvatarPreview');
+    if(!el) return;
+    if(av) el.innerHTML = `<img src="${av}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    else el.innerHTML = '👨‍💼';
+  });
+}
 
 const GAME_LIST=[{key:'roblox',name:'Roblox',defaultLogo:'./roblox.png',active:true},{key:'mlbb',name:'Mobile Legends',defaultLogo:'./mlbb.png',active:false},{key:'pubg',name:'PUBG Mobile',defaultLogo:'./pubg.png',active:false},{key:'ff',name:'Free Fire',defaultLogo:'./ff.png',active:false},{key:'genshin',name:'Genshin Impact',defaultLogo:'./genshin.png',active:false},{key:'valorant',name:'Valorant',defaultLogo:'./valorant.png',active:false}];
 function loadGames(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/games'),(snap)=>{const d=snap.val()||{};renderGameGrid(d);});}
@@ -993,8 +1280,26 @@ window.saveWelcome=async()=>{const active=document.getElementById('welcomeActive
 function loadSyarat(){['username','gamepass','gift'].forEach(key=>{window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/syarat/'+key),(snap)=>{const d=snap.val();if(!d)return;const cap=key.charAt(0).toUpperCase()+key.slice(1);const activeEl=document.getElementById('syaratActive'+cap);const titleEl=document.getElementById('syaratTitle'+cap);const itemsEl=document.getElementById('syaratItems'+cap);if(activeEl)activeEl.value=d.active===false?'false':'true';if(titleEl&&d.title)titleEl.value=d.title;if(itemsEl&&d.items)itemsEl.value=d.items;});});}
 window.saveSyarat=async(key)=>{const cap=key.charAt(0).toUpperCase()+key.slice(1);const active=document.getElementById('syaratActive'+cap).value==='true';const title=document.getElementById('syaratTitle'+cap).value.trim();const items=document.getElementById('syaratItems'+cap).value;if(!title){alert('Isi judul!');return;}if(!items.trim()){alert('Isi minimal 1 syarat!');return;}try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/syarat/'+key),{active,title,items,updatedAt:Date.now()});toast('✅ Disimpan');}catch(e){alert('Gagal');}};
 
-function loadAnnouncement(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/announcement'),(snap)=>{const d=snap.val();if(!d)return;document.getElementById('inputAnnActive').value=d.active===false?'false':'true';});}
-window.saveAnnouncement=async()=>{const active=document.getElementById('inputAnnActive').value==='true';try{await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/announcement'),{active,updatedAt:Date.now()});toast('✅ Disimpan');}catch(e){alert('Gagal');}};
+function loadAnnouncement(){
+  window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/announcement'),(snap)=>{
+    const d=snap.val()||{};
+    document.getElementById('inputAnnActive').value=d.active===false?'false':'true';
+    document.getElementById('inputAnnText').value=d.text||'';
+    document.getElementById('inputAnnType').value=d.type||'info';
+  });
+}
+window.saveAnnouncement=async()=>{
+  const data={
+    active:document.getElementById('inputAnnActive').value==='true',
+    text:document.getElementById('inputAnnText').value.trim(),
+    type:document.getElementById('inputAnnType').value,
+    updatedAt:Date.now()
+  };
+  try{
+    await window.wafaUpdate(window.wafaRef(window.wafaDB,'settings/announcement'),data);
+    toast('✅ Announcement disimpan');
+  }catch(e){alert('Gagal: '+e.message);}
+};
 
 function loadTheme(){window.wafaOnValue(window.wafaRef(window.wafaDB,'settings/theme'),(snap)=>{const d=snap.val();if(!d)return;if(d.primary)document.getElementById('inputPrimary').value=d.primary;if(d.accent)document.getElementById('inputAccent').value=d.accent;updateThemePreview();});document.getElementById('inputPrimary').addEventListener('input',updateThemePreview);document.getElementById('inputAccent').addEventListener('input',updateThemePreview);}
 function updateThemePreview(){const p=document.getElementById('inputPrimary').value;const a=document.getElementById('inputAccent').value;const el=document.getElementById('themePreview');el.style.background=`linear-gradient(90deg, ${p}, ${a})`;el.innerText=`Preview`;}
