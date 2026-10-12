@@ -1,4 +1,4 @@
-// SIDEBAR + CHAT WIDGET + CS BOT + ADMIN CHAT (TERPISAH) + AVATAR
+// SIDEBAR + CHAT WIDGET + CS BOT + ADMIN CHAT + AVATAR + NOTIF
 (function(){
   const sidebarHTML = `
     <div id="wsOverlay" onclick="wsCloseSidebar()"></div>
@@ -392,6 +392,8 @@ let wsCurrentChatData = {};
     .ws-user-info>span{display:block;font-weight:700;font-size:13px;color:#e8e8e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .ws-user-info>small{display:block;font-size:10px;color:#8a8a8a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
     .ws-header-user-avatar{width:20px;height:20px;border-radius:50%;object-fit:cover;margin-right:4px;vertical-align:middle;display:inline-block}
+    .ws-item{position:relative}
+    .ws-menu-badge{position:absolute;right:20px;top:50%;transform:translateY(-50%);background:#ef4444;color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center;line-height:1.4;box-shadow:0 0 6px rgba(239,68,68,0.5);display:none;align-items:center;justify-content:center}
     @media (max-width:500px){
       #wsChatPanel.floating{right:8px;left:8px;bottom:74px;width:auto;height:calc(100vh - 90px);max-height:calc(100vh - 90px);border-radius:16px}
       #wsChatFab{right:14px;bottom:14px;width:52px;height:52px}
@@ -485,13 +487,90 @@ function wsInitFabBadge(){
     const data = snap.val() || {};
     let unread = 0;
     Object.values(data).forEach(m=>{
-      if((m.from === 'admin' || m.from === 'bot') && !m.read) unread++;
+      if((m.from === 'admin' || m.from === 'bot') && !m.read && !m.hiddenForUser) unread++;
     });
     const badge = document.getElementById('wsChatBadge');
     if(!badge) return;
     if(unread > 0){ badge.textContent = unread > 99 ? '99+' : unread; badge.classList.add('show'); }
     else badge.classList.remove('show');
   });
+}
+
+// ===== SOUND NOTIF USER =====
+let wsAudioCtx = null;
+let wsSoundEnabled = localStorage.getItem('wafa_user_sound') !== 'off';
+function wsPlayNotifSound(){
+  if(!wsSoundEnabled) return;
+  try {
+    wsAudioCtx = wsAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if(wsAudioCtx.state === 'suspended') wsAudioCtx.resume();
+    const o = wsAudioCtx.createOscillator();
+    const g = wsAudioCtx.createGain();
+    o.connect(g); g.connect(wsAudioCtx.destination);
+    o.type = 'sine';
+    o.frequency.setValueAtTime(660, wsAudioCtx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(990, wsAudioCtx.currentTime + 0.12);
+    g.gain.setValueAtTime(0.15, wsAudioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, wsAudioCtx.currentTime + 0.4);
+    o.start(); o.stop(wsAudioCtx.currentTime + 0.4);
+  } catch(e){}
+}
+
+// ===== GLOBAL NOTIF LISTENER =====
+let wsGlobalChatState = { cs: 0, admin: 0, initialized: false };
+
+function wsInitGlobalChatListener(){
+  const uid = localStorage.getItem('wafa_uid');
+  if(!uid || !window.wafaDB || !window.wafaOnValue){ setTimeout(wsInitGlobalChatListener, 500); return; }
+
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'cs_chats/' + uid), (snap) => {
+    const data = snap.val() || {};
+    const adminMsgs = Object.values(data).filter(m => (m.from === 'admin' || m.from === 'bot') && !m.hiddenForUser);
+    const latestTime = adminMsgs.reduce((mx, m) => Math.max(mx, m.time || 0), 0);
+    if(!wsGlobalChatState.initialized){ wsGlobalChatState.cs = latestTime; return; }
+    if(latestTime > wsGlobalChatState.cs){
+      wsGlobalChatState.cs = latestTime;
+      const isChatOpen = wsChatMode && wsChatType === 'cs' && !document.hidden;
+      if(!isChatOpen){ wsPlayNotifSound(); wsUpdateMenuBadge('cs'); }
+    }
+  });
+
+  window.wafaOnValue(window.wafaRef(window.wafaDB, 'admin_chats/' + uid), (snap) => {
+    const data = snap.val() || {};
+    const adminMsgs = Object.values(data).filter(m => m.from === 'admin' && !m.hiddenForUser);
+    const latestTime = adminMsgs.reduce((mx, m) => Math.max(mx, m.time || 0), 0);
+    if(!wsGlobalChatState.initialized){ wsGlobalChatState.admin = latestTime; return; }
+    if(latestTime > wsGlobalChatState.admin){
+      wsGlobalChatState.admin = latestTime;
+      const isChatOpen = wsChatMode && wsChatType === 'admin' && !document.hidden;
+      if(!isChatOpen){ wsPlayNotifSound(); wsUpdateMenuBadge('admin'); }
+    }
+  });
+
+  setTimeout(() => { wsGlobalChatState.initialized = true; }, 2500);
+}
+
+function wsUpdateMenuBadge(type){
+  const menuId = type === 'cs' ? 'wsMenuCsBot' : 'wsMenuChat';
+  const menu = document.getElementById(menuId);
+  if(!menu) return;
+  let badge = menu.querySelector('.ws-menu-badge');
+  if(!badge){
+    badge = document.createElement('span');
+    badge.className = 'ws-menu-badge';
+    menu.appendChild(badge);
+  }
+  const cur = parseInt(badge.innerText) || 0;
+  badge.innerText = Math.min(cur + 1, 99);
+  badge.style.display = 'flex';
+}
+
+function wsClearMenuBadge(type){
+  const menuId = type === 'cs' ? 'wsMenuCsBot' : 'wsMenuChat';
+  const menu = document.getElementById(menuId);
+  if(!menu) return;
+  const badge = menu.querySelector('.ws-menu-badge');
+  if(badge) badge.style.display = 'none';
 }
 
 // ===== TOGGLE CHAT =====
@@ -504,6 +583,7 @@ function wsChatOpen(mode, type){
     return;
   }
   wsChatType = type || 'admin';
+  wsClearMenuBadge(wsChatType);
   const panel = document.getElementById('wsChatPanel');
   const backBtn = document.getElementById('wsChatBackBtn');
   if(!panel) return;
@@ -643,7 +723,7 @@ function wsRenderChatMessages(data){
         av.classList.add('has-img');
         av.innerHTML = `<img src="${wsAdminAvatarData}" alt="admin">`;
       } else if(isAdmin){
-        av.textContent = '👨💼';
+        av.textContent = '👨‍💼';
       } else {
         av.textContent = '👤';
       }
@@ -670,7 +750,7 @@ function wsRenderChatMessages(data){
     } else if(isAdmin){
       const lbl = document.createElement('div');
       lbl.className = 'ws-admin-label';
-      lbl.innerHTML = '👨💼 Admin <span style="font-weight:500;opacity:0.7;font-size:9px">• manual</span>';
+      lbl.innerHTML = '👨‍💼 Admin <span style="font-weight:500;opacity:0.7;font-size:9px">• manual</span>';
       bubble.appendChild(lbl);
     }
 
@@ -982,10 +1062,23 @@ document.addEventListener('keydown', (e)=>{
 });
 window.addEventListener('storage', (e)=>{ if(e.key === 'wafa_uid') wsSyncChatFab(); });
 
+// ===== INIT =====
 function wsInitAll(){
-  wsLoadUser(); wsLoadBranding(); wsLoadGames(); wsLoadTheme(); wsSyncChatFab();
+  wsLoadUser();
+  wsLoadBranding();
+  wsLoadGames();
+  wsLoadTheme();
+  wsSyncChatFab();
   wsInitFabBadge();
   wsLoadAdminAvatar();
+  wsInitGlobalChatListener();
+  const resumeOnce = () => {
+    if(wsAudioCtx && wsAudioCtx.state === 'suspended') wsAudioCtx.resume();
+    document.removeEventListener('click', resumeOnce);
+    document.removeEventListener('touchstart', resumeOnce);
+  };
+  document.addEventListener('click', resumeOnce);
+  document.addEventListener('touchstart', resumeOnce);
   setInterval(wsSyncChatFab, 2000);
 }
 if(document.readyState === 'complete'){ wsInitAll(); }
